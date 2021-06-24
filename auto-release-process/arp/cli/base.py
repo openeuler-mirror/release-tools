@@ -17,12 +17,12 @@ import argparse
 from collections import namedtuple
 
 class BaseCommand():
-    parser = argparse.ArgumentParser(description="Automatic Release Tool", prog='oe-art')
+    parser = argparse.ArgumentParser(description="Automatic Release Process", prog='arp')
     subparsers = parser.add_subparsers(title='command',
-                                        help='auto release tool', 
+                                        help='Automatic Release Process', 
                                         required=True,
                                         dest='subparser_name',
-                                        metavar='start|release')
+                                        metavar='start')
 
     def __init__(self):
         self.params = []
