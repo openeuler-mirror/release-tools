@@ -29,13 +29,10 @@ class StartProcessCommand(BaseCommand):
 
     def register(self):
         super(StartProcessCommand, self).register()
-        # for cmd_params in self.collection_params:
-        #     self.sub_parse.add_argument(
-        #         cmd_params[0], nargs='*', default=None, help=cmd_params[1]
-        #     )
         self.sub_parse.set_defaults(func=self.do_command)
 
     def do_command(self, params):
         issueID = params.releaseIssueID
-        print("release process", issueID)
+        giteeID = params.giteeid
+        print("release process", issueID, giteeID)
         StartProcess().get_pkg_list()
