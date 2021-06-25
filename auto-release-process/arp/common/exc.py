@@ -11,6 +11,22 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: Gitee API
-Class:
+Description:System exception information
+Class:Error
 """
+
+class Error(Exception):
+    """
+    Description: Read the configuration file base class in the system
+    Attributes:
+        message:Exception information
+    """
+
+    def __init__(self, msg=''):
+        self.message = msg
+        Exception.__init__(self, msg)
+
+    def __repr__(self):
+        return self.message
+
+    __str__ = __repr__

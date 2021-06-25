@@ -10,15 +10,44 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: The modify issue flows are distributed from here
+Class:
+"""
 
 class ModifyProcess():
+    """
+    Description: entrance for modify process
+    Attributes:
+    """
     def __init__(self):
+        """
+        Description: Instance initialization
+        """
         pass
 
     def modify_cve_list(self):
+        """
+        Description: add or delete cve issue list
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
         print("add/delete cve check list!")
         pass
 
     def modify_bugfix_list(self):
+        """
+        Description: add or delete bugfix issue list
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
         print("add/delete cve check list!")
         pass

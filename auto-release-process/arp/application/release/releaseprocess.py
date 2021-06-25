@@ -10,11 +10,31 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: The different release check flows are distributed from here
+Class:
+"""
 
 class ReleaseProcess():
+    """
+    Description: entrance for release process
+    Attributes:
+    """
     def __init__(self):
+        """
+        Description: Instance initialization
+        """
         pass
 
     def release_check(self):
+        """
+        Description: check release final result ok or not ok
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
         print("start release process!")
         pass

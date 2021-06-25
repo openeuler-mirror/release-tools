@@ -10,3 +10,7 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: check self build requires and install, function and uninstall
+Class:
+"""

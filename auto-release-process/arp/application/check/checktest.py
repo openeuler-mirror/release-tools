@@ -10,3 +10,7 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: get check test restult
+Class:
+"""

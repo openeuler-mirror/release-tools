@@ -10,22 +10,35 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: register method for all commands
+Class: ReleaseCommand
+"""
 
-import sys
-import argparse
 from arp.cli.base import BaseCommand
+from arp.common.exc import Error
 from arp.cli.commands.startprocess import StartProcessCommand
 
 class ReleaseCommand(BaseCommand):
-    
-    def __init__(self):
-        super(ReleaseCommand, self).__init__()
-
+    """
+    Description: auto release process command line
+    Attributes:
+        statistics: Summarized data table
+        table: Output table
+        columns: Calculate the width of the terminal dynamically
+        params: Command parameters
+    """
 
     @classmethod
     def args_parser(cls):
         """
-        arguments parser
+        Description: argument parser
+        Args:
+
+        Returns:
+
+        Raises:
+
         """
         cls.register_command(StartProcessCommand())
 
@@ -33,9 +46,14 @@ class ReleaseCommand(BaseCommand):
         args.func(args)
 
 def main():
+    """
+    Description: entrance for all command line
+
+    Raises:
+        Error: An error occurred while executing the command
+    """
     try:
         command = ReleaseCommand()
         command.args_parser()
-    except Exception:
+    except Error:
         print('Command execution error please try again')
-

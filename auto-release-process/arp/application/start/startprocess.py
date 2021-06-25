@@ -10,11 +10,31 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: The start flows are distributed from here
+Class:
+"""
 
 class StartProcess():
+    """
+    Description: entrance for start process
+    Attributes:
+    """
     def __init__(self):
+        """
+        Description: Instance initialization
+        """
         pass
 
     def get_pkg_list(self):
+        """
+        Description: git cve and bugfix issue list
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
         print("start release process!")
         pass

@@ -10,3 +10,7 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+"""
+Description: check CVE or bugfic list OK and return issue command
+Class:
+"""
