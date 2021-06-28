@@ -17,6 +17,7 @@ Class: BaseCommand
 
 import argparse
 from collections import namedtuple
+from abc import abstractmethod
 
 class BaseCommand():
     """
@@ -59,6 +60,7 @@ class BaseCommand():
 
         """
         command.register()
+        command.sub_parse.set_defaults(func=command.do_command)
 
     def register(self):
         """
@@ -92,3 +94,33 @@ class BaseCommand():
                     help=command_params.help,
                     default=command_params.default,
                     action=command_params.action)
+
+    @classmethod
+    def args_parser(cls):
+        """
+        Description: argument parser
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        for sub_cls in cls.__subclasses__():
+            cls.register_command(sub_cls())
+
+        args = cls.parser.parse_args()
+        args.func(args)
+
+    @abstractmethod
+    def do_command(self, params):
+        """
+        Description: Method which wound need to be implemented by subcommands
+
+        Args:
+            params: Command line parameters
+        Returns:
+
+        Raises:
+
+        """

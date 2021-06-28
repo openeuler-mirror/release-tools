@@ -52,21 +52,7 @@ class StartCommand(BaseCommand):
                 choices=None)
         ]
 
-    def register(self):
-        """
-        Description: Command line parameter registered
-        Args:
-
-        Returns:
-
-        Raises:
-
-        """
-        super(StartCommand, self).register()
-        self.sub_parse.set_defaults(func=self.do_command)
-
-    @staticmethod
-    def do_command(params):
+    def do_command(self, params):
         """
         Description: Executing command
         Args:

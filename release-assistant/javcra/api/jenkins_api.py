@@ -11,6 +11,6 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: Jenkins API
+Description: conver multiple Jenkins restful APIs to python methods
 Class:
 """

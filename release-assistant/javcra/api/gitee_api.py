@@ -11,6 +11,6 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: Gitee API
+Description: conver multiple gitee restful APIs to python methods
 Class:
 """

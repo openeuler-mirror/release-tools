@@ -11,13 +11,13 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: The start flows are distributed from here
+Description: start commands entrance
 Class:
 """
 
 class StartEntrance():
     """
-    Description: entrance for start entrance
+    Description: distributing start command to correct method
     Attributes:
     """
     def __init__(self):

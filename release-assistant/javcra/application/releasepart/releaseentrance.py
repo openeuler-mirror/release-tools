@@ -11,13 +11,13 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: The different release check flows are distributed from here
+Description: release commands entrance
 Class:
 """
 
 class ReleaseEntrance():
     """
-    Description: entrance for release entrance
+    Description: distributing different release commands to correct methods
     Attributes:
     """
     def __init__(self):

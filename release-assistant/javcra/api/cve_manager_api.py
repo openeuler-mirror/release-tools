@@ -11,6 +11,6 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: CVE Manager API
+Description: conver CVE manager restful API to python method
 Class:
 """

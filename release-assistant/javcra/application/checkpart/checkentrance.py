@@ -11,13 +11,13 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: The different check flows are distributed from here
+Description: check commands entrance
 Class:
 """
 
 class CheckEntrance():
     """
-    Description: entrance for check entrance
+    Description: distributing different check commands to correct methods
     Attributes:
     """
     def __init__(self):

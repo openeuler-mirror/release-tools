@@ -17,34 +17,8 @@ Class: JavcraCommand
 
 from javcra.cli.base import BaseCommand
 from javcra.common.exc import Error
-from javcra.cli.commands.startpart import StartCommand
-
-class JavcraCommand(BaseCommand):
-    """
-    Description: Javcra command line
-    Attributes:
-        statistics: Summarized data table
-        table: Output table
-        columns: Calculate the width of the terminal dynamically
-        params: Command parameters
-    """
-
-    @classmethod
-    def args_parser(cls):
-        """
-        Description: argument parser
-        Args:
-
-        Returns:
-
-        Raises:
-
-        """
-        cls.register_command(StartCommand())
-
-        args = cls.parser.parse_args()
-        args.func(args)
-
+# 'import StartCommand' would be used in the args_parser() to register command
+from javcra.cli.commands.startpart import StartCommand # pylint: disable=unused-import
 
 def main():
     """
@@ -54,7 +28,6 @@ def main():
         Error: An error occurred while executing the command
     """
     try:
-        command = JavcraCommand()
-        command.args_parser()
+        BaseCommand().args_parser()
     except Error:
         print('Command execution error please try again')

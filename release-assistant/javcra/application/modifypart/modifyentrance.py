@@ -11,13 +11,13 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: The modify issue flows are distributed from here
+Description: modify commands entrance
 Class:
 """
 
 class ModifyEntrance():
     """
-    Description: entrance for modify entrance
+    Description: distributing different modify commands to correct methods
     Attributes:
     """
     def __init__(self):

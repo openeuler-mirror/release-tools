@@ -11,6 +11,6 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: get check test restult
+Description: get 'check test' restult, it would be ok or not ok
 Class:
 """
