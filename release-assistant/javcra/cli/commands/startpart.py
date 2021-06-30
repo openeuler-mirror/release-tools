@@ -37,7 +37,6 @@ class StartCommand(BaseCommand):
 
         self.add_issueid_arg()
         self.add_giteeid_arg()
-        # self.params = [self.gitee_id, self.issue_id]
 
     def do_command(self, params):
         """

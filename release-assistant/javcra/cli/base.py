@@ -95,35 +95,7 @@ class BaseCommand():
         Raises:
 
         """
-        command.register()
         command.sub_parse.set_defaults(func=command.do_command)
-
-    def register(self):
-        """
-        Description: Command line parameter registered
-        Args:
-
-        Returns:
-
-        Raises:
-
-        """
-        for command_params in self.params:
-            if command_params.sub_command == 'releaseIssueID':
-                self.sub_parse.add_argument(
-                    command_params.sub_command,
-                    help=command_params.help,
-                    default=command_params.default,
-                    action=command_params.action)
-            else:
-                self.sub_parse.add_argument(
-                    command_params.sub_command,
-                    help=command_params.help,
-                    default=command_params.default,
-                    action=command_params.action,
-                    nargs=command_params.nargs,
-                    required=command_params.required,
-                    choices=command_params.choices)
 
     @classmethod
     def args_parser(cls):
