@@ -21,4 +21,9 @@ def validate_giteeid(issue_id, gitee_id):
         issue_id: the openEuler update version issue ID
         gitee_id: the gitee id who comment this issue
     """
+
+    permission = False
+    if not permission:
+        print("Sorry! You do not have the permisson to commit this operation.")
+        return False
     return True

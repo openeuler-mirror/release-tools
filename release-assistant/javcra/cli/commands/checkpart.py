@@ -66,12 +66,14 @@ class CheckCommand(BaseCommand):
         Raises:
 
         """
+        super(CheckCommand, self).do_command(params)
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
+
         permission = validate_giteeid(issue_id, gitee_id)
         if not permission:
-            print("Sorry! You do not have the permisson to commit this operation.")
             return
+
         type_status = params.result
         type_dict = {
             'cve' : CheckEntrance(issue_id, type_status).check_pkglist_result,

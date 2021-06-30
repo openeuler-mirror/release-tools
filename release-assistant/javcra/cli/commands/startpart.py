@@ -53,7 +53,6 @@ class StartCommand(BaseCommand):
 
         permission = validate_giteeid(issue_id, gitee_id)
         if not permission:
-            print("Sorry! You do not have the permisson to commit this operation.")
             return
 
         print("start part", issue_id, gitee_id)
