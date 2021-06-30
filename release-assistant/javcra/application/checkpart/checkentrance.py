@@ -75,5 +75,5 @@ class CheckEntrance():
         Raises:
 
         """
-        print("get the issue status list!")
+        print("get the requires result!")
         pass
