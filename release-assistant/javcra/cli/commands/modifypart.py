@@ -55,7 +55,7 @@ class ModifyCommand(BaseCommand):
             '--release',
             help='(not) release a list of packages \
                 which fixed cve or bugfix issues in this version',
-            default=True,
+            default=False,
             action='store',
             choices=['yes', 'no']
         )
