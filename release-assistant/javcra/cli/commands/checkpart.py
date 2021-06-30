@@ -75,11 +75,11 @@ class CheckCommand(BaseCommand):
 
         type_status = params.result
         type_dict = {
-            'cve' : CheckEntrance(issue_id, type_status).check_pkglist_result,
-            'bug' : CheckEntrance(issue_id, type_status).check_pkglist_result,
-            'status' : CheckEntrance(issue_id, type_status).check_issue_status,
-            'requires' : CheckEntrance(issue_id, type_status).check_requires,
-            'test' : CheckEntrance(issue_id, type_status).check_test_result
+            'cve': CheckEntrance(issue_id, type_status).check_pkglist_result,
+            'bug': CheckEntrance(issue_id, type_status).check_pkglist_result,
+            'status': CheckEntrance(issue_id, type_status).check_issue_status,
+            'requires': CheckEntrance(issue_id, type_status).check_requires,
+            'test': CheckEntrance(issue_id, type_status).check_test_result
         }
 
         print("check part start", issue_id, gitee_id)
