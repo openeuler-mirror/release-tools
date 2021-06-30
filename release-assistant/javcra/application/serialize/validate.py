@@ -22,7 +22,7 @@ def validate_giteeid(issue_id, gitee_id):
         gitee_id: the gitee id who comment this issue
     """
 
-    permission = False
+    permission = True
     if not permission:
         print("Sorry! You do not have the permisson to commit this operation.")
         return False

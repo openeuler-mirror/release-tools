@@ -66,7 +66,6 @@ class CheckCommand(BaseCommand):
         Raises:
 
         """
-        super(CheckCommand, self).do_command(params)
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
 
