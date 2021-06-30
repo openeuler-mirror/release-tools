@@ -11,6 +11,14 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: get 'check test' restult, it would be yes or no
-Class:
+Verification method
 """
+
+def validate_giteeid(issue_id, gitee_id):
+    """
+    Description: get the ID with comment permission from the corresponding Gitee Issue
+    Args:
+        issue_id: the openEuler update version issue ID
+        gitee_id: the gitee id who comment this issue
+    """
+    return True

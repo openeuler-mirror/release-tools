@@ -49,5 +49,31 @@ class ModifyEntrance():
         Raises:
 
         """
-        print("add/delete cve check list!")
+        print("add/delete bugix check list!")
+        pass
+
+    def modify_test_list(self):
+        """
+        Description: add or delete test issue list
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        print("add/delete test check list!")
+        pass
+
+    def modify_release_result(self):
+        """
+        Description: add or delete test issue list
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        print("modify final release list!")
         pass

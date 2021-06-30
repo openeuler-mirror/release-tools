@@ -11,17 +11,17 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: start method's entrance for custom commands
-Class:StartCommand
+Description: release method's entrance for custom commands
+Class:ReleaseCommand
 """
 
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
-from javcra.application.startpart.startentrance import StartEntrance
+from javcra.application.releasepart.releaseentrance import ReleaseEntrance
 
-class StartCommand(BaseCommand):
+class ReleaseCommand(BaseCommand):
     """
-    Description: start the release assistant
+    Description: start the release part
     Attributes:
         sub_parse: Subcommand parameters
         params: Command line parameters
@@ -31,13 +31,20 @@ class StartCommand(BaseCommand):
         """
         Description: Instance initialization
         """
-        super(StartCommand, self).__init__()
+        super(ReleaseCommand, self).__init__()
         self.sub_parse = BaseCommand.subparsers.add_parser(
-            'start', help="release assistant of start part")
+            'release', help="release assistant of release part")
 
         self.add_issueid_arg()
         self.add_giteeid_arg()
-        # self.params = [self.gitee_id, self.issue_id]
+        self.sub_parse.add_argument(
+            '--type',
+            help='Specify the release check type, only allow checkok and cvrfok',
+            default=True,
+            action='store',
+            required=True,
+            choices=['checkok', 'cvrfok']
+        )
 
     def do_command(self, params):
         """
@@ -57,5 +64,5 @@ class StartCommand(BaseCommand):
             print("Sorry! You do not have the permisson to commit this operation.")
             return
 
-        print("start part", issue_id, gitee_id)
-        StartEntrance().get_pkg_list()
+        print("release part", issue_id, gitee_id)
+        ReleaseEntrance().release_check()

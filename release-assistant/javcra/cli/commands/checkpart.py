@@ -11,17 +11,17 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: start method's entrance for custom commands
-Class:StartCommand
+Description: check method's entrance for custom commands
+Class:CheckCommand
 """
 
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
-from javcra.application.startpart.startentrance import StartEntrance
+from javcra.application.checkpart.checkentrance import CheckEntrance
 
-class StartCommand(BaseCommand):
+class CheckCommand(BaseCommand):
     """
-    Description: start the release assistant
+    Description: start the check part
     Attributes:
         sub_parse: Subcommand parameters
         params: Command line parameters
@@ -31,13 +31,30 @@ class StartCommand(BaseCommand):
         """
         Description: Instance initialization
         """
-        super(StartCommand, self).__init__()
+        super(CheckCommand, self).__init__()
         self.sub_parse = BaseCommand.subparsers.add_parser(
-            'start', help="release assistant of start part")
-
+            'check', help="release assistant of check part")
         self.add_issueid_arg()
         self.add_giteeid_arg()
-        # self.params = [self.gitee_id, self.issue_id]
+        self.sub_parse.add_argument(
+            '--type',
+            help='the type of check part, \
+                including cve, bugfix, requires, issue status and test result',
+            default=True,
+            action='store',
+            nargs=None,
+            required=True,
+            choices=['cve', 'bug', 'status', 'requires', 'test']
+            )
+
+        self.sub_parse.add_argument(
+            '--result',
+            help='the check result, it would be yes or no',
+            action='store',
+            nargs=None,
+            required=False,
+            choices=['yes', 'no']
+            )
 
     def do_command(self, params):
         """
@@ -51,11 +68,18 @@ class StartCommand(BaseCommand):
         """
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
-
         permission = validate_giteeid(issue_id, gitee_id)
         if not permission:
             print("Sorry! You do not have the permisson to commit this operation.")
             return
+        type_status = params.result
+        type_dict = {
+            'cve' : CheckEntrance(issue_id, type_status).check_pkglist_result,
+            'bug' : CheckEntrance(issue_id, type_status).check_pkglist_result,
+            'status' : CheckEntrance(issue_id, type_status).check_issue_status,
+            'requires' : CheckEntrance(issue_id, type_status).check_requires,
+            'test' : CheckEntrance(issue_id, type_status).check_test_result
+        }
 
-        print("start part", issue_id, gitee_id)
-        StartEntrance().get_pkg_list()
+        print("check part start", issue_id, gitee_id)
+        type_dict.get(params.type)()

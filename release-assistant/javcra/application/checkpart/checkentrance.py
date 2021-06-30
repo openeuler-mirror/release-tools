@@ -12,7 +12,7 @@
 # ******************************************************************************/
 """
 Description: check commands entrance
-Class:
+Class: CheckEntrance
 """
 
 class CheckEntrance():
@@ -20,15 +20,15 @@ class CheckEntrance():
     Description: distributing different check commands to correct methods
     Attributes:
     """
-    def __init__(self):
+    def __init__(self, issue_id, status):
         """
         Description: Instance initialization
         """
-        pass
+        self.issue_id = issue_id
 
     def check_pkglist_result(self):
         """
-        Description: check cve or bugfix list ok or not ok
+        Description: check cve or bugfix list yes or no
         Args:
 
         Returns:
@@ -41,7 +41,7 @@ class CheckEntrance():
 
     def check_test_result(self):
         """
-        Description: check test result ok or not ok
+        Description: check test result yes or no
         Args:
 
         Returns:

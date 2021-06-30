@@ -28,7 +28,7 @@ class ReleaseEntrance():
 
     def release_check(self):
         """
-        Description: check release final result ok or not ok
+        Description: check release final result yes or no
         Args:
 
         Returns:
