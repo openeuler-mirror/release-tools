@@ -12,7 +12,7 @@
 # ******************************************************************************/
 """
 Description: release commands entrance
-Class:
+Class: ReleaseEntrance
 """
 
 class ReleaseEntrance():

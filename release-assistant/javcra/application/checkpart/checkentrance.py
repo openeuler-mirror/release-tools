@@ -19,12 +19,15 @@ class CheckEntrance():
     """
     Description: distributing different check commands to correct methods
     Attributes:
+        issue_id: the openEuler update version issue ID
+        type_status: the check status which would be yes, no or None type
     """
-    def __init__(self, issue_id, status):
+    def __init__(self, issue_id, type_status):
         """
         Description: Instance initialization
         """
         self.issue_id = issue_id
+        self.type_status = type_status
 
     def check_pkglist_result(self):
         """

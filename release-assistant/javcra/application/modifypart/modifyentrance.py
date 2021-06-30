@@ -12,7 +12,7 @@
 # ******************************************************************************/
 """
 Description: modify commands entrance
-Class:
+Class: ModifyEntrance
 """
 
 class ModifyEntrance():
@@ -67,7 +67,7 @@ class ModifyEntrance():
 
     def modify_release_result(self):
         """
-        Description: add or delete test issue list
+        Description: add or delete final release issue list
         Args:
 
         Returns:
