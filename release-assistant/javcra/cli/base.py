@@ -60,7 +60,6 @@ class BaseCommand():
         self.sub_parse.add_argument(
             'releaseIssueID',
             help='start release issue ID',
-            default=True,
             action='store'
         )
 
@@ -78,7 +77,6 @@ class BaseCommand():
         self.sub_parse.add_argument(
             '--giteeid',
             help='the Gitee ID who trigger this command',
-            default=True,
             action='store',
             required=True
         )

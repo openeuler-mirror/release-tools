@@ -10,16 +10,11 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
-"""
-Description: General constants
-Class:
-"""
+import sys
+from javcra.cli.cmd import main
 
-PERMISSION_DICT = {
-    'cve': 'security',
-    'bug': 'developer',
-    'status': 'all',
-    'requires': 'developer',
-    'test': 'test',
-    'release': 'all'
-}
+try:
+    main()
+except Exception as error:
+    print('Command execution error please try again ')
+    print(error)

@@ -40,9 +40,7 @@ class ReleaseCommand(BaseCommand):
         self.sub_parse.add_argument(
             '--type',
             help='Specify the release check type, only allow checkok and cvrfok',
-            default=True,
             action='store',
-            required=True,
             choices=['checkok', 'cvrfok']
         )
 

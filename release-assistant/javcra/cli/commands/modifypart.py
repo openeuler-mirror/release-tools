@@ -18,6 +18,7 @@ Class:ModifyCommand
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
 from javcra.application.modifypart.modifyentrance import ModifyEntrance
+from javcra.common.constant import PERMISSION_DICT
 
 class ModifyCommand(BaseCommand):
     """
@@ -36,33 +37,24 @@ class ModifyCommand(BaseCommand):
             'modify', help="release assistant of modify part")
         self.add_issueid_arg()
         self.add_giteeid_arg()
-        group = self.sub_parse.add_mutually_exclusive_group()
+        group = self.sub_parse.add_mutually_exclusive_group(required=True)
         group.add_argument(
             '--add',
-            help='adding a list of issues which would add to cve, bugfix or test list',
-            default=True,
+            help='adding a list of issues which would add to cve, bugfix, test or release list',
+            default='',
             action='store',
-            choices=['cve', 'bug', 'test']
+            choices=['cve', 'bug', 'test', 'release']
         )
         group.add_argument(
             '--delete',
-            help='deleting a list of issues which would add to cve or bugfix list',
-            default=True,
+            help='deleting a list of issues which would add to cve, bugfix, test or release list',
+            default='',
             action='store',
-            choices=['cve', 'bug', 'test']
-        )
-        group.add_argument(
-            '--release',
-            help='(not) release a list of packages \
-                which fixed cve or bugfix issues in this version',
-            default=False,
-            action='store',
-            choices=['yes', 'no']
+            choices=['cve', 'bug', 'test', 'release']
         )
         self.sub_parse.add_argument(
             '--id',
-            help='the list of issueid which would add/del to cve or bugfix list',
-            default=True,
+            help='the list of issueid which would add/del to cve, bugfix, test or release list',
             action='store',
             nargs='*',
             required=True,
@@ -81,22 +73,28 @@ class ModifyCommand(BaseCommand):
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
         issue_list = params.id
+        modify_type = ''
 
-        permission = validate_giteeid(issue_id, gitee_id)
+        if params.add:
+            modify_type = params.add
+            action = 'add'
+        elif params.delete:
+            modify_type = params.delete
+            action = 'del'
+        else:
+            print("Cannot parse the parameter")
+            return
+
+        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get(modify_type))
         if not permission:
             return
 
-        if params.release:
-            print("modify release list", issue_id, gitee_id, issue_list)
-            ModifyEntrance().modify_release_result()
-            return
+        type_dict = {
+            'cve': ModifyEntrance(issue_id, issue_list).modify_cve_list,
+            'bug': ModifyEntrance(issue_id, issue_list).modify_bugfix_list,
+            'test': ModifyEntrance(issue_id, issue_list).modify_test_list,
+            'release': ModifyEntrance(issue_id, issue_list).modify_release_result
+        }
 
-        if params.add == 'cve' or params.delete == 'cve':
-            print("modify cve part", issue_id, gitee_id, issue_list)
-            ModifyEntrance().modify_cve_list()
-        elif params.add == 'bug' or params.delete == 'bug':
-            print("modify bugfix part", issue_id, gitee_id, issue_list)
-            ModifyEntrance().modify_bugfix_list()
-        else:
-            print("modify test part", issue_id, gitee_id, issue_list)
-            ModifyEntrance().modify_test_list()
+        print("modify part start!", issue_id, gitee_id, issue_list)
+        type_dict.get(modify_type)(action)

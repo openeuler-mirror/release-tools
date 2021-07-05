@@ -18,6 +18,7 @@ Class:CheckCommand
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
 from javcra.application.checkpart.checkentrance import CheckEntrance
+from javcra.common.constant import PERMISSION_DICT
 
 class CheckCommand(BaseCommand):
     """
@@ -40,7 +41,6 @@ class CheckCommand(BaseCommand):
             '--type',
             help='the type of check part, \
                 including cve, bugfix, requires, issue status and test result',
-            default=True,
             action='store',
             nargs=None,
             required=True,
@@ -50,6 +50,7 @@ class CheckCommand(BaseCommand):
         self.sub_parse.add_argument(
             '--result',
             help='the check result, it would be yes or no',
+            default='yes',
             action='store',
             nargs=None,
             required=False,
@@ -69,7 +70,7 @@ class CheckCommand(BaseCommand):
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
 
-        permission = validate_giteeid(issue_id, gitee_id)
+        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get(params.type))
         if not permission:
             return
 

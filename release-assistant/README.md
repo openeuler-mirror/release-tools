@@ -43,6 +43,13 @@ Javcra 是一款辅助社区开发者和版本发布人员快速发布openEuler 
     javcra modify $releaseIssueID --add test --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
+    gitee issue 评论：/add release #I84734 #I93043 #I3A34M
+
+    ```bash
+    # 添加最终发布的问题列表（默认都是确认发布的，这个场景主要用于，一开始确认为不发布，后来需要修改成发布的场景）
+    javcra modify $releaseIssueID --add release --id $issueID1  $issueID2 ... --giteeid $GITEEID
+    ```
+
     gitee issue 评论：/delete cve #I84734 #I93043 #I3A34M
 
     ```bash
@@ -64,18 +71,11 @@ Javcra 是一款辅助社区开发者和版本发布人员快速发布openEuler 
     javcra modify $releaseIssueID --del test --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/release no #I84734 #I93043 #I3A34M
+    gitee issue 评论：/delete release #I84734 #I93043 #I3A34M
 
     ```bash
     # 添加最终不发布的问题列表
-    javcra modify $releaseIssueID --release no --id $issueID1  $issueID2 ... --giteeid $GITEEID
-    ```
-
-    gitee issue 评论：/release yes #I84734 #I93043 #I3A34M
-
-    ```bash
-    # 添加最终发布的问题列表（默认都是确认发布的，这个场景主要用于，一开始确认为不发布，后来需要修改成发布的场景）
-    javcra modify $releaseIssueID --release yes --id $issueID1  $issueID2 ... --giteeid $GITEEID
+    javcra modify $releaseIssueID --del release --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
 3. 发布流程中对各个状态的检查和确认（check）：
