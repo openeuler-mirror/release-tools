@@ -13,6 +13,8 @@ Javcra 是一款辅助社区开发者和版本发布人员快速发布openEuler 
 
 #### 使用说明
 
+##### 注意！！
+issue评论中的issue id不可加'#'。即输入应为：I483M3，而不是：#I483M3
 1.  启动发布流程（start）：
 
     gitee issue评论： /start-update
@@ -22,56 +24,56 @@ Javcra 是一款辅助社区开发者和版本发布人员快速发布openEuler 
     ```
 2.  修改issue中的列表（modify）：
 
-    gitee issue 评论：/add cve #I84734 #I93043 #I3A34M
+    gitee issue 评论：/add cve I84734 I93043 I3A34M
 
     ```bash
     # 添加cve列表中的issue
     javcra modify $releaseIssueID --add cve --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/add bugfix #I84734 #I93043 #I3A34M
+    gitee issue 评论：/add bugfix I84734 I93043 I3A34M
 
     ```bash
     # 添加bugfix列表中的issue
     javcra modify $releaseIssueID --add bug --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/add test #I84734 #I93043 #I3A34M
+    gitee issue 评论：/add test I84734 I93043 I3A34M
 
     ```bash
     # 添加test列表中的issue
     javcra modify $releaseIssueID --add test --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/add release #I84734 #I93043 #I3A34M
+    gitee issue 评论：/add release I84734 I93043 I3A34M
 
     ```bash
     # 添加最终发布的问题列表（默认都是确认发布的，这个场景主要用于，一开始确认为不发布，后来需要修改成发布的场景）
     javcra modify $releaseIssueID --add release --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/delete cve #I84734 #I93043 #I3A34M
+    gitee issue 评论：/delete cve I84734 I93043 I3A34M
 
     ```bash
     # 删除cve列表中的issue
     javcra modify $releaseIssueID --del cve --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/delete bugfix #I84734 #I93043 #I3A34M
+    gitee issue 评论：/delete bugfix I84734 I93043 I3A34M
 
     ```bash
     # 删除bugfix列表中的issue
     javcra modify $releaseIssueID --del bug --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/delete test #I84734 #I93043 #I3A34M
+    gitee issue 评论：/delete test I84734 I93043 I3A34M
 
     ```bash
     # 删除test列表中的issue
     javcra modify $releaseIssueID --del test --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/delete release #I84734 #I93043 #I3A34M
+    gitee issue 评论：/delete release I84734 I93043 I3A34M
 
     ```bash
     # 添加最终不发布的问题列表
