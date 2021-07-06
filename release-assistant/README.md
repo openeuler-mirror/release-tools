@@ -38,7 +38,7 @@ issue评论中的issue id不可加'#'。即输入应为：I483M3，而不是：#
     javcra modify $releaseIssueID --add bug --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/add release I84734 I93043 I3A34M
+    gitee issue 评论：/release I84734 I93043 I3A34M
 
     ```bash
     # 添加最终发布的问题列表（默认都是确认发布的，这个场景主要用于，一开始确认为不发布，后来需要修改成发布的场景）
@@ -59,7 +59,7 @@ issue评论中的issue id不可加'#'。即输入应为：I483M3，而不是：#
     javcra modify $releaseIssueID --del bug --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/delete release I84734 I93043 I3A34M
+    gitee issue 评论：/no-release I84734 I93043 I3A34M
 
     ```bash
     # 添加最终不发布的问题列表
