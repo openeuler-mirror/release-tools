@@ -43,14 +43,14 @@ class ModifyCommand(BaseCommand):
             help='adding a list of issues which would add to cve, bugfix, test or release list',
             default='',
             action='store',
-            choices=['cve', 'bug', 'test', 'release']
+            choices=['cve', 'bug', 'release']
         )
         group.add_argument(
             '--delete',
             help='deleting a list of issues which would add to cve, bugfix, test or release list',
             default='',
             action='store',
-            choices=['cve', 'bug', 'test', 'release']
+            choices=['cve', 'bug', 'release']
         )
         self.sub_parse.add_argument(
             '--id',
@@ -92,7 +92,6 @@ class ModifyCommand(BaseCommand):
         type_dict = {
             'cve': ModifyEntrance(issue_id, issue_list).modify_cve_list,
             'bug': ModifyEntrance(issue_id, issue_list).modify_bugfix_list,
-            'test': ModifyEntrance(issue_id, issue_list).modify_test_list,
             'release': ModifyEntrance(issue_id, issue_list).modify_release_result
         }
 

@@ -38,7 +38,7 @@ update发布自动化工具通过码云issue串联起整个update发布流程，
 |编号|评论|标签|操作人员|说明|
 |:--|:---|:--|:---|:-----|
 |①|/start-update|update-check-pkg|版本经理|启动发布流程，工具获取cve和bugfix发布范围，回写到issue描述中，添加标签update-check-pkg|
-|②|/add cve #I3NQ1A|NA|安全委员会|添加cve，工具自动修改版本issue描述中的cve清单|
+|②|/add cve I3NQ1A|NA|安全委员会|添加cve，工具自动修改版本issue描述中的cve清单|
 |②|/delete cve #I3NQ1A|NA|安全委员会|删除cve，工具自动修改版本issue描述中的cve清单|
 |②|/add bugfix #I3AZ9M|NA|开发人员|添加bugfix，工具自动修改版本issue描述中的bugfix清单|
 |②|/delete bugfix #I3AZ9M|NA|开发人员|删除bugfix，工具自动修改版本issue描述中的bugfix清单|

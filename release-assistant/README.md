@@ -38,13 +38,6 @@ issue评论中的issue id不可加'#'。即输入应为：I483M3，而不是：#
     javcra modify $releaseIssueID --add bug --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/add test I84734 I93043 I3A34M
-
-    ```bash
-    # 添加test列表中的issue
-    javcra modify $releaseIssueID --add test --id $issueID1  $issueID2 ... --giteeid $GITEEID
-    ```
-
     gitee issue 评论：/add release I84734 I93043 I3A34M
 
     ```bash
@@ -64,13 +57,6 @@ issue评论中的issue id不可加'#'。即输入应为：I483M3，而不是：#
     ```bash
     # 删除bugfix列表中的issue
     javcra modify $releaseIssueID --del bug --id $issueID1  $issueID2 ... --giteeid $GITEEID
-    ```
-
-    gitee issue 评论：/delete test I84734 I93043 I3A34M
-
-    ```bash
-    # 删除test列表中的issue
-    javcra modify $releaseIssueID --del test --id $issueID1  $issueID2 ... --giteeid $GITEEID
     ```
 
     gitee issue 评论：/delete release I84734 I93043 I3A34M
@@ -110,10 +96,10 @@ issue评论中的issue id不可加'#'。即输入应为：I483M3，而不是：#
     javcra check $releaseIssueID --type status --giteeid $GITEEID
     ```
 
-    gitee issue 评论：/get-requires
+    gitee issue 评论：/check-requires
 
     ```bash
-    # 获取当前版本的发布范围以及自验证结果
+    # 获取当前版本的依赖范围以最终确认发布范围并启动自验证，该命令会返回自验证结果。
     javcra check $releaseIssueID --type requires --giteeid $GITEEID
     ```
 

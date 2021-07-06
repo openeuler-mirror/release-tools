@@ -52,19 +52,6 @@ class ModifyEntrance():
         print("add/delete bugix checklist!")
         pass
 
-    def modify_test_list(self, action):
-        """
-        Description: add or delete test issue list
-        Args:
-
-        Returns:
-
-        Raises:
-
-        """
-        print("add/delete test checklist!")
-        pass
-
     def modify_release_result(self, action):
         """
         Description: add or delete final release issue list
