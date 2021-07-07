@@ -1,0 +1,5 @@
+openEuler :
+  openEuler-20.03-LTS:
+    obs_alias: "openEuler:20.03:LTS"
+  openEuler-20.03-LTS-SP1:
+    obs_alias: "openEuler:20.03:LTS:SP1"

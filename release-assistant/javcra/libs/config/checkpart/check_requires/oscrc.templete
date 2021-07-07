@@ -1,0 +1,7 @@
+[general]
+apiurl=@APIURL@
+no_verify=1
+
+[@APIURL@]
+user=@USERNAME@
+pass=@PASSWORD@
