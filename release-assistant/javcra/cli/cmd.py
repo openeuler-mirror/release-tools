@@ -31,6 +31,8 @@ def main():
         Error: An error occurred while executing the command
     """
     try:
+        for sub_cls in BaseCommand.__subclasses__():
+            BaseCommand.register_command(sub_cls())
         BaseCommand().args_parser()
     except Error:
         print('Command execution error please try again')

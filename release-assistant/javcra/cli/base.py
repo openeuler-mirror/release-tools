@@ -106,9 +106,6 @@ class BaseCommand():
         Raises:
 
         """
-        for sub_cls in cls.__subclasses__():
-            cls.register_command(sub_cls())
-
         args = cls.parser.parse_args()
         args.func(args)
 
