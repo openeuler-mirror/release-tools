@@ -32,7 +32,9 @@ def main():
     """
     try:
         for sub_cls in BaseCommand.__subclasses__():
+            # get the all subclass of BaseCommand and register the subcommand one by one
             BaseCommand.register_command(sub_cls())
+        # add all arguments' attribution into instance
         BaseCommand().args_parser()
     except Error:
         print('Command execution error please try again')
