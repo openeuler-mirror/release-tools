@@ -18,6 +18,7 @@ Class:StartCommand
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
 from javcra.application.startpart.startentrance import StartEntrance
+from javcra.common.constant import PERMISSION_DICT
 
 class StartCommand(BaseCommand):
     """
@@ -32,11 +33,8 @@ class StartCommand(BaseCommand):
         Description: Instance initialization
         """
         super(StartCommand, self).__init__()
-        self.sub_parse = BaseCommand.subparsers.add_parser(
-            'start', help="release assistant of start part")
-
-        self.add_issueid_arg()
-        self.add_giteeid_arg()
+        self.add_subcommand_with_2_args(sub_command='start',
+                                        help_desc="release assistant of start part")
 
     def do_command(self, params):
         """
@@ -51,7 +49,7 @@ class StartCommand(BaseCommand):
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
 
-        permission = validate_giteeid(issue_id, gitee_id)
+        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get('start'))
         if not permission:
             return
 

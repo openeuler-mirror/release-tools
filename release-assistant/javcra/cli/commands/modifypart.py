@@ -33,10 +33,8 @@ class ModifyCommand(BaseCommand):
         Description: Instance initialization
         """
         super(ModifyCommand, self).__init__()
-        self.sub_parse = BaseCommand.subparsers.add_parser(
-            'modify', help="release assistant of modify part")
-        self.add_issueid_arg()
-        self.add_giteeid_arg()
+        self.add_subcommand_with_2_args(sub_command='modify',
+                                        help_desc="release assistant of modify part")
         group = self.sub_parse.add_mutually_exclusive_group(required=True)
         group.add_argument(
             '--add',

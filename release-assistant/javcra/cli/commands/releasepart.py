@@ -18,6 +18,7 @@ Class:ReleaseCommand
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
 from javcra.application.releasepart.releaseentrance import ReleaseEntrance
+from javcra.common.constant import PERMISSION_DICT
 
 class ReleaseCommand(BaseCommand):
     """
@@ -32,11 +33,8 @@ class ReleaseCommand(BaseCommand):
         Description: Instance initialization
         """
         super(ReleaseCommand, self).__init__()
-        self.sub_parse = BaseCommand.subparsers.add_parser(
-            'release', help="release assistant of release part")
-
-        self.add_issueid_arg()
-        self.add_giteeid_arg()
+        self.add_subcommand_with_2_args(sub_command='release',
+                                        help_desc="release assistant of release part")
         self.sub_parse.add_argument(
             '--type',
             help='Specify the release check type, only allow checkok and cvrfok',
@@ -56,8 +54,7 @@ class ReleaseCommand(BaseCommand):
         """
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
-
-        permission = validate_giteeid(issue_id, gitee_id)
+        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get(params.type))
         if not permission:
             return
 

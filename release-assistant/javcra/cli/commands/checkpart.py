@@ -33,10 +33,8 @@ class CheckCommand(BaseCommand):
         Description: Instance initialization
         """
         super(CheckCommand, self).__init__()
-        self.sub_parse = BaseCommand.subparsers.add_parser(
-            'check', help="release assistant of check part")
-        self.add_issueid_arg()
-        self.add_giteeid_arg()
+        self.add_subcommand_with_2_args(sub_command='check',
+                                        help_desc="release assistant of check part")
         self.sub_parse.add_argument(
             '--type',
             help='the type of check part, \

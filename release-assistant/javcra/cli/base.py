@@ -47,6 +47,31 @@ class BaseCommand():
             ['sub_command', 'help', 'default', 'action', 'nargs', 'required', 'choices']
             )
 
+    def add_subcommand_with_2_args(self, sub_command, help_desc):
+        """
+        Description: add subcommand with releaseIssueID and gitee ID as sub_parse argument
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        self.sub_parse = BaseCommand.subparsers.add_parser(
+            sub_command, help=help_desc)
+
+        self.sub_parse.add_argument(
+            'releaseIssueID',
+            help='start release issue ID',
+            action='store'
+        )
+        self.sub_parse.add_argument(
+            '--giteeid',
+            help='the Gitee ID who trigger this command',
+            action='store',
+            required=True
+        )
+
     def add_issueid_arg(self):
         """
         Description: add release issud ID into sub_parse argument

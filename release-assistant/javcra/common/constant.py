@@ -21,5 +21,8 @@ PERMISSION_DICT = {
     'status': 'all',
     'requires': 'developer',
     'test': 'test',
-    'release': 'all'
+    'release': 'all',
+    'checkok': 'all',
+    'cvrfok': 'security',
+    'start': 'manager'
 }
