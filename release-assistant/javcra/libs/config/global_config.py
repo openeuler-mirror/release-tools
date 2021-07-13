@@ -52,3 +52,5 @@ OPENEULER_BRANCH_MAP = os.path.join(
     "support_branch.yaml"
 )
 SUPPORTED_BRANCHES_LIST = ["openEuler"]
+
+LOG_DIR = "./"
