@@ -47,6 +47,65 @@ class BaseCommand():
             ['sub_command', 'help', 'default', 'action', 'nargs', 'required', 'choices']
             )
 
+    def add_subcommand_with_2_args(self, sub_command, help_desc):
+        """
+        Description: add subcommand with releaseIssueID and gitee ID as sub_parse argument
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        self.sub_parse = BaseCommand.subparsers.add_parser(
+            sub_command, help=help_desc)
+
+        self.sub_parse.add_argument(
+            'releaseIssueID',
+            help='start release issue ID',
+            action='store'
+        )
+        self.sub_parse.add_argument(
+            '--giteeid',
+            help='the Gitee ID who trigger this command',
+            action='store',
+            required=True
+        )
+
+    def add_issueid_arg(self):
+        """
+        Description: add release issud ID into sub_parse argument
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        self.sub_parse.add_argument(
+            'releaseIssueID',
+            help='start release issue ID',
+            action='store'
+        )
+
+    def add_giteeid_arg(self):
+        """
+        Description: add gitee ID into sub_parse argument
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+
+        self.sub_parse.add_argument(
+            '--giteeid',
+            help='the Gitee ID who trigger this command',
+            action='store',
+            required=True
+        )
+
     @staticmethod
     def register_command(command):
         """
@@ -59,41 +118,7 @@ class BaseCommand():
         Raises:
 
         """
-        command.register()
         command.sub_parse.set_defaults(func=command.do_command)
-
-    def register(self):
-        """
-        Description: Command line parameter registered
-        Args:
-
-        Returns:
-
-        Raises:
-
-        """
-        for command_params in self.params:
-            if command_params.required:
-                self.sub_parse.add_argument(
-                    command_params.sub_command,
-                    help=command_params.help,
-                    default=command_params.default,
-                    action=command_params.action,
-                    required=command_params.required)
-            elif command_params.choices:
-                self.sub_parse.add_argument(
-                    command_params.sub_command,
-                    help=command_params.help,
-                    default=command_params.default,
-                    action=command_params.action,
-                    required=command_params.required,
-                    choices=command_params.choices)
-            else:
-                self.sub_parse.add_argument(
-                    command_params.sub_command,
-                    help=command_params.help,
-                    default=command_params.default,
-                    action=command_params.action)
 
     @classmethod
     def args_parser(cls):
@@ -106,9 +131,6 @@ class BaseCommand():
         Raises:
 
         """
-        for sub_cls in cls.__subclasses__():
-            cls.register_command(sub_cls())
-
         args = cls.parser.parse_args()
         args.func(args)
 

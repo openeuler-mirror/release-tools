@@ -12,7 +12,7 @@
 # ******************************************************************************/
 """
 Description: start commands entrance
-Class:
+Class: StartEntrance
 """
 
 class StartEntrance():

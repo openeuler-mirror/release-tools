@@ -11,18 +11,18 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: start method's entrance for custom commands
-Class:StartCommand
+Description: release method's entrance for custom commands
+Class:ReleaseCommand
 """
 
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
-from javcra.application.startpart.startentrance import StartEntrance
+from javcra.application.releasepart.releaseentrance import ReleaseEntrance
 from javcra.common.constant import PERMISSION_DICT
 
-class StartCommand(BaseCommand):
+class ReleaseCommand(BaseCommand):
     """
-    Description: start the release assistant
+    Description: start the release part
     Attributes:
         sub_parse: Subcommand parameters
         params: Command line parameters
@@ -32,9 +32,15 @@ class StartCommand(BaseCommand):
         """
         Description: Instance initialization
         """
-        super(StartCommand, self).__init__()
-        self.add_subcommand_with_2_args(sub_command='start',
-                                        help_desc="release assistant of start part")
+        super(ReleaseCommand, self).__init__()
+        self.add_subcommand_with_2_args(sub_command='release',
+                                        help_desc="release assistant of release part")
+        self.sub_parse.add_argument(
+            '--type',
+            help='Specify the release check type, only allow checkok and cvrfok',
+            action='store',
+            choices=['checkok', 'cvrfok']
+        )
 
     def do_command(self, params):
         """
@@ -48,10 +54,9 @@ class StartCommand(BaseCommand):
         """
         issue_id = params.releaseIssueID
         gitee_id = params.giteeid
-
-        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get('start'))
+        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get(params.type))
         if not permission:
             return
 
-        print("start part", issue_id, gitee_id)
-        StartEntrance().get_pkg_list()
+        print("release part", issue_id, gitee_id)
+        ReleaseEntrance().release_check()

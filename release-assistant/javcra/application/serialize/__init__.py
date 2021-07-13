@@ -10,7 +10,3 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
-"""
-Description: get 'check test' restult, it would be yes or no
-Class:
-"""

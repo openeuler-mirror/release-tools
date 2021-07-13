@@ -12,7 +12,7 @@
 # ******************************************************************************/
 """
 Description: modify commands entrance
-Class:
+Class: ModifyEntrance
 """
 
 class ModifyEntrance():
@@ -20,13 +20,13 @@ class ModifyEntrance():
     Description: distributing different modify commands to correct methods
     Attributes:
     """
-    def __init__(self):
+    def __init__(self, issue_id, issue_list):
         """
         Description: Instance initialization
         """
         pass
 
-    def modify_cve_list(self):
+    def modify_cve_list(self, action):
         """
         Description: add or delete cve issue list
         Args:
@@ -36,10 +36,10 @@ class ModifyEntrance():
         Raises:
 
         """
-        print("add/delete cve check list!")
+        print("add/delete cve checklist!")
         pass
 
-    def modify_bugfix_list(self):
+    def modify_bugfix_list(self, action):
         """
         Description: add or delete bugfix issue list
         Args:
@@ -49,5 +49,18 @@ class ModifyEntrance():
         Raises:
 
         """
-        print("add/delete cve check list!")
+        print("add/delete bugix checklist!")
+        pass
+
+    def modify_release_result(self, action):
+        """
+        Description: add or delete final release issue list
+        Args:
+
+        Returns:
+
+        Raises:
+
+        """
+        print("modify final release list!")
         pass

@@ -14,3 +14,15 @@
 Description: General constants
 Class:
 """
+
+PERMISSION_DICT = {
+    'cve': 'security',
+    'bug': 'developer',
+    'status': 'all',
+    'requires': 'developer',
+    'test': 'test',
+    'release': 'all',
+    'checkok': 'all',
+    'cvrfok': 'security',
+    'start': 'manager'
+}

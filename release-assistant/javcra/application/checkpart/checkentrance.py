@@ -12,23 +12,26 @@
 # ******************************************************************************/
 """
 Description: check commands entrance
-Class:
+Class: CheckEntrance
 """
 
 class CheckEntrance():
     """
     Description: distributing different check commands to correct methods
     Attributes:
+        issue_id: the openEuler update version issue ID
+        type_status: the check status which would be yes, no or None type
     """
-    def __init__(self):
+    def __init__(self, issue_id, type_status):
         """
         Description: Instance initialization
         """
-        pass
+        self.issue_id = issue_id
+        self.type_status = type_status
 
     def check_pkglist_result(self):
         """
-        Description: check cve or bugfix list ok or not ok
+        Description: check cve or bugfix list yes or no
         Args:
 
         Returns:
@@ -41,7 +44,7 @@ class CheckEntrance():
 
     def check_test_result(self):
         """
-        Description: check test result ok or not ok
+        Description: check test result yes or no
         Args:
 
         Returns:
@@ -75,5 +78,5 @@ class CheckEntrance():
         Raises:
 
         """
-        print("get the issue status list!")
+        print("get the requires result!")
         pass
