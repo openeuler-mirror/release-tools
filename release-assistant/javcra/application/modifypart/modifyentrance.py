@@ -11,56 +11,97 @@
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
 """
-Description: modify commands entrance
-Class: ModifyEntrance
+Description: modify entrance
 """
 
-class ModifyEntrance():
-    """
-    Description: distributing different modify commands to correct methods
-    Attributes:
-    """
-    def __init__(self, issue_id, issue_list):
-        """
-        Description: Instance initialization
-        """
-        pass
 
-    def modify_cve_list(self, action):
+class Operation:
+
+    def init_md_table(self, t_head=None, body_info=None, block_title="", prefix="", suffix=""):
         """
-        Description: add or delete cve issue list
+        initialize the md table of specific part like "CVE part" for release issue
+
         Args:
-
-        Returns:
+            t_head: table head. e.g.["CVE", "仓库", "status"]
+            body_info: table body
+            block_title: title of block. e.g: "## 1.CVE"
+            prefix: table prefix. e.g.: "修复cve xx 个"
+            suffix: characters between the end of the table and the next block.
 
         Raises:
-
-        """
-        print("add/delete cve checklist!")
-        pass
-
-    def modify_bugfix_list(self, action):
-        """
-        Description: add or delete bugfix issue list
-        Args:
+            ValueError: The thead must be a list or tuple
 
         Returns:
-
-        Raises:
-
+            str: markdown table str
         """
-        print("add/delete bugix checklist!")
-        pass
+        if not t_head:
+            t_head = []
 
-    def modify_release_result(self, action):
+        if not isinstance(t_head, (list, tuple)):
+            raise ValueError("The thead must be a list or tuple.")
+
+        thead_str = "|" + "|".join(t_head) + "|\n" + "|-" * len(t_head) + "|\n"
+        tbody_str = self.convert_md_table_format(t_head, body_info)
+        table_str = thead_str + tbody_str
+
+        if prefix:
+            table_str = prefix + "\n" + table_str
+        return "\n".join([block_title, table_str, suffix])
+
+    @staticmethod
+    def convert_md_table_format(table_head, issue_info):
         """
-        Description: add or delete final release issue list
+        get markdown table body according to table_head and issue_info
+
         Args:
+            table_head: table head like ["issue","status",...]
+            issue_info: issue info like [{"issue":...,"status":...},....]
 
         Returns:
+            markdown table str
+        """
+        if not issue_info:
+            issue_info = []
 
-        Raises:
+        table_body_str = ""
+        for info in issue_info:
+            table_body_str += "|"
+            for word in table_head:
+                table_body_str += str(info.get(word)) + "|"
+
+            table_body_str += "\n"
+        return table_body_str
+
+    @staticmethod
+    def get_block_lines(issue_body_lines, start_flag, end_flag):
+        """
+        get block lines of specific part from issue body lines
+
+        Args:
+            issue_body_lines: the lines of issue body
+            start_flag: start flag of specific part, like ""## 1、CVE""
+            end_flag: end flag of specific part, like "\n"
+
+        Returns: block_lines: lines in specific part like "cve part"
+                 block_start_idx: start index of specific part
+                 block_end_idx: end index of specific part
 
         """
-        print("modify final release list!")
-        pass
+        block_start_idx = 0
+        block_end_idx = 0
+        flag = 0
+
+        # get block lines
+        for idx, line in enumerate(issue_body_lines):
+            if not flag and line.startswith(start_flag):
+                # represents the start of block
+                flag = 1
+                block_start_idx = idx
+                continue
+
+            if flag:
+                if line == end_flag:
+                    block_end_idx = idx
+                    break
+
+        return issue_body_lines[block_start_idx:block_end_idx], block_start_idx, block_end_idx
