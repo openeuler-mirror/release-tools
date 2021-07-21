@@ -106,11 +106,11 @@ class HwCould:
             for root, dirs, files in os.walk(local_path, topdown=False):
                 for name in files:
                     pa = os.path.join(root, name)
-                    if choice:
+                    if choice == "build_result":
                         if "failed_log" in pa and choice in pa:
                             paths.append(pa)
                     else:
-                        if "failed_log" in pa or "failed_install_pkglist" in pa:
+                        if "failed_log" in pa and choice in pa or "failed_install_pkglist" in pa:
                             paths.append(pa)
             return paths
         return paths
@@ -160,7 +160,7 @@ class HwCould:
         if choice == "build_result":
             paths = self.os_list_dir(local_path, choice=choice)
         else:
-            paths = self.os_list_dir(local_path)
+            paths = self.os_list_dir(local_path, choice=choice)
         if not paths:
             logging.error("The file to be uploaded was not retrieved locally")
             return False
