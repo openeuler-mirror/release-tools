@@ -13,7 +13,7 @@
 """
 file archiving
 """
-
+import argparse
 import os
 import logging
 import traceback
@@ -40,7 +40,7 @@ def catch_error(func):
     return inner
 
 
-class HwCould:
+class ObsCould:
     """
     file archiving
     Attributes:
@@ -133,6 +133,27 @@ class HwCould:
             return True
         return False
 
+    def delete_dir(self, prefix_name):
+        """
+        Bulk delete file objects
+        Args:
+            prefix_name: prefix_name
+
+        Returns:
+            True: All deleted successfully
+            False: An object exists that failed to delete
+        """
+        path_names = self.bucket_list(prefix_name)
+        fails = []
+        for path_name in path_names:
+            res = self.delete_file(path_name)
+            if not res:
+                logging.error("Failed to delete {} file".format(path_name))
+                fails.append(path_name)
+        if fails:
+            return False
+        return True
+
     @catch_error
     def run(self, branch, choice, local_path, prefix_name="install_build_log"):
         """
@@ -152,11 +173,6 @@ class HwCould:
         if not self.bucket_exist():
             logging.info("The bucket does not exist")
             return False
-        path_names = self.bucket_list("{}/{}/{}".format(prefix_name, branch, choice))
-        for path_name in path_names:
-            res = self.delete_file(path_name)
-            if not res:
-                logging.error("Failed to delete %s file" % path_name)
         if choice == "build_result":
             paths = self.os_list_dir(local_path, choice=choice)
         else:
@@ -169,3 +185,20 @@ class HwCould:
             res = self.upload_dir("{}/{}{}".format(prefix_name, branch, path_name), path)
             if not res:
                 logging.error("%s File upload failed" % path_name)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Cloud archive file upload")
+    parser.add_argument("--choice", required=True, type=str,
+                        help="Select the logs for uploading build_result and check_result")
+    parser.add_argument("--ak", required=True, type=str, help="access key id")
+    parser.add_argument("--sk", required=True, type=str, help="secret access key")
+    parser.add_argument("--branch", required=True, type=str, help="Name of the branch")
+    parser.add_argument("--path", required=True, type=str, help="The directory above which log logs are stored")
+    args = parser.parse_args()
+    server = 'obs.cn-north-4.myhuaweicloud.com'
+    bucketName = "release-tools"
+    client = ObsCould(args.ak, args.sk, server, bucketName)
+    if not client.bucket_exist():
+        print("bucket not exist.")
+    client.run(args.branch, args.choice, args.path)
