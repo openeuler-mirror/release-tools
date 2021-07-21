@@ -13,18 +13,38 @@
 """
 Verification method
 """
+from javcra.common.constant import PERMISSION_INFO
+from javcra.common.constant import COMMAND_DICT
 
-def validate_giteeid(issue_id, gitee_id, person):
+
+def validate_giteeid(user, comment, personnel_authority: dict, permission_info=PERMISSION_INFO,
+                     command_dict=COMMAND_DICT):
     """
     Description: get the ID with comment permission from the corresponding Gitee Issue
     Args:
-        issue_id: the openEuler update version issue ID
-        gitee_id: the gitee id who comment this issue
+        user: user id
+        comment: Related permissions
+        personnel_authority: personnel authority e.g:{'developer': 'xxx', 'version_manager':'xxx'}
+        permission_info: permission info
+        command_dict: command info
+    Returns:
+        True or False
     """
-
-    permission = True
-    print("the permission is given to : " + person)
-    if not permission:
-        print("Sorry! You do not have the permisson to commit this operation.")
+    try:
+        user_id = ''
+        user_list = command_dict[comment]
+        for key, value in personnel_authority.items():
+            if user in value and key in user_list:
+                user_id = key
+        if comment not in permission_info[user_id]:
+            print("{} has no operation authority:{}, please contact the administrator".format(user, comment))
+            return False
+    except KeyError as error:
+        print("Error:{}\n Gitee id:{}\n Comment:{}\n Related permissions: {} \n"
+              "please check and try again".format(error, user, comment, permission_info))
+        return False
+    except AttributeError as error:
+        print("Personnel Authority:{} \n User id:{} \n Comment:{} \n {}".format(personnel_authority, user, comment,
+                                                                                error))
         return False
     return True

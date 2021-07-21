@@ -26,3 +26,38 @@ PERMISSION_DICT = {
     'cvrfok': 'security',
     'start': 'manager'
 }
+PERMISSION_INFO = {
+    "version_manager": ["/start-update", "/no-release"],
+    "security_committee": [
+        "/add-cve",
+        "/delete-cve",
+        "/cve-ok",
+        "/check-ok",
+        "/cvrf-ok",
+    ],
+    "developer": [
+        "/add-bugfix",
+        "/delete-bugfix",
+        "/bugfix-ok",
+        "/check-status",
+        "/get-requires",
+    ],
+    "tester": ["/test-ok"],
+    "tc": ["/check-ok"],
+    "release": ["/check-ok"],
+    "qa": ["/check-ok"]
+}
+
+COMMAND_DICT = {
+    "/start-update": ["version_manager"],
+    "/no-release": ["version_manager"],
+    "/get-requires": ["developer"],
+    "/check-status": ["developer"],
+    "/test-ok": ["tester"],
+    "/check-ok": ["tc", "qa", "release", "security_committee"],
+    "/cvrf-ok": ["security_committee"],
+    "/add-cve": ["security_committee"],
+    "/add-bugfix": ["developer"],
+    "/delete-cve": ["security_committee"],
+    "/delete-bugfix": ["developer"],
+}
