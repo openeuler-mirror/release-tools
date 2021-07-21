@@ -200,5 +200,5 @@ if __name__ == '__main__':
     bucketName = "release-tools"
     client = ObsCould(args.ak, args.sk, server, bucketName)
     if not client.bucket_exist():
-        print("bucket not exist.")
+        logging.error("bucket not exist.")
     client.run(args.branch, args.choice, args.path)
