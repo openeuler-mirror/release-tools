@@ -99,9 +99,8 @@ class Operation:
                 block_start_idx = idx
                 continue
 
-            if flag:
-                if line == end_flag:
-                    block_end_idx = idx
-                    break
+            if flag and line == end_flag:
+                block_end_idx = idx
+                break
 
         return issue_body_lines[block_start_idx:block_end_idx], block_start_idx, block_end_idx
