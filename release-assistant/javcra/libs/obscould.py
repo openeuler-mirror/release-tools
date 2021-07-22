@@ -95,24 +95,22 @@ class ObsCould:
         return False
 
     @staticmethod
-    def os_list_dir(local_path, choice=""):
+    def os_list_dir(local_path, choice):
         """
         Go through local folders
         Returns:
             paths: A collection of folders that meet the requirements
+            choice: build_result or check_result
         """
         paths = []
-        if os.path.isdir(local_path):
-            for root, dirs, files in os.walk(local_path, topdown=False):
-                for name in files:
-                    pa = os.path.join(root, name)
-                    if choice == "build_result":
-                        if "failed_log" in pa and choice in pa:
-                            paths.append(pa)
-                    else:
-                        if "failed_log" in pa and choice in pa or "failed_install_pkglist" in pa:
-                            paths.append(pa)
+        find_path = os.path.join(local_path, choice)
+        if choice == "check_result" and os.path.exists(os.path.join(find_path, "failed_install_pkglist")):
+            paths.append(os.path.join(find_path, "failed_install_pkglist"))
+        find_path = os.path.join(find_path, "failed_log")
+        if not os.path.exists(find_path):
             return paths
+        for log_dir, dirs, files in os.walk(find_path, topdown=False):
+            paths.extend([os.path.join(log_dir, file) for file in files])
         return paths
 
     def upload_dir(self, path_name, path):
