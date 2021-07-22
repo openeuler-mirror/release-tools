@@ -88,7 +88,7 @@ class Issue:
 
         url_dict = {
             "pkg_issues_url": url_prefix + "repos/{owner}/{repo}/issues?access_token={access_token}&state=open"
-            .format(owner=self.owner, repo=kwargs.get("pkg"), access_token=self.token),
+                .format(owner=self.owner, repo=kwargs.get("pkg"), access_token=self.token),
 
             "issue_url": url_prefix + "enterprises/{enterprise}/issues/{number}?access_token={token}".format(
                 enterprise=kwargs.get("owner"), number=kwargs.get("issue_id"), token=self.token),
@@ -329,3 +329,65 @@ class Issue:
         else:
             logger.error("empty content of issue body, can not get update list.")
             return []
+
+    def parsing_body(self):
+        """
+        Unable to get the issue description information
+        Returns:
+            personnel_authority: A dictionary of personnel information
+        """
+        body = self.get_issue_body(self.issue_num)
+        if not body:
+            logger.error("The description information of issue is not obtained")
+            return {}
+        personnel_access = {}
+        try:
+            for con in body.split("\n"):
+                colon = "：" if "：" in con else ":"
+                if "版本经理{colon}".format(colon=colon) in con:
+                    personnel_access["version_manager"] = con.split(colon)[1]
+                elif "安全委员会{colon}".format(colon=colon) in con:
+                    personnel_access["security_committee"] = con.split(colon)[1]
+                elif "开发人员{colon}".format(colon=colon) in con:
+                    personnel_access["developer"] = con.split(colon)[1]
+                elif "测试人员{colon}".format(colon=colon) in con:
+                    personnel_access["tester"] = con.split(colon)[1]
+                elif "tc{colon}".format(colon=colon) in con:
+                    personnel_access["tc"] = con.split(colon)[1]
+                elif "release{colon}".format(colon=colon) in con:
+                    personnel_access["release"] = con.split(colon)[1]
+                elif "qa{colon}".format(colon=colon) in con:
+                    personnel_access["qa"] = con.split(colon)[1]
+            return personnel_access
+        except IndexError as error:
+            logger.error("Error parsing issue description information %s" % error)
+            return {}
+
+    def people_review(self):
+        """
+        relevant people make an issue comment
+        Returns:
+            True: Let the relevant person issue comment successfully
+            False: Let the relevant person issue comment failed
+        """
+        personnel_access = self.parsing_body()
+        if not personnel_access:
+            logger.error("No personnel information obtained,"
+                         "Please make sure that there is personnel information in the issue")
+            return False
+        roles = ["tc", "release", "qa", "security_committee", "version_manager"]
+        names = list()
+        for role in roles:
+            if personnel_access.get(role):
+                names.append(personnel_access.get(role))
+        if not names:
+            logger.error("No information of relevant personnel was obtained")
+            return False
+        personnels = " ".join(set([personnel for name in names for personnel in
+                                   name.strip().split()])).replace("\n", "")
+        res = self.create_issue_comment(personnels + "  Please review this issue")
+        if not res:
+            logger.error("Failed to notify relevant personnel for comment")
+            return False
+        logger.info("%s Relevant personnel have been informed for comment" % personnels)
+        return True
