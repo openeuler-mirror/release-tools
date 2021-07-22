@@ -183,6 +183,9 @@ class ObsCould:
             res = self.upload_dir("{}/{}{}".format(prefix_name, branch, path_name), path)
             if not res:
                 logging.error("%s File upload failed" % path_name)
+        if paths:
+            return False
+        return True
 
 
 if __name__ == '__main__':
