@@ -14,37 +14,28 @@
 Verification method
 """
 from javcra.common.constant import PERMISSION_INFO
-from javcra.common.constant import COMMAND_DICT
 
 
-def validate_giteeid(user, comment, personnel_authority: dict, permission_info=PERMISSION_INFO,
-                     command_dict=COMMAND_DICT):
+def validate_giteeid(giteeid, comment, personnel_authority):
     """
-    Description: get the ID with comment permission from the corresponding Gitee Issue
+    Personnel permission verification
     Args:
-        user: user id
-        comment: Related permissions
-        personnel_authority: personnel authority e.g:{'developer': 'xxx', 'version_manager':'xxx'}
-        permission_info: permission info
-        command_dict: command info
+        giteeid: personnel
+        comment: comment
+        personnel_authority: personnel authority
+
     Returns:
-        True or False
+        True: Authentication is successful
+        False: Validation fails
     """
-    try:
-        user_id = ''
-        user_list = command_dict[comment]
-        for key, value in personnel_authority.items():
-            if user in value and key in user_list:
-                user_id = key
-        if comment not in permission_info[user_id]:
-            print("{} has no operation authority:{}, please contact the administrator".format(user, comment))
-            return False
-    except KeyError as error:
-        print("Error:{}\n Gitee id:{}\n Comment:{}\n Related permissions: {} \n"
-              "please check and try again".format(error, user, comment, permission_info))
-        return False
-    except AttributeError as error:
-        print("Personnel Authority:{} \n User id:{} \n Comment:{} \n {}".format(personnel_authority, user, comment,
-                                                                                error))
-        return False
-    return True
+    roles = []
+    for role, person in personnel_authority.items():
+        if giteeid in person:
+            roles.append(role)
+    comments = []
+    for role in roles:
+        if comment in PERMISSION_INFO[role]:
+            comments.append(comment)
+    if comments:
+        return True
+    return False

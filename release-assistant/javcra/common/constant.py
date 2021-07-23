@@ -47,17 +47,3 @@ PERMISSION_INFO = {
     "release": ["/check-ok"],
     "qa": ["/check-ok"]
 }
-
-COMMAND_DICT = {
-    "/start-update": ["version_manager"],
-    "/no-release": ["version_manager"],
-    "/get-requires": ["developer"],
-    "/check-status": ["developer"],
-    "/test-ok": ["tester"],
-    "/check-ok": ["tc", "qa", "release", "security_committee"],
-    "/cvrf-ok": ["security_committee"],
-    "/add-cve": ["security_committee"],
-    "/add-bugfix": ["developer"],
-    "/delete-cve": ["security_committee"],
-    "/delete-bugfix": ["developer"],
-}
