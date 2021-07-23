@@ -375,6 +375,7 @@ class Issue:
             logger.error("No personnel information obtained,"
                          "Please make sure that there is personnel information in the issue")
             return False
+        # To use it, go to @tc\release\qa\security_committee\version_manager after check -ok
         roles = ["tc", "release", "qa", "security_committee", "version_manager"]
         names = list()
         for role in roles:
