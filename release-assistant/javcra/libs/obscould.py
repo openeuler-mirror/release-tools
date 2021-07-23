@@ -48,7 +48,6 @@ class ObsCould:
         SK: SK in the access key.An empty string by default indicates an anonymous user.
         server: The service address to connect to OBS
         bucketName: bucket Name
-        path: Archive file path
     """
 
     def __init__(self, AK, SK, server, bucketName):
@@ -65,6 +64,7 @@ class ObsCould:
             If it exists, it returns true and if it does not, it returns false
         """
         resp = self.obs_client.headBucket(self.bucketName)
+        # If the response status code is less than 300, the operation succeeds
         if resp.status < 300:
             return True
         return False
@@ -77,6 +77,7 @@ class ObsCould:
         """
         files = list()
         resp = self.obs_client.listObjects(self.bucketName, prefix=prefix_name)
+        # If the response status code is less than 300, the operation succeeds
         if resp.status < 300:
             for content in resp.body.contents:
                 files.append(content.key)
@@ -90,6 +91,7 @@ class ObsCould:
               If it exists, it returns true and if it does not, it returns false
         """
         resp = self.obs_client.deleteObject(self.bucketName, path_name)
+        # If the response status code is less than 300, the operation succeeds
         if resp.status < 300:
             return True
         return False
@@ -127,6 +129,7 @@ class ObsCould:
         headers = PutObjectHeader()
         headers.contentType = 'text/plain'
         resp = self.obs_client.putFile(self.bucketName, path_name, path, headers=headers)
+        # If the response status code is less than 300, the operation succeeds
         if resp.status < 300:
             return True
         return False
@@ -163,27 +166,27 @@ class ObsCould:
             local_path: Locally generate the directory above the log folder
 
         Returns:
-
+            True: The operation success
+            False: The operation failure
         """
         if choice not in ["build_result", "check_result"]:
             logging.error("The choice must be between build_result and check_result")
             return False
         if not self.bucket_exist():
-            logging.info("The bucket does not exist")
+            logging.error("The bucket does not exist")
             return False
-        if choice == "build_result":
-            paths = self.os_list_dir(local_path, choice=choice)
-        else:
-            paths = self.os_list_dir(local_path, choice=choice)
+        paths = self.os_list_dir(local_path, choice=choice)
         if not paths:
             logging.error("The file to be uploaded was not retrieved locally")
             return False
+        failed_upload_file = []
         for path in paths:
             path_name = path.replace(str(local_path), "")
             res = self.upload_dir("{}/{}{}".format(prefix_name, branch, path_name), path)
             if not res:
                 logging.error("%s File upload failed" % path_name)
-        if paths:
+                failed_upload_file.append(path)
+        if failed_upload_file:
             return False
         return True
 
