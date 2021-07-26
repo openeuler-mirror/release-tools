@@ -155,6 +155,51 @@ class ObsCould:
             return False
         return True
 
+    def down_load_file(self, object_key, file_path):
+        """
+        Download files from the cloud
+        Args:
+            object_key: Name of the object under the bucket
+            file_path: Local file path
+
+        Returns:
+            True or False
+        """
+        resp = self.obs_client.getObject(self.bucketName, object_key, downloadPath=file_path)
+        # If the response status code is less than 300, the operation succeeds
+        if resp.status < 300:
+            return True
+        return False
+
+    def parse_install_build_content(self, branch, prefix_name="install_build_log"):
+        """
+        parse install build content
+        Args:
+            branch: branch
+            prefix_name: prefix_name
+
+        Returns:
+            content_list: content list
+        """
+        content_list = {}
+        build_res = set()
+        install_res = set()
+        build_list = self.bucket_list("{}/{}/build_result/failed_log".format(prefix_name, branch))
+
+        install_list = self.bucket_list("{}/{}/check_result/failed_log".format(prefix_name, branch))
+
+        for build_con in build_list:
+            if build_con.split("/")[3]:
+                build_res.add(build_con.split("/")[3])
+        content_list["build_list"] = build_res
+
+        for install_con in install_list:
+            if install_con.split("/")[3]:
+                install_res.add(install_con.split("/")[3])
+        content_list["install_list"] = install_res
+
+        return content_list
+
     @catch_error
     def run(self, branch, choice, local_path, prefix_name="install_build_log"):
         """
