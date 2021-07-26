@@ -149,7 +149,7 @@ class ObsCloud:
         for path_name in path_names:
             res = self.delete_file(path_name)
             if not res:
-                logging.error("Failed to delete {} file".format(path_name))
+                logging.error("Failed to delete %s file" % path_name)
                 fails.append(path_name)
         if fails:
             return False
