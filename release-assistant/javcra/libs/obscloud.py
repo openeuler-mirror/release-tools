@@ -40,7 +40,7 @@ def catch_error(func):
     return inner
 
 
-class ObsCould:
+class ObsCloud:
     """
     file archiving
     Attributes:
@@ -50,12 +50,12 @@ class ObsCould:
         bucketName: bucket Name
     """
 
-    def __init__(self, AK, SK, server, bucketName):
+    def __init__(self, ak, sk, server_name, bucket_name):
         """
         Initialize attribute
         """
-        self.obs_client = ObsClient(access_key_id=AK, secret_access_key=SK, server=server)
-        self.bucketName = bucketName
+        self.obs_client = ObsClient(access_key_id=ak, secret_access_key=sk, server=server_name)
+        self.bucketName = bucket_name
 
     def bucket_exist(self):
         """
