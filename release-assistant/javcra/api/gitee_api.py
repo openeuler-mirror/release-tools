@@ -342,22 +342,21 @@ class Issue:
             return {}
         personnel_access = {}
         try:
+            role_dict = {
+                "version_manager": "版本经理",
+                "security_committee": "安全委员会",
+                "developer": "开发人员",
+                "tester": "测试人员",
+                "tc": "tc",
+                "release": "release",
+                "qa": "qa",
+            }
             for con in body.split("\n"):
                 colon = "：" if "：" in con else ":"
-                if "版本经理{colon}".format(colon=colon) in con:
-                    personnel_access["version_manager"] = con.split(colon)[1]
-                elif "安全委员会{colon}".format(colon=colon) in con:
-                    personnel_access["security_committee"] = con.split(colon)[1]
-                elif "开发人员{colon}".format(colon=colon) in con:
-                    personnel_access["developer"] = con.split(colon)[1]
-                elif "测试人员{colon}".format(colon=colon) in con:
-                    personnel_access["tester"] = con.split(colon)[1]
-                elif "tc{colon}".format(colon=colon) in con:
-                    personnel_access["tc"] = con.split(colon)[1]
-                elif "release{colon}".format(colon=colon) in con:
-                    personnel_access["release"] = con.split(colon)[1]
-                elif "qa{colon}".format(colon=colon) in con:
-                    personnel_access["qa"] = con.split(colon)[1]
+                for role, people in role_dict.items():
+                    if people not in con:
+                        continue
+                    personnel_access[role] = con.split(colon)[1]
             return personnel_access
         except IndexError as error:
             logger.error("Error parsing issue description information %s" % error)
