@@ -247,7 +247,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     server = 'obs.cn-north-4.myhuaweicloud.com'
     bucketName = "release-tools"
-    client = ObsCould(args.ak, args.sk, server, bucketName)
+    client = ObsCloud(args.ak, args.sk, server, bucketName)
     if not client.bucket_exist():
         logging.error("bucket not exist.")
     client.run(args.branch, args.choice, args.path)
