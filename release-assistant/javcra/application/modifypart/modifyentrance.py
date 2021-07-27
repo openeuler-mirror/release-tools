@@ -21,6 +21,7 @@ class Operation:
     """
     md operation for release issue description
     """
+
     def init_md_table(self, t_head=None, body_info=None, block_title="", prefix="", suffix=""):
         """
         initialize the md table of specific part like "CVE part" for release issue
@@ -127,8 +128,11 @@ class Operation:
         fix_line_idx = -1
         count = 0
         for index, cur_line in enumerate(block_lines):
+            # demo: 修复CVE xxx个
             if cur_line.startswith("修复"):
                 fix_line_idx = index
+
+            # demo: |#I41R53:CVE-2021-36222|krb5|
             if cur_line.startswith("|#"):
                 count += 1
 
@@ -157,7 +161,7 @@ class Operation:
         for key, value in append_info.items():
             # if the issue to be added is already in the table, then continue
             if any([key in line for line in block_lines]):
-                logger.warning("issue {} already exists in body content.".format(key))
+                logger.info("issue {} already exists in body content.".format(key))
                 continue
 
             # if the requires info to be added already in the table, then not add
@@ -193,8 +197,8 @@ class Operation:
         if to_remove_idx != -1:
             block_lines.pop(to_remove_idx)
         else:
-            logger.warning("The issue {} does not exist in release issue description."
-                           "".format(delete_issue))
+            logger.info("The issue {} does not exist in release issue description."
+                        "".format(delete_issue))
         return block_lines
 
     def get_new_body_lines(self, old_issue_body, append_info=None, delete_issue=None,
