@@ -244,10 +244,12 @@ if __name__ == '__main__':
     parser.add_argument("--sk", required=True, type=str, help="secret access key")
     parser.add_argument("--branch", required=True, type=str, help="Name of the branch")
     parser.add_argument("--path", required=True, type=str, help="The directory above which log logs are stored")
+    parser.add_argument("--server", required=False, type=str, default="obs.cn-north-4.myhuaweicloud.com",
+                        help="Name of the branch")
+    parser.add_argument("--bucketname", required=False, type=str, default="release-tools", help="Name of the branch")
     args = parser.parse_args()
-    server = 'obs.cn-north-4.myhuaweicloud.com'
-    bucketName = "release-tools"
-    client = ObsCloud(args.ak, args.sk, server, bucketName)
-    if not client.bucket_exist():
-        logging.error("bucket not exist.")
-    client.run(args.branch, args.choice, args.path)
+    client = ObsCloud(args.ak, args.sk, args.server, args.bucketname)
+    res = client.run(args.branch, args.choice, args.path)
+    if not res:
+        logging.error("File archiving failure")
+    logging.info("File archiving succeeded")
