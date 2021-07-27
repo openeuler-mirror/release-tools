@@ -32,10 +32,9 @@ def validate_giteeid(giteeid, comment, personnel_authority):
     for role, person in personnel_authority.items():
         if giteeid in person:
             roles.append(role)
-    comments = []
     for role in roles:
         if comment in PERMISSION_INFO[role]:
-            comments.append(comment)
-    if comments:
-        return True
+            return True
     return False
+
+
