@@ -43,6 +43,7 @@ class CheckTest(Issue):
             return {}
         personnel_access = {}
         try:
+            # The body is a string describing the issue, which becomes a list after split
             for con in body.split("\n"):
                 colon = "：" if "：" in con else ":"
                 for role, people in ROLE_DICT.items():
