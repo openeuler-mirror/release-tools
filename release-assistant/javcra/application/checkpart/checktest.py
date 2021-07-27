@@ -15,6 +15,7 @@ Description: get 'check test' restult, it would be yes or no
 Class:
 """
 from javcra.api.gitee_api import Issue
+from javcra.common.constant import ROLE_DICT
 from javcra.libs.log import logger
 
 
@@ -26,6 +27,7 @@ class CheckTest(Issue):
         token: token
         issue_num: issue_num
     """
+
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
 
@@ -41,18 +43,9 @@ class CheckTest(Issue):
             return {}
         personnel_access = {}
         try:
-            role_dict = {
-                "version_manager": "版本经理",
-                "security_committee": "安全委员会",
-                "developer": "开发人员",
-                "tester": "测试人员",
-                "tc": "tc",
-                "release": "release",
-                "qa": "qa",
-            }
             for con in body.split("\n"):
                 colon = "：" if "：" in con else ":"
-                for role, people in role_dict.items():
+                for role, people in ROLE_DICT.items():
                     if people not in con:
                         continue
                     personnel_access[role] = con.split(colon)[1]
@@ -74,7 +67,9 @@ class CheckTest(Issue):
                          "Please make sure that there is personnel information in the issue")
             return False
         # To use it, go to @tc\release\qa\security_committee\version_manager after check -ok
-        roles = ["tc", "release", "qa", "security_committee", "version_manager"]
+        # Unneeded personnel
+        other_roles = ["developer", "tester"]
+        roles = list(set(list(ROLE_DICT.keys())).difference(set(other_roles)))
         names = list()
         for role in roles:
             if personnel_access.get(role):
