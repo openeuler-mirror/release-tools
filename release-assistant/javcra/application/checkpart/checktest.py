@@ -14,3 +14,79 @@
 Description: get 'check test' restult, it would be yes or no
 Class:
 """
+from javcra.api.gitee_api import Issue
+from javcra.libs.log import logger
+
+
+class CheckTest(Issue):
+    """
+    check test
+    Attributes:
+        repo: repo
+        token: token
+        issue_num: issue_num
+    """
+    def __init__(self, repo, token, issue_num):
+        super().__init__(repo, token, issue_num)
+
+    def parsing_body(self):
+        """
+        Unable to get the issue description information
+        Returns:
+            personnel_authority: A dictionary of personnel information
+        """
+        body = self.get_issue_body(self.issue_num)
+        if not body:
+            logger.error("The description information of issue is not obtained")
+            return {}
+        personnel_access = {}
+        try:
+            role_dict = {
+                "version_manager": "版本经理",
+                "security_committee": "安全委员会",
+                "developer": "开发人员",
+                "tester": "测试人员",
+                "tc": "tc",
+                "release": "release",
+                "qa": "qa",
+            }
+            for con in body.split("\n"):
+                colon = "：" if "：" in con else ":"
+                for role, people in role_dict.items():
+                    if people not in con:
+                        continue
+                    personnel_access[role] = con.split(colon)[1]
+            return personnel_access
+        except IndexError as error:
+            logger.error("Error parsing issue description information %s" % error)
+            return {}
+
+    def people_review(self):
+        """
+        relevant people make an issue comment
+        Returns:
+            True: Let the relevant person issue comment successfully
+            False: Let the relevant person issue comment failed
+        """
+        personnel_access = self.parsing_body()
+        if not personnel_access:
+            logger.error("No personnel information obtained,"
+                         "Please make sure that there is personnel information in the issue")
+            return False
+        # To use it, go to @tc\release\qa\security_committee\version_manager after check -ok
+        roles = ["tc", "release", "qa", "security_committee", "version_manager"]
+        names = list()
+        for role in roles:
+            if personnel_access.get(role):
+                names.append(personnel_access.get(role))
+        if not names:
+            logger.error("No information of relevant personnel was obtained")
+            return False
+        personnels = " ".join(set([personnel for name in names for personnel in
+                                   name.strip().split()])).replace("\n", "")
+        res = self.create_issue_comment(personnels + "  Please review this issue")
+        if not res:
+            logger.error("Failed to notify relevant personnel for comment")
+            return False
+        logger.info("%s Relevant personnel have been informed for comment" % personnels)
+        return True
