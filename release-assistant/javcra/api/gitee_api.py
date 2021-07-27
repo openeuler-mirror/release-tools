@@ -71,7 +71,7 @@ class Issue:
 
             retry_count = 0
             while resp.status_code == 408 and retry_count < retry:
-                logger.error("api request timed out, retrying %s.", retry_count)
+                logger.error("api request timed out, retrying %s." % retry_count)
                 resp = requests.request(method.lower(), url, params=params, headers=self.headers)
                 retry_count += 1
 
@@ -297,7 +297,7 @@ class Issue:
         if block_res:
             pkg_set.update(self.__process_body_for_pkglist(block_res[block_name], block_name=block_name))
         else:
-            logger.warning("not found %s content when getting pkglist from specific part.", block_name)
+            logger.warning("not found %s content when getting pkglist from specific part." % block_name)
         return pkg_set
 
     def get_update_list(self):
