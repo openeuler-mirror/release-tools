@@ -28,12 +28,8 @@ def validate_giteeid(giteeid, comment, personnel_authority):
         True: Authentication is successful
         False: Validation fails
     """
-    roles = []
     for role, person in personnel_authority.items():
-        if giteeid in person:
-            roles.append(role)
-    for role in roles:
-        if comment in PERMISSION_INFO[role]:
+        if giteeid in person and comment in PERMISSION_INFO[role]:
             return True
     return False
 
