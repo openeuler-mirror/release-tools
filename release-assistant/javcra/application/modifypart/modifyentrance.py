@@ -13,8 +13,12 @@
 """
 Description: modify entrance
 """
+import datetime
 import re
+
+from javcra.api.gitee_api import Issue
 from javcra.libs.log import logger
+from javcra.libs.read_excel import download_file
 
 
 class Operation:
@@ -235,3 +239,31 @@ class Operation:
         final_lines = self.modify_block_lines(issue_body_lines, block_lines, block_start_idx,
                                               block_end_idx)
         return "".join(final_lines)
+
+
+class CveIssue(Issue, Operation):
+    """
+    operation cVE in issue
+    """
+    def __init__(self, repo, token, issue_num):
+        super().__init__(repo, token, issue_num)
+
+    def get_cve_list(self):
+        """
+        Obtain cVE-related information provided by the CVE-Manager.
+        Returns:
+            cve_list: Data in Excel in dictionary form
+        """
+
+        now_time = datetime.date(datetime.date.today().year, datetime.date.today().month,
+                                 datetime.date.today().day).strftime('%Y-%m-%d')
+        branch_name = self.get_update_issue_branch()
+        if not branch_name:
+            logger.error("Failed to obtain branch")
+            return []
+        cve_list = download_file(now_time, "{}_updateinfo.xlsx".format(branch_name))
+        if not cve_list:
+            logger.error("Failed to obtain CVE data")
+            return []
+        return cve_list
+
