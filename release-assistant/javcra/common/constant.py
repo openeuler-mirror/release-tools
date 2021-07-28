@@ -33,5 +33,6 @@ ROLE_DICT = {
     "tester": "测试人员",
     "tc": "tc",
     "release": "release",
-    "qa": "qa",
+    "qa": "qa"
 }
+ROLES = ["tc", "release", "qa", "security_committee", "version_manager"]

@@ -16,6 +16,7 @@ Class:
 """
 from javcra.api.gitee_api import Issue
 from javcra.common.constant import ROLE_DICT
+from javcra.common.constant import ROLES
 from javcra.libs.log import logger
 
 
@@ -43,7 +44,8 @@ class CheckTest(Issue):
             return {}
         personnel_access = {}
         try:
-            # The body is a string describing the issue, which becomes a list after split
+            # get personnel permissions from the issue body and get personnel
+            # permissions dict from the issue body, like{"version_manager":"@xxx", ...}
             for con in body.split("\n"):
                 colon = "：" if "：" in con else ":"
                 for role, people in ROLE_DICT.items():
@@ -68,11 +70,8 @@ class CheckTest(Issue):
                          "Please make sure that there is personnel information in the issue")
             return False
         # To use it, go to @tc\release\qa\security_committee\version_manager after check -ok
-        # Unneeded personnel
-        other_roles = ["developer", "tester"]
-        roles = list(set(list(ROLE_DICT.keys())).difference(set(other_roles)))
         names = list()
-        for role in roles:
+        for role in ROLES:
             if personnel_access.get(role):
                 names.append(personnel_access.get(role))
         if not names:
