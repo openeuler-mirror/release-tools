@@ -27,8 +27,7 @@ PERMISSION_DICT = {
     'start': 'manager'
 }
 
-AK = ""
-SK = ""
+
 CVE_MANAGE_SERVER = "obs.ap-southeast-1.myhuaweicloud.com"
 CVE_MANAGE_BUCKET_NAME = "openeuler-cve-cvrf"
 CVE_UPDATE_INFO = "cve-manager-updateinfo"
