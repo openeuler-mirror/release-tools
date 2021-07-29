@@ -256,8 +256,8 @@ class CveIssue(Issue, Operation):
         Args:
             user_email (str): gitee user email
         """
-        start_time = datetime.date(datetime.date.today().year, datetime.date.today().month - 3,
-                                   datetime.date.today().day).strftime('%Y-%m-%d')
+        # Take cVE within three months
+        start_time = (datetime.datetime.now() + datetime.timedelta(days=-90)).strftime('%Y-%m-%d')
         email_name = user_email.split('@')[0]
         url = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData?startTime=" + \
               start_time + "&typeName=" + email_name
@@ -266,6 +266,7 @@ class CveIssue(Issue, Operation):
             if response.status_code == 200:
                 logger.info("The CVE-Manager is triggered to generate the CVE list and archive the cVE list")
                 return True
+            logger.error("The CVE List file fails to be archived")
             return False
         except requests.RequestException as error:
             logger.error("The CVE List file fails to be archived because %s " % error)
