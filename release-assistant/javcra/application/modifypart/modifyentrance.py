@@ -266,6 +266,7 @@ class CveIssue(Issue, Operation):
             if response.status_code == 200:
                 logger.info("The CVE-Manager is triggered to generate the CVE list and archive the cVE list")
                 return True
+            return False
         except requests.RequestException as error:
             logger.error("The CVE List file fails to be archived because %s " % error)
             return False
