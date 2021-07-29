@@ -20,12 +20,10 @@ import uuid
 
 import pandas as pd
 
-from javcra.api.obscloud import ObsCloud, catch_error
-from javcra.common.constant import AK
+from javcra.api.obscloud import ObsCloud
 from javcra.common.constant import CVE_MANAGE_BUCKET_NAME
 from javcra.common.constant import CVE_MANAGE_SERVER
 from javcra.common.constant import CVE_UPDATE_INFO
-from javcra.common.constant import SK
 from javcra.libs.log import logger
 
 
@@ -74,7 +72,7 @@ def download_file(now_time, file_name):
     file_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     temp_path = os.path.join(file_path, "tmp{}".format(str(uuid.uuid1().hex)))
     try:
-        obs_client = ObsCloud(AK, SK, CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
+        obs_client = ObsCloud(os.getenv("ak"), os.getenv("sk"), CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
         # Determine whether the file to be downloaded is in the object of the bucket
         files = obs_client.bucket_list("{}/{}".format(CVE_UPDATE_INFO, now_time))
         file_object = ""

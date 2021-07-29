@@ -16,6 +16,8 @@ Description: modify entrance
 import datetime
 import re
 
+import requests
+
 from javcra.api.gitee_api import Issue
 from javcra.libs.log import logger
 from javcra.libs.read_excel import download_file
@@ -247,6 +249,26 @@ class CveIssue(Issue, Operation):
     """
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
+
+    def create_cve_list(self, user_email):
+        """
+        The CVE-Manager is triggered to generate the CVE list and archive it
+        Args:
+            user_email (str): gitee user email
+        """
+        start_time = datetime.date(datetime.date.today().year, datetime.date.today().month - 3,
+                                   datetime.date.today().day).strftime('%Y-%m-%d')
+        email_name = user_email.split('@')[0]
+        url = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData?startTime=" + \
+              start_time + "&typeName=" + email_name
+        try:
+            response = requests.get(url, headers=self.headers)
+            if response.status_code == 200:
+                logger.info("The CVE-Manager is triggered to generate the CVE list and archive the cVE list")
+                return True
+        except requests.RequestException as error:
+            logger.error("The CVE List file fails to be archived because %s " % error)
+            return False
 
     def get_cve_list(self):
         """
