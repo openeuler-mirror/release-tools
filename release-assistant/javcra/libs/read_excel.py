@@ -62,7 +62,6 @@ def read_excel_xlsx(curr_path):
     return out_list
 
 
-@catch_error
 def download_file(now_time, file_name):
     """
     download file content
@@ -74,23 +73,34 @@ def download_file(now_time, file_name):
     """
     file_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     temp_path = os.path.join(file_path, "tmp{}".format(str(uuid.uuid1().hex)))
-    obs_client = ObsCloud(AK, SK, CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
-    files = obs_client.bucket_list("{}/{}".format(CVE_UPDATE_INFO, now_time))
-    file_object = ""
-    for file in files:
-        if "{CVE_UPDATE_INFO}/{date}/{title}".format(
-                CVE_UPDATE_INFO=CVE_UPDATE_INFO, date=now_time, title=file_name) == file:
-            file_object = file
-    if not file_object:
-        logger.error("The object does not exist in the bucket")
+    try:
+        obs_client = ObsCloud(AK, SK, CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
+        # Determine whether the file to be downloaded is in the object of the bucket
+        files = obs_client.bucket_list("{}/{}".format(CVE_UPDATE_INFO, now_time))
+        file_object = ""
+        for file in files:
+            if "{CVE_UPDATE_INFO}/{date}/{title}".format(
+                    CVE_UPDATE_INFO=CVE_UPDATE_INFO, date=now_time, title=file_name) == file:
+                file_object = file
+        if not file_object:
+            logger.error("The object does not exist in the bucket")
+            return []
+        if not os.path.exists(temp_path):
+            os.mkdir(temp_path)
+        file_path = os.path.join(temp_path, 'Temporary_Files.xlsx')
+
+        # The download file
+        res = obs_client.down_load_file(file_object, file_path)
+        if not res:
+            logger.error("The object does not exist in the bucket")
+            return []
+
+        # Read the file contents in Excel
+        cve_list = read_excel_xlsx(file_path)
+        return cve_list
+    except (OSError, FileNotFoundError) as error:
+        logger.error(error)
         return []
-    if not os.path.exists(temp_path):
-        os.mkdir(temp_path)
-    file_path = os.path.join(temp_path, 'Temporary_Files.xlsx')
-    res = obs_client.down_load_file(file_object, file_path)
-    if not res:
-        logger.error("The object does not exist in the bucket")
-        return []
-    cve_list = read_excel_xlsx(file_path)
-    shutil.rmtree(temp_path)
-    return cve_list
+    finally:
+        if temp_path:
+            shutil.rmtree(temp_path)
