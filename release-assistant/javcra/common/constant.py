@@ -26,6 +26,27 @@ PERMISSION_DICT = {
     'cvrfok': 'security',
     'start': 'manager'
 }
+PERMISSION_INFO = {
+    "version_manager": ["/start-update", "/no-release"],
+    "security_committee": [
+        "/add-cve",
+        "/delete-cve",
+        "/cve-ok",
+        "/check-ok",
+        "/cvrf-ok",
+    ],
+    "developer": [
+        "/add-bugfix",
+        "/delete-bugfix",
+        "/bugfix-ok",
+        "/check-status",
+        "/get-requires",
+    ],
+    "tester": ["/test-ok"],
+    "tc": ["/check-ok"],
+    "release": ["/check-ok"],
+    "qa": ["/check-ok"]
+}
 ROLE_DICT = {
     "version_manager": "版本经理",
     "security_committee": "安全委员会",
