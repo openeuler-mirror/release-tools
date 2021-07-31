@@ -88,7 +88,7 @@ class Issue:
 
         url_dict = {
             "pkg_issues_url": url_prefix + "repos/{owner}/{repo}/issues?access_token={access_token}&state=open"
-            .format(owner=self.owner, repo=kwargs.get("pkg"), access_token=self.token),
+                .format(owner=self.owner, repo=kwargs.get("pkg"), access_token=self.token),
 
             "issue_url": url_prefix + "enterprises/{enterprise}/issues/{number}?access_token={token}".format(
                 enterprise=kwargs.get("owner"), number=kwargs.get("issue_id"), token=self.token),
