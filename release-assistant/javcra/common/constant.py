@@ -31,3 +31,13 @@ PERMISSION_DICT = {
 CVE_MANAGE_SERVER = "obs.ap-southeast-1.myhuaweicloud.com"
 CVE_MANAGE_BUCKET_NAME = "openeuler-cve-cvrf"
 CVE_UPDATE_INFO = "cve-manager-updateinfo"
+ROLE_DICT = {
+    "version_manager": "版本经理",
+    "security_committee": "安全委员会",
+    "developer": "开发人员",
+    "tester": "测试人员",
+    "tc": "tc",
+    "release": "release",
+    "qa": "qa"
+}
+ROLES = ["tc", "release", "qa", "security_committee", "version_manager"]
