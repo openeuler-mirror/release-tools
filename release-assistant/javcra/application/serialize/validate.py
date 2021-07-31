@@ -13,18 +13,24 @@
 """
 Verification method
 """
+from javcra.common.constant import PERMISSION_INFO
 
-def validate_giteeid(issue_id, gitee_id, person):
+
+def validate_giteeid(giteeid, comment, personnel_authority):
     """
-    Description: get the ID with comment permission from the corresponding Gitee Issue
+    Personnel permission verification
     Args:
-        issue_id: the openEuler update version issue ID
-        gitee_id: the gitee id who comment this issue
-    """
+        giteeid: personnel
+        comment: comment
+        personnel_authority: personnel authority
 
-    permission = True
-    print("the permission is given to : " + person)
-    if not permission:
-        print("Sorry! You do not have the permisson to commit this operation.")
-        return False
-    return True
+    Returns:
+        True: Authentication is successful
+        False: Validation fails
+    """
+    for role, person in personnel_authority.items():
+        if giteeid in person and comment in PERMISSION_INFO.get(role):
+            return True
+    return False
+
+
