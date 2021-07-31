@@ -317,7 +317,7 @@ class Operation(Issue):
             str: score value or no score
         """
         # to match openEuler评分 for cve
-        euler_score_pattern = re.compile( "openEuler评分.*?(?P<euler_score>[0-9\.]+)", flags=re.S)
+        euler_score_pattern = re.compile("openEuler评分.*?(?P<euler_score>[0-9\.]+)", flags=re.S)
         euler_res = euler_score_pattern.search(body_str)
 
         if euler_res:
