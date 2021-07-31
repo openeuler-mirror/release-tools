@@ -256,7 +256,7 @@ class CveIssue(Issue, Operation):
         Args:
             user_email (str): gitee user email
         """
-        # Take cVE within three months
+        # Take cve within three months
         start_time = (datetime.datetime.now() + datetime.timedelta(days=-90)).strftime('%Y-%m-%d')
         email_name = user_email.split('@')[0]
         url = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData?startTime=" + \
