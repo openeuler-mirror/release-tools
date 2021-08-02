@@ -242,7 +242,7 @@ class Operation(Issue):
             new body lines
         """
         if not any((append_info, delete_issue, update_info)):
-            raise ValueError("append_info、 delete_info or update info need at least one")
+            raise ValueError("append_info or delete_info or update info need at least one")
 
         issue_body_lines = old_issue_body.splitlines(keepends=True)
         block_lines, block_start_idx, block_end_idx = self.get_block_lines(
