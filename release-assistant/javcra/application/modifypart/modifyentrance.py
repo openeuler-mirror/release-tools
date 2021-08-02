@@ -14,10 +14,12 @@
 Description: modify entrance
 """
 import re
+
+from javcra.api.gitee_api import Issue
 from javcra.libs.log import logger
 
 
-class Operation:
+class Operation(Issue):
     """
     md operation for release issue description
     """
@@ -201,8 +203,26 @@ class Operation:
                         "".format(delete_issue))
         return block_lines
 
+    @staticmethod
+    def __update_info_in_specific_block(update_info, block_lines):
+        """
+        update info in specific block for update operation
+        Args:
+            update_info: issue to update
+            block_lines: lines of specific block
+        Returns:
+            block_lines: new lines of specific block
+        """
+        for issue_id, issue_content in update_info.items():
+            if not issue_content:
+                continue
+            for idx, ln in enumerate(block_lines):
+                if issue_id in ln:
+                    block_lines[idx] = issue_content
+        return block_lines
+
     def get_new_body_lines(self, old_issue_body, append_info=None, delete_issue=None,
-                           start_flag="", end_flag="\n"):
+                           update_info=None, start_flag="", end_flag="\n"):
         """
         generating a new issue body by add and delete operation
 
@@ -210,6 +230,7 @@ class Operation:
             old_issue_body: old issue body
             append_info: issues to add. like {issue_id:{"repo":..,"status":...},...}
             delete_issue: issues to delete.
+            update_info: issues to update.
             start_flag: start flag of block
             end_flag: end flag of block.
 
@@ -220,8 +241,8 @@ class Operation:
         Returns:
             new body lines
         """
-        if not any((append_info, delete_issue)):
-            raise ValueError("append_info and delete_info need at least one")
+        if not any((append_info, delete_issue, update_info)):
+            raise ValueError("append_info、 delete_info or update info need at least one")
 
         issue_body_lines = old_issue_body.splitlines(keepends=True)
         block_lines, block_start_idx, block_end_idx = self.get_block_lines(
@@ -229,9 +250,30 @@ class Operation:
 
         if append_info:
             block_lines = self.__append_info_in_specific_block(append_info, block_lines)
-        else:
+        elif delete_issue:
             block_lines = self.__delete_issue_in_specific_block(delete_issue, block_lines)
+        else:
+            block_lines = self.__update_info_in_specific_block(update_info, block_lines)
 
         final_lines = self.modify_block_lines(issue_body_lines, block_lines, block_start_idx,
                                               block_end_idx)
         return "".join(final_lines)
+
+    def create_jenkins_comment(self, jenkins_result):
+        """method to create issue comment
+
+        Args:
+            jenkins_result (str): jenkins result
+        Returns:
+            comment_res: Success and failure in creating a comment
+        """
+        if not jenkins_result:
+            logger.error("Failed to get Jenkins compile result")
+            return
+        th = ["name", "status", "output"]
+        comment = self.init_md_table(th, jenkins_result)
+        if not comment:
+            return
+        comment_res = self.create_issue_comment(comment)
+        return comment_res
+
