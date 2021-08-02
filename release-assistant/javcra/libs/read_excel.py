@@ -100,5 +100,5 @@ def download_file(now_time, file_name):
         logger.error(error)
         return []
     finally:
-        if temp_path:
+        if os.path.exists(temp_path):
             shutil.rmtree(temp_path)
