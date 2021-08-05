@@ -275,7 +275,7 @@ class Operation(Issue):
         comment = self.init_md_table(th, jenkins_result)
         comment_res = self.create_issue_comment(comment)
         if not comment_res:
-            logger.error("Failed to create Jenkins' comment message")
+            logger.error("Failed to create Jenkins' comment message %s" % comment)
             return
         return comment_res
 
