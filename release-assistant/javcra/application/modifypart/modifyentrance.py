@@ -272,9 +272,10 @@ class Operation(Issue):
             return
         th = ["name", "status", "output"]
         comment = self.init_md_table(th, jenkins_result)
-        if not comment:
-            return
         comment_res = self.create_issue_comment(comment)
+        if not comment_res:
+            logger.error("Failed to create Jenkins' comment message")
+            return
         return comment_res
 
     def add_for_specific_block(self, body_str, issues, table_head, block_name):
