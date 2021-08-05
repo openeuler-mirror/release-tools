@@ -90,7 +90,7 @@ def download_file(now_time, file_name):
         # The download file
         res = obs_client.down_load_file(file_object, file_path)
         if not res:
-            logger.error("The object does not exist in the bucket")
+            logger.error("The object does not exist in the bucket %s" % file_path)
             return []
 
         # Read the file contents in Excel

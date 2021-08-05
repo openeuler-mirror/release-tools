@@ -245,7 +245,7 @@ class Operation(Issue):
 
 class CveIssue(Operation):
     """
-    operation cVE in issue
+    operation CVE in issue
     """
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
@@ -264,9 +264,9 @@ class CveIssue(Operation):
         try:
             response = requests.get(url, headers=self.headers)
             if response.status_code == 200:
-                logger.info("The CVE-Manager is triggered to generate the CVE list and archive the cVE list")
+                logger.info("The CVE-Manager is triggered to generate the CVE list and archive the CVE list")
                 return True
-            logger.error("The CVE List file fails to be archived")
+            logger.error("The CVE List file fails to be archived %s" % response.status_code)
             return False
         except requests.RequestException as error:
             logger.error("The CVE List file fails to be archived because %s " % error)
