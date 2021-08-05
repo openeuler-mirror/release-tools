@@ -219,17 +219,18 @@ class Operation(Issue):
             for idx, ln in enumerate(block_lines):
                 if issue_id in ln:
                     block_lines[idx] = issue_content
+                    break
         return block_lines
 
-    def get_new_body_lines(self, old_issue_body, append_info=None, delete_issue=None,
+    def get_new_body_lines(self, old_issue_info, append_info=None, delete_info=None,
                            update_info=None, start_flag="", end_flag="\n"):
         """
-        generating a new issue body by add and delete operation
+        generating a new issue body by add or delete or update operation
 
         Args:
-            old_issue_body: old issue body
+            old_issue_info: old issue info
             append_info: issues to add. like {issue_id:{"repo":..,"status":...},...}
-            delete_issue: issues to delete.
+            delete_info: issues to delete.
             update_info: issues to update.
             start_flag: start flag of block
             end_flag: end flag of block.
@@ -241,17 +242,17 @@ class Operation(Issue):
         Returns:
             new body lines
         """
-        if not any((append_info, delete_issue, update_info)):
+        if not any((append_info, delete_info, update_info)):
             raise ValueError("append_info or delete_info or update info need at least one")
 
-        issue_body_lines = old_issue_body.splitlines(keepends=True)
+        issue_body_lines = old_issue_info.splitlines(keepends=True)
         block_lines, block_start_idx, block_end_idx = self.get_block_lines(
             issue_body_lines, start_flag, end_flag)
 
         if append_info:
             block_lines = self.__append_info_in_specific_block(append_info, block_lines)
-        elif delete_issue:
-            block_lines = self.__delete_issue_in_specific_block(delete_issue, block_lines)
+        elif delete_info:
+            block_lines = self.__delete_issue_in_specific_block(delete_info, block_lines)
         else:
             block_lines = self.__update_info_in_specific_block(update_info, block_lines)
 
