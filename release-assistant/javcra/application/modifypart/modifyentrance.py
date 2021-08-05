@@ -342,7 +342,7 @@ class Operation(Issue):
         # delete each issue and then get new issue body lines
         for issue_id in issues:
             res_str = self.get_new_body_lines(
-                res_str, delete_issue=issue_id, start_flag=block_name, end_flag="\n"
+                res_str, delete_info=issue_id, start_flag=block_name, end_flag="\n"
             )
         return res_str
 
