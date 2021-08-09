@@ -295,6 +295,24 @@ class CveIssue(Operation):
             logger.error("The CVE List file fails to be archived because %s " % error)
             return False
 
+    def get_cve_list(self):
+        """
+        Obtain cVE-related information provided by the CVE-Manager.
+        Returns:
+            cve_list: Data in Excel in dictionary form
+        """
+        now_time = datetime.date(datetime.date.today().year, datetime.date.today().month,
+                                 datetime.date.today().day).strftime('%Y-%m-%d')
+        branch_name = self.get_update_issue_branch()
+        if not branch_name:
+            logger.error("Failed to obtain branch")
+            return []
+        cve_list = download_file(now_time, "{}_updateinfo.xlsx".format(branch_name))
+        if not cve_list:
+            logger.error("Failed to obtain CVE data")
+            return []
+        return cve_list
+
     def create_jenkins_comment(self, jenkins_result):
         """method to create issue comment
 
