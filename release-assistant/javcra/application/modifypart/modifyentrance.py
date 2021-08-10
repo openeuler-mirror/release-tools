@@ -544,6 +544,56 @@ class CveIssue(Operation):
         raise NotImplementedError
 
 
+class CveIssue(Operation):
+    """
+    operation CVE in issue
+    """
+
+    def __init__(self, repo, token, issue_num):
+        super().__init__(repo, token, issue_num)
+
+    def create_cve_list(self, user_email):
+        """
+        The CVE-Manager is triggered to generate the CVE list and archive it
+        Args:
+            user_email (str): gitee user email
+        """
+        # Take cve within three months
+        start_time = (datetime.datetime.now() + datetime.timedelta(days=-90)).strftime('%Y-%m-%d')
+        email_name = user_email.split('@')[0]
+        url = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData?startTime=" + \
+              start_time + "&typeName=" + email_name
+        try:
+            response = requests.get(url, headers=self.headers)
+            if response.status_code == 200:
+                logger.info("The CVE-Manager is triggered to generate the CVE list and archive the CVE list")
+                return True
+            logger.error("The CVE List file fails to be archived %s" % response.status_code)
+            return False
+        except requests.RequestException as error:
+            logger.error("The CVE List file fails to be archived because %s " % error)
+            return False
+
+    def get_cve_list(self):
+        """
+        Obtain cVE-related information provided by the CVE-Manager.
+        Returns:
+            cve_list: Data in Excel in dictionary form
+        """
+
+        now_time = datetime.date(datetime.date.today().year, datetime.date.today().month,
+                                 datetime.date.today().day).strftime('%Y-%m-%d')
+        branch_name = self.get_update_issue_branch()
+        if not branch_name:
+            logger.error("Failed to obtain branch")
+            return []
+        cve_list = download_file(now_time, "{}_updateinfo.xlsx".format(branch_name))
+        if not cve_list:
+            logger.error("Failed to obtain CVE data")
+            return []
+        return cve_list
+
+
 class BugFixIssue(Operation):
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
