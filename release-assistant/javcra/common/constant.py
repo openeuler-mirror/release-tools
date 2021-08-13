@@ -61,3 +61,10 @@ ROLE_DICT = {
     "qa": "qa"
 }
 ROLES = ["tc", "release", "qa", "security_committee", "version_manager"]
+
+# jenkins job path prefix
+JENKINS_PATH_PREFIX = "function-item/release-manager/release_tools"
+
+AARCH_FRAME = "aarch64"
+
+X86_FRAME = "x86_64"
