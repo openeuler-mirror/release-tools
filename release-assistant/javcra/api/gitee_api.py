@@ -95,7 +95,7 @@ class Issue:
 
             "create_issue_url": url_prefix + "repos/{owner}/issues".format(owner=kwargs.get("owner")),
 
-            "update_issue_url": url_prefix + "repos/{owner}/issues/{number}".format(owner=self.owner,
+            "update_issue_url": url_prefix + "repos/{owner}/issues/{number}".format(owner=kwargs.get("owner"),
                                                                                     number=self.issue_num),
 
             "create_comment_url": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments".format(
@@ -178,7 +178,7 @@ class Issue:
             created_issue_id = resp_content["number"]
             return created_issue_id
 
-    def update_issue(self, **kwargs):
+    def update_issue(self, owner="openEuler", **kwargs):
         """
         call the gitee api to update the issue for release issue
 
@@ -186,7 +186,7 @@ class Issue:
             update issue result
         """
         params = self.__generate_request_params(**kwargs)
-        update_issue_url = self.__get_gitee_api_url("update_issue_url")
+        update_issue_url = self.__get_gitee_api_url("update_issue_url", owner=owner)
 
         return self.gitee_api_request(
             "patch",

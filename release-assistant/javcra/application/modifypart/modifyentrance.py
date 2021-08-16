@@ -15,9 +15,7 @@ Description: modify entrance
 """
 import datetime
 import re
-
 import requests
-
 from javcra.api.gitee_api import Issue
 from javcra.libs.log import logger
 from javcra.libs.read_excel import download_file
@@ -544,6 +542,29 @@ class CveIssue(Operation):
             return []
         return cve_list
 
+    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+        """
+        get new issue body for cve block operation
+
+        Args:
+            operate: operate str. Defaults to "init".expected [init,add,delete]
+            body_str: gitee issue body str.
+            issues: issue id list.
+
+        Returns:
+            new issue body str
+        """
+        if not issues:
+            issues = []
+
+        t_head = ["CVE", "仓库", "status", "score", "version", "abi是否变化"]
+        block_name = "## 1、CVE"
+        cve_list = [] if operate != "init" else self.get_cve_list()
+        cve_prefix = "修复CVE {}个".format(len(cve_list))
+
+        return self.operate_for_specific_block(t_head, block_name, prefix=cve_prefix, operate=operate,
+                                               table_body=cve_list, body_str=body_str, issues=issues)
+
 
 class BugFixIssue(Operation):
     def __init__(self, repo, token, issue_num):
@@ -577,6 +598,46 @@ class BugFixIssue(Operation):
             table_body=bugfix_list,
             body_str=body_str,
             issues=issues,
+        )
+
+
+class RequiresIssue(Operation):
+    def __init__(self, repo, token, issue_num):
+        super().__init__(repo, token, issue_num)
+
+    @staticmethod
+    def get_requires_list():
+        """
+        get requires list
+
+        Returns:
+            requires list, like [{"仓库":..., "引入原因":...},...]
+        """
+        # since the code that generates pkg requires is not in the repository,
+        # so it is assumed that the return value is []
+        return []
+
+    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+        """
+        get new issue body for requires block operation
+
+        Args:
+            operate. Defaults to "init".expected [init,add,delete]
+            body_str: gitee issue body str.
+            issues: issue id list.
+
+        Returns:
+            new issue body str
+        """
+
+        t_head = ["仓库", "引入原因"]
+        block_name = "## 3、requires"
+
+        if operate not in ["init", "add"]:
+            raise ValueError("requires block operation only allowed in ['init', 'add'].")
+
+        return self.operate_for_specific_block(
+            t_head, block_name, operate=operate, body_str=body_str, issues=self.get_requires_list()
         )
 
 
@@ -634,3 +695,168 @@ class RemainIssue(Operation):
             body_str=body_str,
             issues=issues
         )
+
+
+class IssueOperation(Operation):
+    def __init__(self, repo, token, issue_num):
+        super().__init__(repo, token, issue_num)
+        args = (repo, token, issue_num)
+        self.cve_object = CveIssue(*args)
+        self.bugfix_object = BugFixIssue(*args)
+        self.requires_object = RequiresIssue(*args)
+        self.install_build_object = InstallBuildIssue(*args)
+        self.remain_object = RemainIssue(*args)
+
+    def init_repo_table(self):
+        """
+        init repo table
+
+        return:
+            md table str
+        """
+        block_name = "# 2、测试repo源"
+        table_head = ["repo_type", "url"]
+        table_str = self.init_md_table(table_head)
+        return block_name + table_str
+
+    def create_install_build_issue(self, failed_type, pkg_name):
+        """
+        create issue when install failed or build failed
+
+        Args:
+            failed_type: install failed or build failed
+            pkg_name: package name
+
+        return:
+            issue_id
+        """
+        branch = self.get_update_issue_branch()
+        if not branch:
+            logger.error("failed to create install build issue because the release issue branch not found.")
+            return None
+
+        params = {
+            "repo": pkg_name,
+            "owner": self.owner,
+            "access_token": self.token,
+            "title": "[{brh}] {pkg} {verify_type} failed".format(pkg=pkg_name, verify_type=failed_type, brh=branch)
+        }
+
+        command = ""
+        if failed_type == "build":
+            command = "rpmbuild --rebuild"
+        elif failed_type == "install":
+            command = "yum install"
+
+        params["body"] = """Branch: {brh}
+                   Component: {pkg}
+                   Instructions to reappear the problem : {command}
+                   Expected results: successfully {_type}
+                   Actual results: failed to {_type}""".format(brh=branch, pkg=pkg_name, command=command,
+                                                               _type=failed_type)
+        issue_id = self.create_issue(params)
+        return issue_id
+
+    def get_update_version_info(self):
+        """
+        Get update target and personnel information
+
+        Returns:
+            update version info
+        """
+        issue_body = self.get_issue_body(self.issue_num)
+        if issue_body:
+            if re.compile("1、CVE.*?\\n\\n", re.S).search(issue_body):
+                logger.error("Issue has CVE content, maybe you already have operated start update command.")
+                return None
+            if not issue_body.endswith("\n"):
+                issue_body += "\n"
+            return issue_body
+        return None
+
+    def init_issue_description(self):
+        """
+        initialize the release issue body when commenting "start-update" command
+
+        Returns:
+            True or False
+        """
+        update_info = self.get_update_version_info()
+        if not update_info:
+            return False
+
+        release_range = "# 1、发布范围\n"
+        cve_block_str = self.cve_object.init()
+        bugfix_block_str = self.bugfix_object.init()
+        requires_block_str = self.requires_object.init()
+        repo_block_str = self.init_repo_table()
+        install_build_block_str = self.install_build_object.init()
+        remain_block_str = self.remain_object.init()
+
+        body_str = (
+                update_info
+                + release_range
+                + cve_block_str
+                + bugfix_block_str
+                + requires_block_str
+                + repo_block_str
+                + install_build_block_str
+                + remain_block_str
+        )
+
+        return True if self.update_issue(body=body_str) else False
+
+    def update_issue_description(self, operate, update_block, issues=None):
+        """
+        to update issue description
+
+        Args:
+            operate: operate in {add,delete}.
+            update_block: block name, like cve or bugfix,
+            issues: issue list.
+
+        returns:
+                True or False
+        """
+        if not issues:
+            issues = []
+
+        old_body_str = self.get_issue_body(self.issue_num)
+        if not old_body_str:
+            logger.error("The current issue has no content, please start first.")
+            return False
+
+        # get the block object, like cve block object, and then call "get_new_issue_body" for this block
+        operate_object = getattr(self, update_block + "_object")
+        body_str = operate_object.get_new_issue_body(
+            operate=operate, body_str=old_body_str, issues=issues)
+
+        if not body_str:
+            logger.error("after update issue description, got empty new release issue body.")
+            return False
+
+        return True if self.update_issue(body=body_str) else False
+
+    def operate_release_issue(self, operation="init", operate_block=None, issues=None):
+        """
+        modify entrance of the release issue
+
+        Args:
+            operation: {init,add,delete}
+            operate_block: block to operate
+                           when the operation is "init", operate_block=None
+            issues: issue list
+
+        Returns:
+            True or False
+        """
+        try:
+            if operation == "init":
+                return self.init_issue_description()
+            else:
+                return self.update_issue_description(
+                    operate=operation, update_block=operate_block, issues=issues
+                )
+        except ValueError as e:
+            logger.error(e)
+            return False
