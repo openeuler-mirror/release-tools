@@ -99,7 +99,7 @@ class Issue:
                                                                                     number=self.issue_num),
 
             "create_comment_url": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments".format(
-                owner=self.owner, repo=self.repo, number=self.issue_num)
+                owner=kwargs.get("owner"), repo=self.repo, number=self.issue_num)
         }
 
         return url_dict.get(url_name)
@@ -201,7 +201,7 @@ class Issue:
         Args:
             comment (str): comment str
         """
-        url = self.__get_gitee_api_url("create_comment_url")
+        url = self.__get_gitee_api_url("create_comment_url", owner="openeuler")
         params = {"body": comment, "access_token": self.token}
         resp = self.gitee_api_request("post", url=url, params=params)
         return resp

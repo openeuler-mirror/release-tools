@@ -207,15 +207,35 @@ class Operation(Issue):
                         "".format(delete_issue))
         return block_lines
 
-    def get_new_body_lines(self, old_issue_body, append_info=None, delete_issue=None,
-                           start_flag="", end_flag="\n"):
+    @staticmethod
+    def __update_info_in_specific_block(update_info, block_lines):
         """
-        generating a new issue body by add and delete operation
+        update info in specific block for update operation
+        Args:
+            update_info: issue to update
+            block_lines: lines of specific block
+        Returns:
+            block_lines: new lines of specific block
+        """
+        for issue_id, issue_content in update_info.items():
+            if not issue_content:
+                continue
+            for idx, ln in enumerate(block_lines):
+                if issue_id in ln:
+                    block_lines[idx] = issue_content
+                    break
+        return block_lines
+
+    def get_new_body_lines(self, old_issue_info, append_info=None, delete_info=None,
+                           update_info=None, start_flag="", end_flag="\n"):
+        """
+        generating a new issue body by add or delete or update operation
 
         Args:
-            old_issue_body: old issue body
+            old_issue_info: old issue info
             append_info: issues to add. like {issue_id:{"repo":..,"status":...},...}
-            delete_issue: issues to delete.
+            delete_info: issues to delete.
+            update_info: issues to update.
             start_flag: start flag of block
             end_flag: end flag of block.
 
@@ -226,21 +246,43 @@ class Operation(Issue):
         Returns:
             new body lines
         """
-        if not any((append_info, delete_issue)):
-            raise ValueError("append_info and delete_info need at least one")
+        if not any((append_info, delete_info, update_info)):
+            raise ValueError("append_info or delete_info or update info need at least one")
 
-        issue_body_lines = old_issue_body.splitlines(keepends=True)
+        issue_body_lines = old_issue_info.splitlines(keepends=True)
         block_lines, block_start_idx, block_end_idx = self.get_block_lines(
             issue_body_lines, start_flag, end_flag)
 
         if append_info:
             block_lines = self.__append_info_in_specific_block(append_info, block_lines)
+        elif delete_info:
+            block_lines = self.__delete_issue_in_specific_block(delete_info, block_lines)
         else:
-            block_lines = self.__delete_issue_in_specific_block(delete_issue, block_lines)
+            block_lines = self.__update_info_in_specific_block(update_info, block_lines)
 
         final_lines = self.modify_block_lines(issue_body_lines, block_lines, block_start_idx,
                                               block_end_idx)
         return "".join(final_lines)
+
+    def create_jenkins_comment(self, jenkins_result):
+        """method to create issue comment
+
+        Args:
+            jenkins_result: jenkins result
+        Returns:
+            comment_res: Success and failure in creating a comment
+        """
+        for result in jenkins_result:
+            if not result.get("status"):
+                logger.error("failed to obtain jenkins_result")
+                return
+        th = ["name", "status", "output"]
+        comment = self.init_md_table(th, jenkins_result)
+        comment_res = self.create_issue_comment(comment)
+        if not comment_res:
+            logger.error("Failed to create Jenkins' comment message %s" % comment)
+            return
+        return comment_res
 
     def add_for_specific_block(self, body_str, issues, table_head, block_name):
         """
@@ -305,7 +347,7 @@ class Operation(Issue):
         # delete each issue and then get new issue body lines
         for issue_id in issues:
             res_str = self.get_new_body_lines(
-                res_str, delete_issue=issue_id, start_flag=block_name, end_flag="\n"
+                res_str, delete_info=issue_id, start_flag=block_name, end_flag="\n"
             )
         return res_str
 
