@@ -10,3 +10,6 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+import os
+
+os.environ['user_email'] = "guoxiaoqi2@huawei.com"

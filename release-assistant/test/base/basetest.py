@@ -13,15 +13,39 @@
 """
 The test base class contains some public methods
 """
+import sys
 import argparse
 import json
-import sys
 import unittest
+from unittest.mock import PropertyMock
 from io import StringIO
-
+from unittest import mock
+from pathlib import Path
+from javcra.cli.base import BaseCommand
 import requests
 
-from javcra.cli.base import BaseCommand
+MOCK_DATA_FOLDER = str(Path(Path(__file__).parents[1], "mock_data"))
+
+
+class MakeObject(object):
+    """
+    class for object
+    """
+
+    def __init__(self, dict_):
+        self.__dict__.update(dict_)
+
+
+def dict_2_object(content):
+    """
+    dict to object
+    Args:
+        content: content type:dict
+
+    Returns:
+
+    """
+    return json.loads(json.dumps(content), object_hook=MakeObject)
 
 
 class TestBase(unittest.TestCase):
@@ -81,6 +105,12 @@ class TestBase(unittest.TestCase):
             self.expect_str.strip().strip("\r\n").strip("\n"), self.print_result
         )
 
+    def _to_add_cleanup(self):
+        """_to_add_cleanup"""
+        for single_patcher in self._to_clean_patchers:
+            self.addCleanup(single_patcher.stop)
+        self._to_clean_patchers.clear()
+
     def tearDown(self) -> None:
         """
         The last to run after each test case is run
@@ -93,10 +123,11 @@ class TestBase(unittest.TestCase):
         BaseCommand.subparsers = BaseCommand.parser.add_subparsers(
             help="Just A Very Convenient Release Assistant"
         )
+        self._to_add_cleanup()
         return super().tearDown()
 
 
-class TestMixin(unittest.TestCase):
+class TestMixin(TestBase):
     """
     The base class that sends HTTP requests
     """
@@ -192,3 +223,142 @@ class TestMixin(unittest.TestCase):
             issuse_describe_url, data=dict(access_token=access_token)
         ).get("body")
         return describe
+
+    def _create_patch(self, mock_name, **kwargs):
+        """create_patch
+
+        Args:
+            method_name (str): mock method or attribute name
+
+        """
+        patcher = mock.patch(mock_name, **kwargs)
+        self._to_clean_patchers.append(patcher)
+        patcher.start()
+
+    def _to_update_kw_and_make_mock(self, mock_name, effect=None, **kwargs):
+        """_to_update_kw_and_make_mock
+
+        Args:
+            mock_name (str):  mock method or attribute name
+            effect (Any, optional): side effect value
+
+        Raises:
+            ValueError: If the side_effect or return_value keyword parameter is not specified
+                        specify the value of the effect keyword parameter
+        """
+        if "side_effect" not in kwargs and "return_value" not in kwargs:
+            if effect is None:
+                raise ValueError(
+                    "If the side_effect or return_value keyword parameter is not specified,"
+                    "specify the value of the effect keyword parameter"
+                )
+            kwargs["side_effect"] = effect
+        self._create_patch(mock_name, **kwargs)
+
+    @staticmethod
+    def read_file_content(path, folder=MOCK_DATA_FOLDER, is_json=True):
+        """to read file content if is_json is True return dict else return str
+
+        Args:
+            path: Absolute path or the path relative of mock_data folder
+            is_json: if is True use json.loads to load data else not load
+
+        Raises:
+            FileNotFoundError:Check Your path Please
+            JSONDecodeError:Check Your Josn flie Please
+
+        Returns:
+            file's content:if is_json is True return dict else return str
+        """
+        curr_path = Path(folder, path)
+        if Path(path).is_absolute():
+            curr_path = path
+
+        with open(str(curr_path), "r", encoding="utf-8") as f_p:
+            if is_json:
+                return json.loads(f_p.read())
+            else:
+                return f_p.read()
+
+    def mock_request(self, **kwargs):
+        """mock_request"""
+        self._to_update_kw_and_make_mock(
+            "requests.request",
+            **kwargs,
+        )
+
+    def mock_requests_get(self, **kwargs):
+        """mock_requests_get"""
+        self._to_update_kw_and_make_mock(
+            "requests.get",
+            **kwargs,
+        )
+
+    def mock_obs_cloud_list_objects(self, **kwargs):
+        """mock_obs_cloud_list_objects"""
+        self._to_update_kw_and_make_mock(
+            "obs.ObsClient.listObjects",
+            **kwargs,
+        )
+
+    def mock_obs_cloud_get_objects(self, **kwargs):
+        """mock_obs_cloud_get_objects"""
+        self._to_update_kw_and_make_mock(
+            "obs.ObsClient.getObject",
+            **kwargs,
+        )
+
+    def mock_pandas_read_excel(self, **kwargs):
+        """mock_pandas_read_excel"""
+        self._to_update_kw_and_make_mock(
+            "pandas.read_excel",
+            **kwargs,
+        )
+
+    def make_expect_data(self, status_code, file_name, folder=MOCK_DATA_FOLDER):
+        """
+        make expected data
+        Args:
+            status_code: status code
+            folder: folder
+            file_name: file of expected data
+        Returns:
+        """
+        mock_r = requests.Response()
+        mock_r.status_code = status_code
+        self._to_update_kw_and_make_mock(
+            "requests.Response.text",
+            new_callable=PropertyMock,
+            return_value=self.read_file_content(file_name, folder=folder, is_json=False),
+        )
+        return mock_r
+
+    @staticmethod
+    def make_object_data(status_code, text=""):
+        """
+        make object data
+        Args:
+            status_code: status code
+            text: text
+        Returns:
+        """
+        object_r = dict_2_object({})
+        object_r.status = status_code
+        object_r.status_code = status_code
+        object_r.text = text
+        return object_r
+
+    @staticmethod
+    def make_obs_cloud_data(status, body=""):
+        """
+        make obs cloud data
+        Args:
+            status: status code
+            body: body
+        Returns:
+        """
+        mock_r = requests.Response()
+        mock_r.status = status
+        mock_r.status_code = status
+        mock_r.body = dict_2_object(body)
+        return mock_r
