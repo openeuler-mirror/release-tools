@@ -774,6 +774,61 @@ class IssueOperation(Operation):
             return issue_body
         return None
 
+    def _process_issue_id(self, body):
+        """
+        Process the MD string to get the issue ID
+        Args:
+            body (str): block body
+        Returns:
+            set: current block repos
+        """
+        content = re.compile("#[a-zA-Z0-9]+", re.S).findall(body)
+        if not content:
+            return content
+        return [con.replace("#", "") for con in content]
+
+    def _get_install_build_bugfix_issue_id(self, issue_body):
+        """
+        Gets the corresponding block element with regular,
+        Args
+            issue_body: issue body str
+
+        Returns:
+            issue number: issue number list
+        """
+
+        def update_set(res_obj):
+            # Call the _process_issue_id function to return the issue number
+            res_set = set()
+            issue_list = self._process_issue_id(res_obj)
+            res_set.update(issue_list)
+            return res_set
+
+        def update_res(issue_res, choice):
+            # If this table object exists,
+            # the final issue is fetched based on the selection
+            issues = set()
+            if issue_res:
+                issues = update_set(issue_res[choice])
+            return issues
+
+        # Installs the compiled table information object
+        install_build_res = re.compile("(?P<install_build>3、安装、自编译问题.*?\\n\\n)",
+                                       re.S).search(issue_body)
+        # Table information object for bugfix
+        bugfix_res = re.compile("(?P<bugfix>2、bugfix.*?\\n\\n)", re.S).search(issue_body)
+
+        # cve table information object
+        cve_res = re.compile("(?P<cve>1、CVE.*?\\n\\n)", re.S).search(issue_body)
+
+        install_build_issues = update_res(install_build_res, "install_build")
+        bugfix_issues = update_res(bugfix_res, "bugfix")
+        cve_issues = update_res(cve_res, "cve")
+        if not all([install_build_issues, bugfix_issues, cve_issues]):
+            logger.info("Block has no related issues  install_build_issues:%s, "
+                        "bugfix_issues: %s,cve_issues: %s " % (install_build_issues, bugfix_issues, cve_issues))
+        return list(install_build_issues), list(bugfix_issues), list(cve_issues)
+
     def init_issue_description(self):
         """
         initialize the release issue body when commenting "start-update" command
