@@ -64,8 +64,8 @@ gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS/update/source/RPM-GPG-KEY-
 
 #EPOL binary repo
 
-[published-EPOL]
-name=published-EPOL
+[published-Epol-src]
+name=published-Epol-sr
 baseurl=https://repo.openeuler.org/openEuler-20.03-LTS/EPOL/$basearch/
 enabled=0
 gpgcheck=0

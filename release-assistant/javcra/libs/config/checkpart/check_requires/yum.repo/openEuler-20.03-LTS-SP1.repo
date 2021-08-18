@@ -66,17 +66,17 @@ gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/OS/$basearch/RPM-GPG-K
 
 [published-Epol-src]
 name=published-Epol-src
-baseurl=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/Epol/source
+baseurl=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/EPOL/source
 enabled=0
 gpgcheck=0
-gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/Epol/source/RPM-GPG-KEY-openEuler
+gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/EPOL/source/RPM-GPG-KEY-openEuler
 
 [published-Epol-update-src]
 name=published-Epol-update-src
-baseurl=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/Epol/update/source
+baseurl=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/EPOL/update/source
 enabled=0
 gpgcheck=0
-gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/Epol/update/source/RPM-GPG-KEY-openEuler
+gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/EPOL/update/source/RPM-GPG-KEY-openEuler
 
 [devel-obs]
 name=devel-obs

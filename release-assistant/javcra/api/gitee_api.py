@@ -20,6 +20,11 @@ import re
 import time
 import requests
 from requests.exceptions import RequestException
+
+from javcra.application.checkpart.check_requires import init_env
+from javcra.application.checkpart.check_requires.dnf_api import DnfApi
+from javcra.application.checkpart.check_requires.shell_api_tool import ShellCmdApi
+from javcra.common.constant import BRANCH_LIST, LTS_BRANCH, REPO_EP_NAME, REPO_STA_NAME, EPOL_SRC_NAME
 from javcra.libs.log import logger
 
 
@@ -329,3 +334,61 @@ class Issue:
         else:
             logger.error("empty content of issue body, can not get update list.")
             return []
+
+    @staticmethod
+    def get_standard_epol_list(branch, pkg_list):
+        """get standard epol list
+
+        Args:
+            branch: branch name
+            pkg_list: package list from release issue
+        Returns:
+            pkglist_standard: standard pkg list
+            pkglist_epol: epol pkg list
+        """
+
+        def shell_cmd(basis_cmd, repo_file_condition, repo_conditions):
+            """
+            execute shell cmd
+            """
+            basis_cmd.extend(repo_file_condition)
+            basis_cmd.extend(repo_conditions)
+            # package info str
+            output = ShellCmdApi.call_subprocess(basis_cmd)
+            if not output:
+                return False
+            for repo_condition in repo_conditions:
+                # whether the repo in package info str
+                if repo_condition in output:
+                    return True
+            return False
+
+        if branch not in BRANCH_LIST:
+            raise ValueError("not supporting branch: %s, which not in %s." % (branch, BRANCH_LIST))
+
+        if branch == LTS_BRANCH:
+            repo_epol = EPOL_SRC_NAME
+        else:
+            repo_epol = REPO_EP_NAME
+        repo_standard = REPO_STA_NAME
+
+        # get repo according to the branch
+        repofile = init_env.get_yum_repo_file(branch)
+
+        # repo file condition like ["-c", "repo file path"]
+        repo_file_condition = DnfApi.generate_repo_file_condition(repofile)
+
+        # generate repo cmd like ["--repo", "repo_name"]
+        standard_repo_condition = DnfApi.generate_repo_condition(repo_standard)
+        epol_repo_condition = DnfApi.generate_repo_condition(repo_epol)
+
+        pkglist_standard = []
+        pkglist_epol = []
+        for pkg in pkg_list:
+            basis_cmd = ["dnf", "info", pkg]
+            # use "dnf" to query package info of specific repo
+            if shell_cmd(basis_cmd, repo_file_condition, standard_repo_condition):
+                pkglist_standard.append(pkg)
+            elif shell_cmd(basis_cmd, repo_file_condition, epol_repo_condition):
+                pkglist_epol.append(pkg)
+        return pkglist_standard, pkglist_epol
