@@ -1,0 +1,91 @@
+{
+  "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+  "actions": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "_class": "org.jenkinsci.plugins.displayurlapi.actions.JobDisplayAction"
+    },
+    {},
+    {},
+    {
+      "_class": "com.cloudbees.plugins.credentials.ViewCredentialsAction"
+    }
+  ],
+  "description": "",
+  "displayName": "trigger",
+  "displayNameOrNull": null,
+  "fullDisplayName": "function-item » release-manager » release_tools » update_20210819094245 » trigger",
+  "fullName": "function-item/release-manager/release_tools/update_20210819094245/trigger",
+  "name": "trigger",
+  "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/",
+  "buildable": true,
+  "builds": [
+    {
+      "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+      "number": 1,
+      "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+    }
+  ],
+  "color": "blue",
+  "firstBuild": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+    "number": 1,
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+  },
+  "healthReport": [
+    {
+      "description": "Build stability: No recent builds failed.",
+      "iconClassName": "icon-health-80plus",
+      "iconUrl": "health-80plus.png",
+      "score": 100
+    }
+  ],
+  "inQueue": false,
+  "keepDependencies": false,
+  "lastBuild": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+    "number": 1,
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+  },
+  "lastCompletedBuild": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+    "number": 1,
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+  },
+  "lastFailedBuild": null,
+  "lastStableBuild": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+    "number": 1,
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+  },
+  "lastSuccessfulBuild": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+    "number": 1,
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+  },
+  "lastUnstableBuild": null,
+  "lastUnsuccessfulBuild": null,
+  "nextBuildNumber": 2,
+  "property": [
+    {
+      "_class": "com.sonyericsson.jenkins.plugins.bfa.model.ScannerJobProperty"
+    },
+    {
+      "_class": "com.gitee.jenkins.connection.GiteeConnectionProperty"
+    },
+    {
+      "_class": "com.sonyericsson.rebuild.RebuildSettings"
+    }
+  ],
+  "queueItem": null,
+  "concurrentBuild": true,
+  "resumeBlocked": false
+}

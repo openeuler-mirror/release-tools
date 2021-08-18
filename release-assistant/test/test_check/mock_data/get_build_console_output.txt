@@ -1,0 +1,31 @@
+Started by user tuShenmei
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] Start of Pipeline
+[Pipeline] stage
+[Pipeline] { (obs_build)
+[Pipeline] parallel
+[Pipeline] { (Branch: self_build_0)
+[Pipeline] { (Branch: self_build_1)
+[Pipeline] { (Branch: self_build_2)
+[Pipeline] { (Branch: self_build_3)
+[Pipeline] build
+Scheduling project: function-item » release-manager » release_tools » update_20210819094245 » aarch64 » openEuler-20.03-LTS-SP1_1
+[Pipeline] build
+Scheduling project: function-item » release-manager » release_tools » update_20210819094245 » aarch64 » openEuler-20.03-LTS-SP1_2
+[Pipeline] build
+Scheduling project: function-item » release-manager » release_tools » update_20210819094245 » x86_64 » openEuler-20.03-LTS-SP1_1
+[Pipeline] build
+Scheduling project: function-item » release-manager » release_tools » update_20210819094245 » x86_64 » openEuler-20.03-LTS-SP1_2
+Starting building: function-item » release-manager » release_tools » update_20210819094245 » aarch64 » openEuler-20.03-LTS-SP1_1 #1
+Starting building: function-item » release-manager » release_tools » update_20210819094245 » aarch64 » openEuler-20.03-LTS-SP1_2 #1
+Starting building: function-item » release-manager » release_tools » update_20210819094245 » x86_64 » openEuler-20.03-LTS-SP1_1 #1
+Starting building: function-item » release-manager » release_tools » update_20210819094245 » x86_64 » openEuler-20.03-LTS-SP1_2 #1
+[Pipeline] }
+[Pipeline] }
+[Pipeline] }
+[Pipeline] }
+[Pipeline] // parallel
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] End of Pipeline
+Finished: SUCCESS

@@ -1,0 +1,7 @@
+[ERROR] failed to get requires.
+[INFO] successfully create transfer standard rpm jenkins res
+[INFO] successful to add repo in release issue.
+[INFO] successfully create selfbuild jenkins res
+[INFO] successfully create install jenkins res
+failed to write back to install_build issue I46DHK in release issue
+failed to write back to install_build issue I47FFK in release issue

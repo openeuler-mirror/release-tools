@@ -1,0 +1,36 @@
+{
+  "_class": "hudson.model.Queue$LeftItem",
+  "actions": [
+    {
+      "_class": "hudson.model.CauseAction",
+      "causes": [
+        {
+          "_class": "hudson.model.Cause$UserIdCause",
+          "shortDescription": "Started by user tuShenmei",
+          "userId": "tushenmei",
+          "userName": "tuShenmei"
+        }
+      ]
+    }
+  ],
+  "blocked": false,
+  "buildable": false,
+  "id": 25271,
+  "inQueueSince": 1629338144957,
+  "params": "",
+  "stuck": false,
+  "task": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+    "name": "trigger",
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/",
+    "color": "notbuilt_anime"
+  },
+  "url": "queue/item/25271/",
+  "why": null,
+  "cancelled": false,
+  "executable": {
+    "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+    "number": 1,
+    "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/"
+  }
+}

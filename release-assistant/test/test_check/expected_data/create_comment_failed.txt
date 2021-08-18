@@ -1,0 +1,5 @@
+[ERROR] failed to get requires.
+[ERROR] failed to create transfer standard rpm jenkins res
+[INFO] successful to add repo in release issue.
+[ERROR] failed to create selfbuild jenkins res
+[ERROR] failed to create install jenkins res
