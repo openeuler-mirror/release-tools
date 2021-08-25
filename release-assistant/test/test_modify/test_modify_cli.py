@@ -14,3 +14,445 @@
 """
 TestModify
 """
+import os
+from requests import RequestException
+from javcra.cli.commands.modifypart import ModifyCommand
+from test.base.basetest import TestMixin
+
+EXPECT_DATA_FILE = os.path.join(os.path.abspath(os.path.dirname(__file__)), "mock_data")
+
+
+class TestModify(TestMixin):
+    """
+    class for test TestModify
+
+    """
+    cmd_class = ModifyCommand
+
+    def test_add_cve_success(self):
+        """
+        test add cve success
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in cve successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_data = self.read_file_content('add_cve_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(side_effect=[resp, resp, mock_r, mock_r, mock_final_r, mock_final_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_add_bugfix_success(self):
+        """
+        test add bugfix success
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in bugfix successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_data = self.read_file_content('add_bugfix_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(side_effect=[resp, resp, mock_r, mock_final_r, mock_final_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=bugfix", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_add_remain_success(self):
+        """
+        test add remain success
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in remain successfully.
+update remain issues successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_data = self.read_file_content('add_remain_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_r, mock_r, resp, resp, resp, mock_r, mock_r, mock_final_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=remain", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_add_cve_failed(self):
+        """
+        test add cve failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] failed to add I3AQ2G in cve.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r, mock_r, resp, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_add_bugfix_failed(self):
+        """
+        test add bugfix failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] failed to add I3AQ2G in bugfix.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r, mock_r, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=bugfix", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_add_remain_failed(self):
+        """
+        test add remain failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] failed to add I3AQ2G in remain.
+failed to update remain issues, please check whether the issue exist in cve and bugfix part.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_r, mock_r, RequestException, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=remain", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_add_remain_not_in_cve_and_bugfix(self):
+        """
+        test add remain not in cve and bugfix
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in remain successfully.
+failed to update remain issues, please check whether the issue exist in cve and bugfix part.
+        """
+        resp = self.make_expect_data(200, 'add_remain_not_in_cve_and_bugfix.txt', folder=EXPECT_DATA_FILE)
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_data = self.read_file_content('add_remain_not_in_cve_and_bugfix.txt', folder=EXPECT_DATA_FILE,
+                                                 is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_r, mock_r, resp, resp, resp, mock_r, mock_r, mock_final_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=remain", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_delete_cve_success(self):
+        """
+        test delete cve success
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3V9IG']
+[INFO] delete I3V9IG in cve successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('delete_cve_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=cve", "--id=I3V9IG"]
+        self.assert_result()
+
+    def test_delete_bugfix_success(self):
+        """
+        test delete bugfix success
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3J655']
+[INFO] delete I3J655 in bugfix successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('delete_bugfix_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=bugfix", "--id=I3J655"]
+        self.assert_result()
+
+    def test_delete_remain_success(self):
+        """
+        test delete remain success
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3SZRJ']
+[INFO] delete I3SZRJ in remain successfully.
+update remain issues successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('delete_remain_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_issue_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_data = self.read_file_content('delete_update_remain_success.txt', folder=EXPECT_DATA_FILE,
+                                                 is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        mock_issue_r = self.make_object_data(200, mock_issue_data)
+        self.mock_request(side_effect=[resp, resp, mock_r, mock_r, mock_issue_r, mock_issue_r, mock_final_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id=I3SZRJ"]
+        self.assert_result()
+
+    def test_delete_cve_failed(self):
+        """
+        test delete cve failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3V9IG']
+[ERROR] failed to delete I3V9IG in cve.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        self.mock_request(side_effect=[resp, resp, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=cve", "--id=I3V9IG"]
+        self.assert_result()
+
+    def test_delete_bugfix_failed(self):
+        """
+        test delete bugfix failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3J655']
+[ERROR] failed to delete I3J655 in bugfix.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        self.mock_request(side_effect=[resp, resp, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=bugfix", "--id=I3J655"]
+        self.assert_result()
+
+    def test_delete_remain_failed(self):
+        """
+        test delete remain failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3SZRJ']
+[ERROR] failed to delete I3SZRJ in remain.
+failed to update remain issues, please check whether the issue exist in cve and bugfix part.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        self.mock_request(
+            side_effect=[resp, resp, RequestException, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id=I3SZRJ"]
+        self.assert_result()
+
+    def test_parameter_validation_failed(self):
+        """
+        test parameter validation failed
+        """
+
+        self.expect_str = """
+Parameter validation failed
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id"]
+        self.assert_result()
+
+    def test_no_personnel_authority(self):
+        """test_no_personnel_authority"""
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id=I3AQ2G"]
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] The current user does not have relevant operation permissions
+"""
+        resp = self.make_expect_data(200, 'mock_issue.txt', folder=EXPECT_DATA_FILE)
+        self.mock_request(side_effect=[resp])
+        self.assert_result()
+
+    def test_request_raise_requestexception(self):
+        """
+        test_request_raise_requestexception
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] The current user does not have relevant operation permissions
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id=I3AQ2G"]
+        self.mock_request(side_effect=[RequestException])
+        self.assert_result()
+
+    def test_update_remain_failed(self):
+        """
+        test_update_remain_failed
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] delete I3AQ2G in remain successfully.
+failed to update remain issues, please check whether the issue exist in cve and bugfix part.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('add_issue_info.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r, mock_r, resp, resp, RequestException])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id=I3AQ2G"]
+        self.assert_result()
+
+    def test_delete_multiple_cve(self):
+        """
+        test delete multiple cve
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3V9IG', 'I3AQ2G']
+[INFO] delete I3V9IG,I3AQ2G in cve successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('delete_multiple_cve_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=cve", "--id", "I3V9IG", "I3AQ2G"]
+        self.assert_result()
+
+    def test_delete_multiple_bugfix(self):
+        """
+        test delete multiple bugfix
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3J655', 'I3AHLY']
+[INFO] delete I3J655,I3AHLY in bugfix successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('delete_multiple_bugfix_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        self.mock_request(side_effect=[resp, resp, mock_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=bugfix", "--id", "I3J655", "I3AHLY"]
+        self.assert_result()
+
+    def test_delete_multiple_remain(self):
+        """
+        test delete multiple remain
+        """
+
+        self.expect_str = """
+modify part start! I40769 Mary ['I3SZRJ', 'I3OC6A']
+[INFO] delete I3SZRJ,I3OC6A in remain successfully.
+update remain issues successfully.
+        """
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_data = self.read_file_content('delete_multiple_remain_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_1_data = self.read_file_content('delete_multiple_update_remain_success.txt', folder=EXPECT_DATA_FILE,
+                                                   is_json=False)
+        mock_final_2_data = self.read_file_content('delete_multiple_update_remain_success2.txt',
+                                                   folder=EXPECT_DATA_FILE,
+                                                   is_json=False)
+        mock_issue_1_data = self.read_file_content('mock_remain_issue_1_data.txt', folder=EXPECT_DATA_FILE,
+                                                   is_json=False)
+        mock_issue_2_data = self.read_file_content('mock_remain_issue_2_data.txt', folder=EXPECT_DATA_FILE,
+                                                   is_json=False)
+        mock_r = self.make_object_data(200, mock_data)
+        mock_final_1_r = self.make_object_data(200, mock_final_1_data)
+        mock_final_2_r = self.make_object_data(200, mock_final_2_data)
+        mock_issue_1_r = self.make_object_data(200, mock_issue_1_data)
+        mock_issue_2_r = self.make_object_data(200, mock_issue_2_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_r, mock_r, mock_issue_1_r, mock_issue_1_r, mock_final_1_r, mock_r,
+                         mock_issue_2_r, mock_issue_2_r, mock_final_2_r])
+        self.command_params = ["I40769", "--giteeid=Mary", "--delete=remain", "--id", "I3SZRJ", "I3OC6A"]
+        self.assert_result()
+
+    def test_old_body_is_none(self):
+        """
+        test old body is none
+        """
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] failed to add I3AQ2G in cve.
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        issue_body_is_none_data = self.read_file_content('mock_issue_is_none.txt', folder=EXPECT_DATA_FILE,
+                                                         is_json=False)
+        mock_issue_body_is_none_r = self.make_object_data(200, issue_body_is_none_data)
+        self.mock_request(side_effect=[resp, mock_issue_body_is_none_r])
+        self.assert_result()
+
+    def test_issue_body_is_none(self):
+        """
+        test issue body is none
+        """
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[ERROR] failed to add I3AQ2G in cve.
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        self.mock_request(side_effect=[resp, resp, RequestException])
+        self.assert_result()
+
+    def test_cve_basescore(self):
+        """
+        test cve basescore
+        """
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in cve successfully.
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        cve_basescore_data = self.read_file_content('mock_issue_basescore.txt', folder=EXPECT_DATA_FILE,
+                                                    is_json=False)
+        mock_cve_basescore_r = self.make_object_data(200, cve_basescore_data)
+        mock_final_data = self.read_file_content('add_cve_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_cve_basescore_r, mock_cve_basescore_r, mock_final_r, mock_final_r])
+        self.assert_result()
+
+    def test_cve_no_score(self):
+        """
+        test cve no score
+        """
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in cve successfully.
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        cve_no_core_data = self.read_file_content('mock_issue_no_score.txt', folder=EXPECT_DATA_FILE,
+                                                  is_json=False)
+        mock_cve_no_core_r = self.make_object_data(200, cve_no_core_data)
+        mock_final_data = self.read_file_content('add_cve_no_score.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_cve_no_core_r, mock_cve_no_core_r, mock_final_r, mock_final_r])
+        self.assert_result()
+
+    def test_cve_abi_yes(self):
+        """
+        test cve abi yes
+        """
+        self.expect_str = """
+modify part start! I40769 Mary ['I3AQ2G']
+[INFO] add I3AQ2G in cve successfully.
+        """
+        self.command_params = ["I40769", "--giteeid=Mary", "--add=cve", "--id=I3AQ2G"]
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        cve_abi_data = self.read_file_content('mock_issue_abi.txt', folder=EXPECT_DATA_FILE,
+                                              is_json=False)
+        mock_cve_abi_r = self.make_object_data(200, cve_abi_data)
+        mock_final_data = self.read_file_content('add_cve_abi_success.txt', folder=EXPECT_DATA_FILE, is_json=False)
+        mock_final_r = self.make_object_data(200, mock_final_data)
+        self.mock_request(
+            side_effect=[resp, resp, mock_cve_abi_r, mock_cve_abi_r, mock_final_r, mock_final_r])
+        self.assert_result()
