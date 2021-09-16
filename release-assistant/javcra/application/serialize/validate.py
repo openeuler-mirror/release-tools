@@ -13,7 +13,57 @@
 """
 Verification method
 """
+from marshmallow import ValidationError
 from javcra.common.constant import PERMISSION_INFO
+
+
+def _serialization(*args, **kwargs):
+    """
+    Validation after serialization
+    Args:
+        verifier: The class name of the validator
+        data: data
+    Returns:
+        result: Verify the dictionary after success
+        errors: The dictionary
+    Raise:
+        ValidationError: Validation error
+    """
+    result = {}
+    errors = {}
+    try:
+        verifier, data = args
+        result = verifier().load(data, partial=kwargs.get("partial", ()))
+    except ValidationError as err:
+        errors = err.messages
+    return result, errors
+
+
+def validate(verifier, data, load=False, partial=()):
+    """
+    Validation method
+    Args:
+        verifier:The name of the validator's class
+        data: Passed parameter
+        load: Defaults to False.
+        partial: Specifies the field to validate
+
+    Raises:
+        TypeError: Type error
+
+    Returns:
+        result: Verify the dictionary after success
+        errors: The dictionary
+    """
+    if not isinstance(data, dict):
+        raise TypeError("The content to verify needs to be of a dictionary type")
+
+    if load:
+        result, errors = _serialization(verifier, data, partial=partial)
+    else:
+        errors = verifier().validate(data, partial=partial)
+        result = data
+    return result, errors
 
 
 def validate_giteeid(giteeid, comment, personnel_authority):
@@ -32,5 +82,3 @@ def validate_giteeid(giteeid, comment, personnel_authority):
         if giteeid in person and comment in PERMISSION_INFO.get(role):
             return True
     return False
-
-
