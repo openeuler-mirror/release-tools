@@ -829,6 +829,58 @@ class IssueOperation(Operation):
                         "bugfix_issues: %s,cve_issues: %s " % (install_build_issues, bugfix_issues, cve_issues))
         return list(install_build_issues), list(bugfix_issues), list(cve_issues)
 
+    def update_remain_issue_state(self, issue_list, action):
+        """
+       Change the issue in bugfix and cve according to
+       whether the command is left
+       Args:
+           issue_list: issues
+           action: add or delete
+       Returns:
+            True or False
+       """
+        try:
+            if action not in ["add", "delete"]:
+                raise ValueError("action parameter errors must be in add and delete")
+            issue_body = self.get_issue_body(self.issue_num)
+            if not issue_body:
+                raise ValueError("failed to obtain the issue description")
+            _, bugfix_issues, cve_issue = self._get_install_build_bugfix_issue_id(issue_body)
+            to_update = {}
+            not_exist_issues = []
+            for issue in issue_list:
+                if issue not in bugfix_issues and issue not in cve_issue:
+                    not_exist_issues.append(issue)
+                    logger.warning("issue %s not exist in cve and bugfix part" % issue)
+                    continue
+                if issue in bugfix_issues:
+                    t_head = ["issue", "仓库", "status"]
+                    operate_ins = getattr(self, "bugfix" + "_object")
+                    block_name = '## 2、bugfix'
+                    new_con = operate_ins.get_single_issue_info(issue, block_name)[0]
+                else:
+                    t_head = ["CVE", "仓库", "status", "score", "version", "abi是否变化"]
+                    operate_ins = getattr(self, "cve" + "_object")
+                    block_name = '## 1、CVE'
+                    new_con = operate_ins.get_single_issue_info(issue, block_name)[0]
+                if action == "add":
+                    new_con["status"] = "遗留"
+                to_update.setdefault(
+                    issue, self.convert_md_table_format(t_head, [new_con])
+                )
+                body_str = self.get_new_body_lines(
+                    issue_body, update_info=to_update, start_flag=block_name, end_flag="\n"
+                )
+                res = self.update_issue(body=body_str)
+                if not res:
+                    raise ValueError("failed to %s action issue status,issue is %s" % (action, issue))
+        except (ValueError, AttributeError, IndexError, TypeError, KeyError) as error:
+            logger.error("In the %s operation, the reasons for the error are as follows: %s" % (action, error))
+            return False
+        if issue_list == not_exist_issues:
+            return False
+        return True
+
     def init_issue_description(self):
         """
         initialize the release issue body when commenting "start-update" command
