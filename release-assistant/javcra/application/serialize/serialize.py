@@ -18,55 +18,52 @@ from marshmallow import fields
 from marshmallow import validate
 
 
-class StartSchema(Schema):
+class BaseSchema(Schema):
     """
-    start command parameter verification
+    basic parameter validator
     """
     issueid = fields.String(required=True, validate=validate.Length(min=1))
     giteeid = fields.String(required=True, validate=validate.Length(min=1))
+    token = fields.String(required=True, validate=validate.Length(min=1))
+
+
+class StartSchema(BaseSchema):
+    """
+    start command parameter verification
+    """
     repo = fields.String(required=True, validate=validate.Length(min=1))
     ak = fields.String(required=True, validate=validate.Length(min=1))
     sk = fields.String(required=True, validate=validate.Length(min=1))
     useremail = fields.String(required=True, validate=validate.Length(min=1))
-    token = fields.String(required=True, validate=validate.Length(min=1))
 
 
-class CheckSchema(Schema):
+class CheckSchema(BaseSchema):
     """
     check command parameter verification
     """
-    issueid = fields.String(required=True, validate=validate.Length(min=1))
-    giteeid = fields.String(required=True, validate=validate.Length(min=1))
     type = fields.String(
         required=True, validate=validate.OneOf(["status", "requires", "test"])
     )
-    token = fields.String(required=True, validate=validate.Length(min=1))
-    ak = fields.String(required=True, validate=validate.Length(min=1))
-    sk = fields.String(required=True, validate=validate.Length(min=1))
-    jenkinsuser = fields.String(required=True, validate=validate.Length(min=1))
-    jenkinskey = fields.String(required=True, validate=validate.Length(min=1))
+    ak = fields.String(required=False, validate=validate.Length(min=1))
+    sk = fields.String(required=False, validate=validate.Length(min=1))
+    jenkinsuser = fields.String(required=False, validate=validate.Length(min=1))
+    jenkinskey = fields.String(required=False, validate=validate.Length(min=1))
 
 
-class ModifySchema(Schema):
+class ModifySchema(BaseSchema):
     """
     modify command parameter verification
     """
-    issueid = fields.String(required=True, validate=validate.Length(min=1))
-    giteeid = fields.String(required=True, validate=validate.Length(min=1))
     id = fields.List(fields.String(), validate=validate.Length(min=1))
     choice = fields.String(
         required=True, validate=validate.OneOf(["cve", "bugfix", "remain"])
     )
-    token = fields.String(required=True, validate=validate.Length(min=1))
 
 
-class ReleaseSchema(Schema):
+class ReleaseSchema(BaseSchema):
     """
     Release command parameter verification
     """
-    issueid = fields.String(required=True, validate=validate.Length(min=1))
-    giteeid = fields.String(required=True, validate=validate.Length(min=1))
     type = fields.String(required=True, validate=validate.OneOf(["checkok", "cvrfok"]))
-    token = fields.String(required=True, validate=validate.Length(min=1))
     jenkinsuser = fields.String(required=True, validate=validate.Length(min=1))
     jenkinskey = fields.String(required=True, validate=validate.Length(min=1))

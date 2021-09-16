@@ -21,10 +21,10 @@ def _serialization(*args, **kwargs):
     """
     Validation after serialization
     Args:
-        verifier: The class name of the validator
+        verifier: the class name of the validator
         data: data
     Returns:
-        result: Verify the dictionary after success
+        result: verify the dictionary after success
         errors: The dictionary
     Raise:
         ValidationError: Validation error
@@ -43,17 +43,17 @@ def validate(verifier, data, load=False, partial=()):
     """
     Validation method
     Args:
-        verifier:The name of the validator's class
-        data: Passed parameter
-        load: Defaults to False.
-        partial: Specifies the field to validate
+        verifier: the name of the validator's class
+        data: passed parameter
+        load: whether to serialize the parameters, the default is False
+        partial: specifies the field to validate
 
     Raises:
-        TypeError: Type error
+        TypeError: type error
 
     Returns:
-        result: Verify the dictionary after success
-        errors: The dictionary
+        result: verify the dictionary after success
+        errors: the dictionary
     """
     if not isinstance(data, dict):
         raise TypeError("The content to verify needs to be of a dictionary type")
