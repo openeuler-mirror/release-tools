@@ -17,6 +17,7 @@ import datetime
 import re
 import requests
 from javcra.api.gitee_api import Issue
+from javcra.common.constant import REPO_BASE_URL
 from javcra.libs.log import logger
 from javcra.libs.read_excel import download_file
 
@@ -801,6 +802,39 @@ class IssueOperation(Operation):
                 issue_body += "\n"
             return issue_body
         return None
+
+    def get_repo(self, md_type=True):
+        """
+        get repo according to branch 、date and epol
+        """
+        branch = self.get_update_issue_branch()
+        if not branch:
+            raise ValueError("can not get the branch, please check.")
+
+        base_url = REPO_BASE_URL + branch
+        repos = []
+        repo_dict = {
+            "repo_type": "standard",
+            "url": base_url + "/update_" + self.date + "/"
+        }
+        repos.append(repo_dict)
+
+        pkglist = self.get_update_list()
+        _, epol_list = self.get_standard_epol_list(branch, pkglist)
+        if epol_list:
+            repo_dict = dict()
+            repo_dict["repo_type"] = "epol"
+            if "sp2" in branch or "SP2" in branch:
+                repo_dict["url"] = base_url + "/EPOL/update_" + self.date + "/main/"
+            else:
+                repo_dict["url"] = base_url + "/EPOL/update_" + self.date + "/"
+            repos.append(repo_dict)
+
+        if md_type:
+            t_header = ["repo_type", "url"]
+            block_name = "# 2、测试repo源"
+            return self.init_md_table(t_head=t_header, body_info=repos, block_title=block_name)
+        return repos
 
     def _process_issue_id(self, body):
         """

@@ -68,3 +68,22 @@ JENKINS_PATH_PREFIX = "function-item/release-manager/release_tools"
 AARCH_FRAME = "aarch64"
 
 X86_FRAME = "x86_64"
+
+# branch list for standard epol list
+BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS"]
+
+# lts branch
+LTS_BRANCH = "openEuler-20.03-LTS"
+
+# repo epol name list
+REPO_EP_NAME = ["published-Epol-src", "published-Epol-update-src"]
+
+# repo standard name list
+REPO_STA_NAME = ["published-everything-src", "published-update-src"]
+
+# epol src name
+EPOL_SRC_NAME = ["published-Epol-src"]
+
+# repo base url
+REPO_BASE_URL = "http://121.36.84.172/repo.openeuler.org/"
+

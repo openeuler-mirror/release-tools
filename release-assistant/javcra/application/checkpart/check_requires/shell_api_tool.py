@@ -31,6 +31,7 @@ class ShellCmdApi(object):
         return:
             result: console output str
         """
+        output = ""
         try:
             output = subprocess.check_output(
                 cmd_list,
