@@ -446,6 +446,32 @@ class Operation(Issue):
 
         return [issue_info]
 
+    def update_for_specific_block(self, body_str, issues, table_head, block_name):
+        """
+        Update specific table modules
+        Args:
+            body_str: body info
+            issues: list of issue numbers
+            table_head: table head
+            block_name: block name
+
+        Returns:
+            get_new_body_lines: The new issue of body
+        """
+        if not body_str:
+            raise ValueError("no content of release issue, failed to update")
+        to_update = {}
+        for issue_id in issues:
+            # latest issue status
+            single_issue_info = self.get_single_issue_info(issue_id, block_name)
+            to_update.setdefault(
+                issue_id, self.convert_md_table_format(table_head, single_issue_info)
+            )
+
+        return self.get_new_body_lines(
+            body_str, update_info=to_update, start_flag=block_name, end_flag="\n"
+        )
+
     def operate_for_specific_block(self, table_head, block_name, table_body=None, prefix="", operate="init",
                                    body_str=None, issues=None):
         """
@@ -475,9 +501,11 @@ class Operation(Issue):
             return self.add_for_specific_block(body_str, issues, table_head, block_name)
         elif operate == "delete":
             return self.delete_for_specific_block(body_str, issues, block_name)
+        elif operate == "update":
+            return self.update_for_specific_block(body_str, issues, table_head, block_name)
         else:
             raise ValueError(
-                "not allowed 'operate' value,expected in ['init','add','delete'],but given {}".format(operate)
+                "not allowed 'operate' value,expected in ['init','add','delete','update'],but given {}".format(operate)
             )
 
     def init(self):
@@ -831,14 +859,14 @@ class IssueOperation(Operation):
 
     def update_remain_issue_state(self, issue_list, action):
         """
-       Change the issue in bugfix and cve according to
-       whether the command is left
-       Args:
+        Change the issue in bugfix and cve according to
+        whether the command is left
+        Args:
            issue_list: issues
            action: add or delete
-       Returns:
+        Returns:
             True or False
-       """
+        """
         try:
             if action not in ["add", "delete"]:
                 raise ValueError("action parameter errors must be in add and delete")
@@ -878,6 +906,30 @@ class IssueOperation(Operation):
             logger.error("In the %s operation, the reasons for the error are as follows: %s" % (action, error))
             return False
         if issue_list == not_exist_issues:
+            return False
+        return True
+
+    def check_issue_state(self):
+        """
+        Check the issue status under the bugfix and install_build headers
+        Returns:
+            True: update the status of the issue to the latest status successfully
+            False: failed to update the status of the issue to the latest status
+        """
+        try:
+            body = self.get_issue_body(self.issue_num)
+            if not body:
+                raise ValueError("failed to get issue description information")
+            # get the bugfix and the issue number under the install_build and cve table headers
+            install_build_issues, bugfix_issues, _ = self._get_install_build_bugfix_issue_id(body)
+            if install_build_issues:
+                self.operate_release_issue(operation="update", operate_block="install_build",
+                                           issues=install_build_issues)
+            if bugfix_issues:
+                self.operate_release_issue(operation="update", operate_block="bugfix",
+                                           issues=bugfix_issues)
+        except (ValueError, TypeError, KeyError, AttributeError) as error:
+            logger.error("failed to update the status of the issue, the specific reason is %s" % error)
             return False
         return True
 
