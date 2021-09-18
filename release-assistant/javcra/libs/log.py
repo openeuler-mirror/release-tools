@@ -51,20 +51,25 @@ class Log(object):
             encoding="utf-8",
             use_gzip=True,
         )
+        self.__console_handler = logging.StreamHandler()
         self.__set_formatter()
         self.__set_handler()
 
     def __set_formatter(self):
         formatter = logging.Formatter(
-            "%(asctime)s-%(filename)s-[line:%(lineno)d]"
+            "%(asctime)s-%(filename)s-[line:%(lineno)d]-[%(funcName)s]"
             "-%(levelname)s-[ log details ]: %(message)s",
             datefmt="%a, %d %b %Y %H:%M:%S",
         )
         self.__current_rotating_file_handler.setFormatter(formatter)
+        self.__console_handler.setFormatter(formatter)
 
     def __set_handler(self):
         self.__current_rotating_file_handler.setLevel(self.__level)
+        self.__console_handler.setLevel(self.__level)
+
         self.__logger.addHandler(self.__current_rotating_file_handler)
+        self.__logger.addHandler(self.__console_handler)
 
     @property
     def logger(self):
@@ -74,6 +79,15 @@ class Log(object):
         if not self.__current_rotating_file_handler:
             self.__init_handler()
         return self.__logger
+
+    @property
+    def file_handler(self):
+        """
+        The file handle to the log
+        """
+        if not self.__current_rotating_file_handler:
+            self.__init_handler()
+        return self.__current_rotating_file_handler
 
 
 logger = Log(__name__, path=LOG_DIR).logger

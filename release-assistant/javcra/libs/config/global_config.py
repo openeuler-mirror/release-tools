@@ -27,7 +27,7 @@ CHECK_REQUIRES_CONFIG_FOLDER_PATH = os.path.join(os.path.dirname(__file__))
 # oscrc config
 # the template file of oscrc, which will be stored in CHECK_REQUIRES_CONFIG_FOLDER_PATH
 OSCRC_TEMPLETE = os.path.join(
-    CHECK_REQUIRES_CONFIG_FOLDER_PATH, 
+    CHECK_REQUIRES_CONFIG_FOLDER_PATH,
     "checkpart",
     "check_requires",
     "oscrc.templete"
@@ -54,3 +54,6 @@ OPENEULER_BRANCH_MAP = os.path.join(
 SUPPORTED_BRANCHES_LIST = ["openEuler"]
 
 LOG_DIR = "./"
+
+# ip and port for sending update info to test
+TEST_IP_PORT = "123.60.114.22:21510"
