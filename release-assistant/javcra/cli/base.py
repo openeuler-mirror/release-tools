@@ -19,6 +19,7 @@ import argparse
 from collections import namedtuple
 from abc import abstractmethod
 
+
 class BaseCommand():
     """
     Description: Basic attributes used for command invocation
@@ -45,11 +46,11 @@ class BaseCommand():
         self.sub_args = namedtuple(
             'sub_args',
             ['sub_command', 'help', 'default', 'action', 'nargs', 'required', 'choices']
-            )
+        )
 
-    def add_subcommand_with_2_args(self, sub_command, help_desc):
+    def add_subcommand_communal_args(self, sub_command, help_desc):
         """
-        Description: add subcommand with releaseIssueID and gitee ID as sub_parse argument
+        Description: add subcommand with releaseIssueID and gitee ID and token as sub_parse argument
         Args:
 
         Returns:
@@ -71,39 +72,38 @@ class BaseCommand():
             action='store',
             required=True
         )
-
-    def add_issueid_arg(self):
-        """
-        Description: add release issud ID into sub_parse argument
-        Args:
-
-        Returns:
-
-        Raises:
-
-        """
         self.sub_parse.add_argument(
-            'releaseIssueID',
-            help='start release issue ID',
-            action='store'
+            "--token",
+            type=str,
+            help="a valid GiteeToken value",
+            action="store",
+            required=True,
         )
 
-    def add_giteeid_arg(self):
+    def add_obs_ak_arg(self):
         """
-        Description: add gitee ID into sub_parse argument
-        Args:
-
-        Returns:
-
-        Raises:
-
+        Description: add obs ak into sub_parse argument
         """
 
         self.sub_parse.add_argument(
-            '--giteeid',
-            help='the Gitee ID who trigger this command',
-            action='store',
-            required=True
+            "--ak",
+            type=str,
+            help="provide your access key",
+            action="store",
+            required=True,
+        )
+
+    def add_obs_sk_arg(self):
+        """
+        Description: add obs ak into sub_parse argument
+        """
+
+        self.sub_parse.add_argument(
+            "--sk",
+            type=str,
+            help="provide your secret key",
+            action="store",
+            required=True,
         )
 
     @staticmethod

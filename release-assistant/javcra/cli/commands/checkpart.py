@@ -17,8 +17,8 @@ Class:CheckCommand
 
 from javcra.cli.base import BaseCommand
 from javcra.application.serialize.validate import validate_giteeid
-from javcra.application.checkpart.checkentrance import CheckEntrance
 from javcra.common.constant import PERMISSION_DICT
+
 
 class CheckCommand(BaseCommand):
     """
@@ -33,8 +33,8 @@ class CheckCommand(BaseCommand):
         Description: Instance initialization
         """
         super(CheckCommand, self).__init__()
-        self.add_subcommand_with_2_args(sub_command='check',
-                                        help_desc="release assistant of check part")
+        self.add_subcommand_communal_args('check',
+                                          help_desc="release assistant of check part")
         self.sub_parse.add_argument(
             '--type',
             help='the type of check part, \
@@ -43,7 +43,7 @@ class CheckCommand(BaseCommand):
             nargs=None,
             required=True,
             choices=['cve', 'bug', 'status', 'requires', 'test']
-            )
+        )
 
         self.sub_parse.add_argument(
             '--result',
@@ -53,7 +53,7 @@ class CheckCommand(BaseCommand):
             nargs=None,
             required=False,
             choices=['yes', 'no']
-            )
+        )
 
     def do_command(self, params):
         """
@@ -71,15 +71,3 @@ class CheckCommand(BaseCommand):
         permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get(params.type))
         if not permission:
             return
-
-        type_status = params.result
-        type_dict = {
-            'cve': CheckEntrance(issue_id, type_status).check_pkglist_result,
-            'bug': CheckEntrance(issue_id, type_status).check_pkglist_result,
-            'status': CheckEntrance(issue_id, type_status).check_issue_status,
-            'requires': CheckEntrance(issue_id, type_status).check_requires,
-            'test': CheckEntrance(issue_id, type_status).check_test_result
-        }
-
-        print("check part start", issue_id, gitee_id)
-        type_dict.get(params.type)()

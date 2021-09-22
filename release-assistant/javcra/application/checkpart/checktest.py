@@ -49,9 +49,9 @@ class CheckTest(Issue):
             for con in body.split("\n"):
                 colon = "：" if "：" in con else ":"
                 for role, people in ROLE_DICT.items():
-                    if people not in con:
+                    if people + colon not in con:
                         continue
-                    personnel_access[role] = con.split(colon)[1]
+                    personnel_access[role] = con.split(people + colon)[1]
             return personnel_access
         except IndexError as error:
             logger.error("Error parsing issue description information %s" % error)

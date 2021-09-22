@@ -16,9 +16,11 @@ Class:ModifyCommand
 """
 
 from javcra.cli.base import BaseCommand
-from javcra.application.serialize.validate import validate_giteeid
-from javcra.application.modifypart.modifyentrance import ModifyEntrance
-from javcra.common.constant import PERMISSION_DICT
+from javcra.cli.commands import parameter_permission_validate
+from javcra.application.modifypart.modifyentrance import IssueOperation
+from javcra.application.serialize.serialize import ModifySchema
+from javcra.common.constant import GITEE_REPO
+
 
 class ModifyCommand(BaseCommand):
     """
@@ -33,26 +35,26 @@ class ModifyCommand(BaseCommand):
         Description: Instance initialization
         """
         super(ModifyCommand, self).__init__()
-        self.add_subcommand_with_2_args(sub_command='modify',
-                                        help_desc="release assistant of modify part")
+        self.add_subcommand_communal_args('modify',
+                                          help_desc="release assistant of modify part")
         group = self.sub_parse.add_mutually_exclusive_group(required=True)
         group.add_argument(
             '--add',
-            help='adding a list of issues which would add to cve, bugfix, test or release list',
+            help='adding a list of issues which would add to cve, bugfix, test or remain list',
             default='',
             action='store',
-            choices=['cve', 'bug', 'release']
+            choices=['cve', 'bugfix', 'remain']
         )
         group.add_argument(
             '--delete',
-            help='deleting a list of issues which would add to cve, bugfix, test or release list',
+            help='deleting a list of issues which would add to cve, bugfix, test or remain list',
             default='',
             action='store',
-            choices=['cve', 'bug', 'release']
+            choices=['cve', 'bugfix', 'remain']
         )
         self.sub_parse.add_argument(
             '--id',
-            help='the list of issueid which would add/del to cve, bugfix, test or release list',
+            help='the list of issueid which would add/del to cve, bugfix, test or remain list',
             action='store',
             nargs='*',
             required=True,
@@ -68,30 +70,41 @@ class ModifyCommand(BaseCommand):
         Raises:
 
         """
-        issue_id = params.releaseIssueID
-        gitee_id = params.giteeid
-        issue_list = params.id
-        modify_type = ''
-
-        if params.add:
-            modify_type = params.add
-            action = 'add'
-        elif params.delete:
-            modify_type = params.delete
-            action = 'del'
-        else:
-            print("Cannot parse the parameter")
-            return
-
-        permission = validate_giteeid(issue_id, gitee_id, PERMISSION_DICT.get(modify_type))
-        if not permission:
-            return
-
-        type_dict = {
-            'cve': ModifyEntrance(issue_id, issue_list).modify_cve_list,
-            'bug': ModifyEntrance(issue_id, issue_list).modify_bugfix_list,
-            'release': ModifyEntrance(issue_id, issue_list).modify_release_result
+        # parameter dictionary
+        param_dict = {
+            "issueid": params.releaseIssueID,
+            "giteeid": params.giteeid,
+            "id": params.id,
+            "choice": params.add or params.delete,
+            "token": params.token,
         }
 
-        print("modify part start!", issue_id, gitee_id, issue_list)
-        type_dict.get(modify_type)(action)
+        # get action and modify_type according to parameters
+        action = "add" if params.add else "delete"
+        modify_type = params.add if params.add else params.delete
+        comment = "/" + action + "-" + modify_type
+        if modify_type == "remain":
+            comment = "/no-release"
+        validate_result = parameter_permission_validate(
+            ModifySchema, param_dict, comment
+        )
+        if not validate_result:
+            return
+
+        # add or delete issues according to your choice
+        issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
+        modify_res = issue.operate_release_issue(operation=action, operate_block=modify_type, issues=params.id)
+        if modify_res:
+            print("[INFO] %s %s in %s successfully." % (action, ",".join(params.id), modify_type))
+        else:
+            print(
+                "[ERROR] failed to %s %s in %s."
+                % (action, ",".join(params.id), modify_type)
+            )
+        if modify_type == "remain":
+            check_res = issue.update_remain_issue_state(params.id, action)
+            if check_res:
+                print("update remain issues successfully.")
+            else:
+                print("failed to update remain issues, "
+                      "please check whether the issue exist in cve and bugfix part.")

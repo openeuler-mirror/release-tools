@@ -188,14 +188,17 @@ class ObsCloud:
 
         install_list = self.bucket_list("{}/{}/check_result/failed_log".format(prefix_name, branch))
 
+        # the objects stored on cloud are cut according to "/",
+        # and the position of 4 is the name of the software package
+        # example: /install_build_log/branch_name/build_result/failed_log/package_name/self_build_res
         for build_con in build_list:
-            if build_con.split("/")[3]:
-                build_res.add(build_con.split("/")[3])
+            if build_con.split("/")[4]:
+                build_res.add(build_con.split("/")[4])
         content_list["build_list"] = build_res
 
         for install_con in install_list:
-            if install_con.split("/")[3]:
-                install_res.add(install_con.split("/")[3])
+            if install_con.split("/")[4]:
+                install_res.add(install_con.split("/")[4])
         content_list["install_list"] = install_res
 
         return content_list
@@ -227,8 +230,10 @@ class ObsCloud:
         failed_upload_file = []
         for path in paths:
             path_name = path.replace(str(local_path), "")
-            res = self.upload_dir("{}/{}{}".format(prefix_name, branch, path_name), path)
-            if not res:
+            if not path_name.startswith("/"):
+                path_name = "/" + path_name
+            upload_res = self.upload_dir("{}/{}{}".format(prefix_name, branch, path_name), path)
+            if not upload_res:
                 logging.error("%s File upload failed" % path_name)
                 failed_upload_file.append(path)
         if failed_upload_file:
@@ -249,7 +254,7 @@ if __name__ == '__main__':
     parser.add_argument("--bucketname", required=False, type=str, default="release-tools", help="Name of the branch")
     args = parser.parse_args()
     client = ObsCloud(args.ak, args.sk, args.server, args.bucketname)
-    res = client.run(args.branch, args.choice, args.path)
-    if not res:
+    RESP = client.run(args.branch, args.choice, args.path)
+    if not RESP:
         logging.error("File archiving failure")
     logging.info("File archiving succeeded")

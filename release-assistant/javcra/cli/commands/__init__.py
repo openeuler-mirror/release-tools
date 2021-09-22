@@ -10,3 +10,47 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+from javcra.application.checkpart.checktest import CheckTest
+from javcra.application.serialize.validate import validate, validate_giteeid
+from javcra.common.constant import GITEE_REPO
+
+
+def personnel_authority(param_dict):
+    """
+    personnel name and responsibilities acquisition
+    Args:
+        param_dict: parameter dictionary
+
+    Returns:
+        personnel_dict: personnel Information Dictionary
+    """
+    check = CheckTest(GITEE_REPO, param_dict.get("token"), param_dict.get("issueid"))
+    personnel_dict = check.parsing_body()
+    if not personnel_dict:
+        print("[ERROR] Failed to get the list of personnel permissions")
+        return {}
+    return personnel_dict
+
+
+def parameter_permission_validate(schema, param_dict, comment):
+    """
+    parameter verification and authorization verification
+    Args:
+        schema: validator class
+        param_dict: parameter dictionary
+        comment: comment
+    Returns:
+        return true if the verification is passed, otherwise return false
+    """
+    _, error = validate(schema, param_dict, load=True)
+    if error:
+        print("Parameter validation failed")
+        return False
+    personnel_dict = personnel_authority(param_dict)
+    if not personnel_dict:
+        return False
+    permission = validate_giteeid(param_dict.get("giteeid"), comment, personnel_dict)
+    if not permission:
+        print("[ERROR] The current user does not have relevant operation permissions")
+        return False
+    return True

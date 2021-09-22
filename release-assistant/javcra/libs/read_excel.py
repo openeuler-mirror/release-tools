@@ -60,19 +60,21 @@ def read_excel_xlsx(curr_path):
     return out_list
 
 
-def download_file(now_time, file_name):
+def download_file(now_time, file_name, obs_ak, obs_sk):
     """
     download file content
     Args:
         now_time: now_time
         file_name: file_name
+        obs_ak: obs ak
+        obs_sk: obs sk
     Returns:
         cve_list:
     """
     file_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     temp_path = os.path.join(file_path, "tmp{}".format(str(uuid.uuid1().hex)))
     try:
-        obs_client = ObsCloud(os.getenv("ak"), os.getenv("sk"), CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
+        obs_client = ObsCloud(obs_ak, obs_sk, CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
         # Determine whether the file to be downloaded is in the object of the bucket
         files = obs_client.bucket_list("{}/{}".format(CVE_UPDATE_INFO, now_time))
         file_object = ""

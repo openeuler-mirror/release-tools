@@ -16,6 +16,7 @@ Description: modify entrance
 import datetime
 import re
 import requests
+from retrying import retry
 from javcra.api.gitee_api import Issue
 from javcra.common.constant import REPO_BASE_URL
 from javcra.libs.log import logger
@@ -509,16 +510,16 @@ class Operation(Issue):
                 "not allowed 'operate' value,expected in ['init','add','delete','update'],but given {}".format(operate)
             )
 
-    def init(self):
+    def init(self, *args):
         """
         init specific block
 
         Returns:
             init str
         """
-        return self.get_new_issue_body(operate="init")
+        return self.get_new_issue_body(operate="init", *args)
 
-    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         raise NotImplementedError
 
 
@@ -548,30 +549,51 @@ class CveIssue(Operation):
                 return True
             logger.error("The CVE List file fails to be archived %s" % response.status_code)
             return False
-        except requests.RequestException as error:
+        except (requests.RequestException, AttributeError) as error:
             logger.error("The CVE List file fails to be archived because %s " % error)
             return False
 
-    def get_cve_list(self):
+    def get_cve_list(self, *args):
         """
         Obtain cVE-related information provided by the CVE-Manager.
         Returns:
             cve_list: Data in Excel in dictionary form
         """
+        user_email, obs_ak, obs_sk = args
 
-        now_time = datetime.date(datetime.date.today().year, datetime.date.today().month,
-                                 datetime.date.today().day).strftime('%Y-%m-%d')
-        branch_name = self.get_update_issue_branch()
-        if not branch_name:
-            logger.error("Failed to obtain branch")
+        # trigger cve_manger to archive
+        resp = self.create_cve_list(user_email)
+        if not resp:
             return []
-        cve_list = download_file(now_time, "{}_updateinfo.xlsx".format(branch_name))
-        if not cve_list:
-            logger.error("Failed to obtain CVE data")
-            return []
+
+        @retry(stop_max_attempt_number=5, wait_fixed=60000)
+        def get_list():
+            """
+            Get archived files
+            Returns:
+                cve_list: document content
+            """
+            now_time = datetime.date(
+                datetime.date.today().year,
+                datetime.date.today().month,
+                datetime.date.today().day,
+            ).strftime("%Y-%m-%d")
+            branch_name = self.get_update_issue_branch()
+            if not branch_name:
+                logger.error("Failed to obtain branch")
+                return []
+            cve_list = download_file(
+                now_time, "{}_updateinfo.xlsx".format(branch_name), obs_ak, obs_sk
+            )
+            if not cve_list:
+                logger.error("Failed to obtain CVE data")
+                raise ValueError("Failed to obtain CVE data")
+            return cve_list
+
+        cve_list = get_list()
         return cve_list
 
-    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         """
         get new issue body for cve block operation
 
@@ -588,7 +610,7 @@ class CveIssue(Operation):
 
         t_head = ["CVE", "仓库", "status", "score", "version", "abi是否变化"]
         block_name = "## 1、CVE"
-        cve_list = [] if operate != "init" else self.get_cve_list()
+        cve_list = [] if operate != "init" else self.get_cve_list(*args)
         cve_prefix = "修复CVE {}个".format(len(cve_list))
 
         return self.operate_for_specific_block(t_head, block_name, prefix=cve_prefix, operate=operate,
@@ -599,7 +621,7 @@ class BugFixIssue(Operation):
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
 
-    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         """
         get new issue body for bugfix block operation
 
@@ -646,7 +668,7 @@ class RequiresIssue(Operation):
         # so it is assumed that the return value is []
         return []
 
-    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         """
         get new issue body for requires block operation
 
@@ -674,7 +696,7 @@ class InstallBuildIssue(Operation):
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
 
-    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         """
         get new issue body for install build block operation
 
@@ -702,7 +724,7 @@ class RemainIssue(Operation):
     def __init__(self, repo, token, issue_num):
         super().__init__(repo, token, issue_num)
 
-    def get_new_issue_body(self, operate="init", body_str=None, issues=None):
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         """
         get new issue body for remain block operation
 
@@ -967,7 +989,7 @@ class IssueOperation(Operation):
             return False
         return True
 
-    def init_issue_description(self):
+    def init_issue_description(self, *args):
         """
         initialize the release issue body when commenting "start-update" command
 
@@ -979,7 +1001,7 @@ class IssueOperation(Operation):
             return False
 
         release_range = "# 1、发布范围\n"
-        cve_block_str = self.cve_object.init()
+        cve_block_str = self.cve_object.init(*args)
         bugfix_block_str = self.bugfix_object.init()
         requires_block_str = self.requires_object.init()
         repo_block_str = self.init_repo_table()
@@ -1030,7 +1052,7 @@ class IssueOperation(Operation):
 
         return True if self.update_issue(body=body_str) else False
 
-    def operate_release_issue(self, operation="init", operate_block=None, issues=None):
+    def operate_release_issue(self, *args, operation="init", operate_block=None, issues=None):
         """
         modify entrance of the release issue
 
@@ -1045,7 +1067,7 @@ class IssueOperation(Operation):
         """
         try:
             if operation == "init":
-                return self.init_issue_description()
+                return self.init_issue_description(*args)
             else:
                 return self.update_issue_description(
                     operate=operation, update_block=operate_block, issues=issues

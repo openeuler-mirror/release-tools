@@ -20,6 +20,7 @@ from javcra.application.serialize.validate import validate_giteeid
 from javcra.application.releasepart.releaseentrance import ReleaseEntrance
 from javcra.common.constant import PERMISSION_DICT
 
+
 class ReleaseCommand(BaseCommand):
     """
     Description: start the release part
@@ -33,8 +34,7 @@ class ReleaseCommand(BaseCommand):
         Description: Instance initialization
         """
         super(ReleaseCommand, self).__init__()
-        self.add_subcommand_with_2_args(sub_command='release',
-                                        help_desc="release assistant of release part")
+        self.add_subcommand_communal_args('release', help_desc="release assistant of release part")
         self.sub_parse.add_argument(
             '--type',
             help='Specify the release check type, only allow checkok and cvrfok',
