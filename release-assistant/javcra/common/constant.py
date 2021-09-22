@@ -87,3 +87,17 @@ EPOL_SRC_NAME = ["published-Epol-src"]
 # repo base url
 REPO_BASE_URL = "http://121.36.84.172/repo.openeuler.org/"
 
+# template job of aarch64
+AARCH64_TM_JOB = "function-item/release-manager/update_template_jobs/aarch64/test_build"
+
+# template job of x86
+X86_TM_JOB = "function-item/release-manager/update_template_jobs/x86-64/test_build"
+
+# template job of trigger
+TRIGGER_TM_JOB = "function-item/release-manager/update_template_jobs/trigger"
+
+ACTUATOR_DICT = {
+    "openEuler-20.03-LTS-SP1": "openeuler-20.03-lts-sp1",
+    "openEuler-20.03-LTS-SP2": "openeuler-20.03-lts-sp2",
+    "openEuler-20.03-LTS": "openeuler-20.03-lts"
+}
