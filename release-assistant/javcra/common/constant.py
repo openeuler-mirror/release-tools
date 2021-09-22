@@ -87,6 +87,7 @@ EPOL_SRC_NAME = ["published-Epol-src"]
 # repo base url
 REPO_BASE_URL = "http://121.36.84.172/repo.openeuler.org/"
 
+
 # template job of aarch64
 AARCH64_TM_JOB = "function-item/release-manager/update_template_jobs/aarch64/test_build"
 
@@ -101,3 +102,6 @@ ACTUATOR_DICT = {
     "openEuler-20.03-LTS-SP2": "openeuler-20.03-lts-sp2",
     "openEuler-20.03-LTS": "openeuler-20.03-lts"
 }
+
+# git warehouse address for release issue
+GITEE_REPO = "release-management"
