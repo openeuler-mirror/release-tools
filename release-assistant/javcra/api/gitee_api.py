@@ -231,6 +231,9 @@ class Issue:
                     logger.error("incorrect title, please check. Title: %s" % title)
                     return None
                 branch = title.strip().split()[0]
+                if branch not in BRANCH_LIST:
+                    logger.error("branch %s not in qualified branch_list: %s" % (branch, BRANCH_LIST))
+                    return None
         except IndexError:
             logger.error("failed to get update issue branch.")
         return branch

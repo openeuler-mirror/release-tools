@@ -107,6 +107,31 @@ class BaseCommand():
         )
 
     @staticmethod
+    def create_comment(type_res, result, issue):
+        """
+        create comment for jenkins job
+        """
+        if not result:
+            raise ValueError("%s: No comment information. The content is:  %s." % (type_res, result))
+
+        comment_res = issue.create_jenkins_comment(result)
+        if not comment_res:
+            print("[ERROR] failed to create %s" % type_res)
+        else:
+            print("[INFO] successfully create %s" % type_res)
+
+    @staticmethod
+    def get_branch_pkgs(issue):
+        branch_name = issue.get_update_issue_branch()
+        if not branch_name:
+            raise ValueError("failed to get branch name.")
+
+        update_pkgs = issue.get_update_list()
+        if not update_pkgs:
+            raise ValueError("failed to get obs_pkgs.")
+        return branch_name, update_pkgs
+
+    @staticmethod
     def register_command(command):
         """
         Description: Registration of commands
