@@ -197,7 +197,7 @@ class CheckCommand(BaseCommand):
                 "ScanOSSResultRepo": constant.JENKINS_SERVER_REPO,
                 "action": "create",
                 "obs_project": obs_project,
-                "update_dir": "update_" + issue.date,
+                "update_dir": "update_" + release_date,
                 "package_family": pkg_family,
                 "pkgnamelist": ",".join(pkgs),
             }
@@ -228,7 +228,7 @@ class CheckCommand(BaseCommand):
                 "ScanOSSResultRepo": constant.JENKINS_SERVER_REPO,
                 "ARCH": X86_FRAME,
                 "EPOL": epol_flag,
-                "UPDATE_TIME": issue.date,
+                "UPDATE_TIME": release_date,
                 "BRANCH": branch_name,
                 "PKGLIST": ",".join(update_pkgs),
             }
@@ -259,7 +259,7 @@ class CheckCommand(BaseCommand):
 
         issue = self.issue(params)
         check_issue = self.check_issue(params)
-        branch_name, update_pkgs = self.get_branch_pkgs(issue)
+        branch_name, update_pkgs, release_date = self.get_release_info(issue)
 
         standard_list, epol_list = issue.get_standard_epol_list(branch_name, update_pkgs)
         epol_flag = "True" if epol_list else "False"
@@ -268,7 +268,7 @@ class CheckCommand(BaseCommand):
         paral_num = min(MAX_PARAL_NUM, len(update_pkgs))
 
         # get jenkins_server and cloud server
-        jenkins_server = self.jenkins_server(params, paral_num, branch_name, issue.date)
+        jenkins_server = self.jenkins_server(params, paral_num, branch_name, release_date)
         cloud_server = ObsCloud(
             params.ak, params.sk, REALSE_TOOLS_SERVER, REALSE_TOOLS_BUCKET_NAME
         )

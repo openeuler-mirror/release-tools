@@ -611,6 +611,7 @@ class CveIssue(Operation):
 
         t_head = ["CVE", "仓库", "status", "score", "version", "abi是否变化"]
         block_name = "## 1、CVE"
+        logger.info("Start to obtain cve archive information, it may take a few minutes.")
         cve_list = [] if operate != "init" else self.get_cve_list(*args)
         cve_prefix = "修复CVE {}个".format(len(cve_list))
 
@@ -821,10 +822,45 @@ class IssueOperation(Operation):
             if re.compile("1、CVE.*?\\n\\n", re.S).search(issue_body):
                 logger.error("Issue has CVE content, maybe you already have operated start update command.")
                 return None
+
+            if "代码冻结" not in issue_body:
+                logger.error("the code freeze time is not in release issue body.")
+                return None
+
             if not issue_body.endswith("\n"):
                 issue_body += "\n"
             return issue_body
         return None
+
+    def get_release_time(self):
+        """
+        get the date for release
+        Returns:
+            release_date
+        """
+        issue_body = self.get_issue_body(self.issue_num)
+        if not issue_body:
+            logger.error("no content of release issue body.")
+            return None
+
+        date_info = re.compile("(?P<release_date>代码冻结.*?\\n\\n)", re.S).search(issue_body)
+        if not date_info:
+            logger.error("the code freeze time is not in release issue body.")
+            return None
+
+        split_date_info = re.split(r":|：", date_info["release_date"].strip())
+        try:
+            release_date = split_date_info[1].strip()
+            # The length of the date including year, month, and day is 8
+            if release_date.isdigit() and len(release_date) == 8:
+                return release_date
+
+            logger.error("The format of the code freeze date: %s does not meet the requirements." % release_date)
+            return None
+
+        except IndexError:
+            logger.error("error in getting code freeze date.")
+            return None
 
     def get_repo(self, md_type=True):
         """
@@ -834,11 +870,15 @@ class IssueOperation(Operation):
         if not branch:
             raise ValueError("can not get the branch, please check.")
 
+        release_date = self.get_release_time()
+        if not release_date:
+            raise ValueError("can not get the release time, please check.")
+
         base_url = REPO_BASE_URL + branch
         repos = []
         repo_dict = {
             "repo_type": "standard",
-            "url": base_url + "/update_" + self.date + "/"
+            "url": base_url + "/update_" + release_date + "/"
         }
         repos.append(repo_dict)
 
@@ -848,9 +888,9 @@ class IssueOperation(Operation):
             repo_dict = dict()
             repo_dict["repo_type"] = "epol"
             if "sp2" in branch or "SP2" in branch:
-                repo_dict["url"] = base_url + "/EPOL/update_" + self.date + "/main/"
+                repo_dict["url"] = base_url + "/EPOL/update_" + release_date + "/main/"
             else:
-                repo_dict["url"] = base_url + "/EPOL/update_" + self.date + "/"
+                repo_dict["url"] = base_url + "/EPOL/update_" + release_date + "/"
             repos.append(repo_dict)
 
         if md_type:
