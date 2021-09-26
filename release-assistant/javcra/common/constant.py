@@ -136,3 +136,6 @@ CHECK_COMMENT_DICT = {
     "requires": "/get-requires",
     "test": "/test-ok",
 }
+
+# release url
+RELEASE_URL = "https://www.openeuler.org/api-cve/cve-security-notice-server/syncAll"
