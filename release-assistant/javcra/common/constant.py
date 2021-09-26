@@ -87,7 +87,6 @@ EPOL_SRC_NAME = ["published-Epol-src"]
 # repo base url
 REPO_BASE_URL = "http://121.36.84.172/repo.openeuler.org/"
 
-
 # template job of aarch64
 AARCH64_TM_JOB = "function-item/release-manager/update_template_jobs/aarch64/test_build"
 
@@ -105,3 +104,35 @@ ACTUATOR_DICT = {
 
 # git warehouse address for release issue
 GITEE_REPO = "release-management"
+
+# ScanOSS API URL for jenkins trigger
+JENKINS_API_URL = "https://shenzhen.scanoss.com/api/scan/direct"
+
+# server repo for jenkins trigger
+JENKINS_SERVER_REPO = "121.36.53.23"
+
+# install jenkins job prefix
+INSTALL_JOB_PREFIX = "function-item/release-manager/update_template_jobs/install_"
+
+# job for upload package rpm to server
+OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
+
+# jenkins base url
+JENKINS_BASE_URL = 'https://jenkins.openeuler.org'
+
+REALSE_TOOLS_BUCKET_NAME = "release-tools"
+
+REALSE_TOOLS_SERVER = "obs.cn-north-4.myhuaweicloud.com"
+
+# max parallel jenkins num
+MAX_PARAL_NUM = 6
+
+# obs_project
+OBS_PRJ = "openEuler:20.09"
+
+# check comment dict
+CHECK_COMMENT_DICT = {
+    "status": "/check-status",
+    "requires": "/get-requires",
+    "test": "/test-ok",
+}

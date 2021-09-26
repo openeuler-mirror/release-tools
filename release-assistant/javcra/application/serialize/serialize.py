@@ -67,3 +67,5 @@ class ReleaseSchema(BaseSchema):
     type = fields.String(required=True, validate=validate.OneOf(["checkok", "cvrfok"]))
     jenkinsuser = fields.String(required=True, validate=validate.Length(min=1))
     jenkinskey = fields.String(required=True, validate=validate.Length(min=1))
+    publishuser = fields.String(required=True, validate=validate.Length(min=1))
+    publishkey = fields.String(required=True, validate=validate.Length(min=1))

@@ -15,6 +15,7 @@ Description: conver multiple Jenkins restful APIs to python methods
 Class:
 """
 import math
+import re
 import time
 import xml.etree.ElementTree as ET
 from collections import defaultdict
@@ -549,11 +550,12 @@ class JenkinsJob(object):
                     if "Starting building" in line:
                         line_info = line.split()
                         _job_name = line_info[2]
-                        _build_id = line_info[3].strip("#")
-                        job_name_id_dict[_job_name] = _build_id
+                        build_id_info = line_info[3]
+                        job_name_id_dict[_job_name] = re.findall(r'\d+', build_id_info)[0]
                 logger.info("finished to get build id dict: %s" % job_name_id_dict)
             except IndexError as err:
                 logger.error("error in get self_build parallel job id. %s" % err)
+                return {}
 
             return job_name_id_dict
 
