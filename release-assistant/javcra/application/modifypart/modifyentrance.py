@@ -14,11 +14,12 @@
 Description: modify entrance
 """
 import datetime
+import json
 import re
 import requests
 from retrying import retry
 from javcra.api.gitee_api import Issue
-from javcra.common.constant import REPO_BASE_URL
+from javcra.common.constant import REPO_BASE_URL, RELEASE_URL
 from javcra.libs.log import logger
 from javcra.libs.read_excel import download_file
 
@@ -1051,6 +1052,69 @@ class IssueOperation(Operation):
             return False
 
         return True if self.update_issue(body=body_str) else False
+
+    def count_issue_status(self):
+        """
+        statistics of the status of all issues
+        Returns:
+            true: the status of all issue is completed
+            false: there is an unfinished issue
+        """
+        try:
+            body = self.get_issue_body(self.issue_num)
+            # obtain the issue number under installation, compilation and bugfix
+            install_build_issues, bugfix_issues, _ = self._get_install_build_bugfix_issue_id(body)
+            issues = install_build_issues + bugfix_issues
+            unfinished_issues = []
+            if not issues:
+                logger.error("failed to obtain issue number")
+                return False
+            # traverse all issues, get the status of the issue,
+            # and add the unfinished ones to the unfinished list
+            for issue_number in issues:
+                issue_content = self.get_issue_info(issue_number)
+                if not issue_content:
+                    logger.error("failed to get the issue info of %s. " % issue_number)
+                    continue
+                if issue_content.get("issue_state") != "已完成":
+                    unfinished_issues.append(issue_number)
+            if unfinished_issues:
+                logger.info("The following issue status is not complete %s" % ",".join(unfinished_issues))
+                return False
+        except (ValueError, TypeError) as error:
+            logger.error("an error occurred while counting the status of the issue. "
+                         "The error is %s" % error)
+            return False
+        return True
+
+    @staticmethod
+    def release_announcement(user_name, password):
+        """
+        release announcement
+        Args:
+            user_name: user name
+            password: password
+
+        Returns:
+            return true on success, false on failure
+        """
+        try:
+            response = requests.post(RELEASE_URL, data={"username": user_name,
+                                                        "password": password})
+            if response.status_code == 200:
+                if "successfully" in json.loads(response.text):
+                    logger.info("release announcement successfully")
+                    return True
+                logger.error(response.text)
+                return False
+            logger.error("failed to request the announcement address: %s ,"
+                         "because of the response status code is %s "
+                         "response body is %s " % (RELEASE_URL, response.status_code, response.text))
+            return False
+        except (requests.RequestException, AttributeError, json.JSONDecodeError) as error:
+            logger.error("failed to request the announcement address: %s ,"
+                         "because of %s" % (RELEASE_URL, error))
+            return False
 
     def operate_release_issue(self, *args, operation="init", operate_block=None, issues=None):
         """
