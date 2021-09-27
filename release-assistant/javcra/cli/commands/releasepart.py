@@ -125,6 +125,21 @@ class ReleaseCommand(BaseCommand):
             epol_transfer_res = publish_rpms(obs_prj, "EPOL")
             self.create_comment("transfer epol rpm jenkins res", epol_transfer_res, issue)
 
+    def cvrfok_operation(self, params):
+        """
+        Description: operation for cvrf ok
+        Args:
+            params: Command line parameters
+
+        Returns:
+
+        """
+
+        release_resp = IssueOperation.release_announcement(params.publishuser, params.publishkey)
+        if not release_resp:
+            raise ValueError("failed to publish announcement")
+        print("successful announcement")
+
     def do_command(self, params):
         """
         Description: Executing command
@@ -155,5 +170,6 @@ class ReleaseCommand(BaseCommand):
 
         try:
             getattr(self, "{}_operation".format(params.type))(params)
-        except ValueError:
-            print("not allowed operate type: %s in release part." % params.type)
+        except ValueError as error:
+            print("during the operation %s, a failure occurred, "
+                  "and the cause of the error was %s" % (params.type, error))

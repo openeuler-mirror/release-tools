@@ -168,15 +168,30 @@ class CheckCommand(BaseCommand):
         Args:
             params: Command line parameters
 
-        Returns:
-            True or False
+        Raises:
+            ValueError: throw an exception when the function call returns false
         """
-        status_res = self.issue(params).check_issue_state()
+        issue = self.issue(params)
+        check_issue = self.check_issue(params)
+
+        # check whether all the issue status is incomplete
+        status_res = issue.check_issue_state()
         if not status_res:
-            print("[ERROR] failed to update status in check part.")
-            return False
+            raise ValueError("failed to update status in check part.")
         print("[INFO] successfully update status in check part.")
-        return True
+
+        # statistics of the status of all issues
+        count_res = issue.count_issue_status()
+        if not count_res:
+            raise ValueError("the status of the issue is not all completed, please complete first")
+        print("[INFO] All issues are completed, the next test platform test")
+
+        # send repo info
+        resp = check_issue.send_repo_info()
+        if not resp:
+            print("[ERROR] failed to send repo info.")
+            return
+        print("[info] to send repo info success")
 
     def requires_operation(self, params):
         """
@@ -347,5 +362,6 @@ class CheckCommand(BaseCommand):
             return
         try:
             getattr(self, "{}_operation".format(params.type))(params)
-        except ValueError:
-            print("not allowed operate type: %s in check part." % params.type)
+        except ValueError as error:
+            print("during the operation %s, a failure occurred, "
+                  "and the cause of the error was %s" % (params.type, error))
