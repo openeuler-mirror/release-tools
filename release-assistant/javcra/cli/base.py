@@ -121,7 +121,7 @@ class BaseCommand():
             print("[INFO] successfully create %s" % type_res)
 
     @staticmethod
-    def get_branch_pkgs(issue):
+    def get_release_info(issue):
         branch_name = issue.get_update_issue_branch()
         if not branch_name:
             raise ValueError("failed to get branch name.")
@@ -129,7 +129,12 @@ class BaseCommand():
         update_pkgs = issue.get_update_list()
         if not update_pkgs:
             raise ValueError("failed to get obs_pkgs.")
-        return branch_name, update_pkgs
+
+        release_date = issue.get_release_time()
+        if not release_date:
+            raise ValueError("can not get the release time, please check.")
+
+        return branch_name, update_pkgs, release_date
 
     @staticmethod
     def register_command(command):

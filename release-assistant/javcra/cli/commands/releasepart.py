@@ -90,7 +90,7 @@ class ReleaseCommand(BaseCommand):
                 "ScanOSSResultRepo": constant.JENKINS_SERVER_REPO,
                 "action": "release",
                 "obs_project": obs_project,
-                "update_dir": "update_" + issue.date,
+                "update_dir": "update_" + release_date,
                 "package_family": pkg_family,
             }
             jenkins_obs_res = jenkins_server.get_specific_job_comment(
@@ -99,7 +99,7 @@ class ReleaseCommand(BaseCommand):
             return jenkins_obs_res
 
         issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
-        branch_name, update_pkgs = self.get_branch_pkgs(issue)
+        branch_name, update_pkgs, release_date = self.get_release_info(issue)
 
         # get parallel jenkins job num according to length of pkg_list and max parallel num
         paral_num = min(MAX_PARAL_NUM, len(update_pkgs))
@@ -111,7 +111,7 @@ class ReleaseCommand(BaseCommand):
             params.jenkinskey,
             paral_num,
             branch_name,
-            issue.date,
+            release_date,
         )
 
         # publish pkg rpms
