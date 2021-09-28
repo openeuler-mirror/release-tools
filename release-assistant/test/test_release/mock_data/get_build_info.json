@@ -1,0 +1,53 @@
+{
+  "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
+  "actions": [
+    {
+      "_class": "hudson.model.CauseAction",
+      "causes": [
+        {
+          "_class": "hudson.model.Cause$UserIdCause",
+          "shortDescription": "Started by user tuShenmei",
+          "userId": "tushenmei",
+          "userName": "tuShenmei"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "_class": "org.jenkinsci.plugins.displayurlapi.actions.RunDisplayAction"
+    },
+    {
+      "_class": "org.jenkinsci.plugins.pipeline.modeldefinition.actions.RestartDeclarativePipelineAction"
+    },
+    {},
+    {
+      "_class": "org.jenkinsci.plugins.workflow.job.views.FlowGraphAction"
+    },
+    {},
+    {},
+    {}
+  ],
+  "artifacts": [],
+  "building": false,
+  "description": null,
+  "displayName": "#1",
+  "duration": 183608,
+  "estimatedDuration": 183608,
+  "executor": null,
+  "fullDisplayName": "function-item » release-manager » release_tools » update_20210819094245 » trigger #1",
+  "id": "1",
+  "keepLog": false,
+  "number": 1,
+  "queueId": 25271,
+  "result": "SUCCESS",
+  "timestamp": 1629338152823,
+  "url": "https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/trigger/1/",
+  "changeSets": [],
+  "culprits": [],
+  "nextBuild": null,
+  "previousBuild": null
+}
