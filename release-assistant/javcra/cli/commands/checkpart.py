@@ -184,14 +184,14 @@ class CheckCommand(BaseCommand):
         count_res = issue.count_issue_status()
         if not count_res:
             raise ValueError("the status of the issue is not all completed, please complete first")
-        print("[INFO] All issues are completed, the next test platform test")
+        print("[INFO] All issues are completed, the next step is sending repo to test platform.")
 
         # send repo info
         resp = check_issue.send_repo_info()
         if not resp:
             print("[ERROR] failed to send repo info.")
             return
-        print("[info] to send repo info success")
+        print("[INFO] successfully to send repo info.")
 
     def requires_operation(self, params):
         """

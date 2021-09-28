@@ -677,7 +677,7 @@ class RequiresIssue(Operation):
         Args:
             operate. Defaults to "init".expected [init,add,delete]
             body_str: gitee issue body str.
-            issues: issue id list.
+            issues: issue list
 
         Returns:
             new issue body str
@@ -689,8 +689,9 @@ class RequiresIssue(Operation):
         if operate not in ["init", "add"]:
             raise ValueError("requires block operation only allowed in ['init', 'add'].")
 
+        issues = self.get_requires_list()
         return self.operate_for_specific_block(
-            t_head, block_name, operate=operate, body_str=body_str, issues=self.get_requires_list()
+            t_head, block_name, operate=operate, body_str=body_str, issues=issues
         )
 
 
@@ -1062,6 +1063,31 @@ class IssueOperation(Operation):
 
         return True if self.update_issue(body=body_str) else False
 
+    def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
+        """
+        get new issue body for specific operation
+
+        Args:
+            operate: operate str. Defaults to "init".expected [init,add,delete]
+            body_str: gitee issue body str.
+            issues: issue id list.
+
+        Returns:
+            new issue body str
+        """
+        old_body_str = self.get_issue_body(self.issue_num)
+        if not old_body_str:
+            logger.error("The current issue has no content, please start first.")
+            return False
+
+        update_block = args[0]
+        # get the block object, like cve block object, and then call
+        # "get_new_issue_body" for this block
+        operate_object = getattr(self, update_block + "_object")
+        body_str = operate_object.get_new_issue_body(
+            operate=operate, body_str=old_body_str, issues=issues)
+        return body_str
+
     def update_issue_description(self, operate, update_block, issues=None):
         """
         to update issue description
@@ -1079,16 +1105,15 @@ class IssueOperation(Operation):
 
         old_body_str = self.get_issue_body(self.issue_num)
         if not old_body_str:
-            logger.error("The current issue has no content, please start first.")
+            logger.error(
+                "The current issue has no content, please start first.")
             return False
 
-        # get the block object, like cve block object, and then call "get_new_issue_body" for this block
-        operate_object = getattr(self, update_block + "_object")
-        body_str = operate_object.get_new_issue_body(
-            operate=operate, body_str=old_body_str, issues=issues)
+        body_str = self.get_new_issue_body(update_block, operate=operate, issues=issues)
 
         if not body_str:
-            logger.error("after update issue description, got empty new release issue body.")
+            logger.error(
+                "after update issue description, got empty new release issue body.")
             return False
 
         return True if self.update_issue(body=body_str) else False
@@ -1107,8 +1132,9 @@ class IssueOperation(Operation):
             issues = install_build_issues + bugfix_issues
             unfinished_issues = []
             if not issues:
-                logger.error("failed to obtain issue number")
-                return False
+                logger.info("no issue in install_build and bugfix block.")
+                return True
+
             # traverse all issues, get the status of the issue,
             # and add the unfinished ones to the unfinished list
             for issue_number in issues:
