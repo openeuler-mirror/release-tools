@@ -106,11 +106,15 @@ class CheckEntrance(IssueOperation):
             headers = {"Content-Type": "application/json; charset=utf8"}
             resp = requests.post(url_for_test, data=json.dumps(update_data), headers=headers, timeout=3)
 
-            if not resp:
+            if not resp or resp.status_code != 200:
                 logger.error("failed to send repo info.")
                 return False
 
-        except (ValueError, IndexError, RequestException) as err:
+            if json.loads(resp.text).get("error_code") != 200:
+                logger.error("failed to send repo info. Response: %s." % json.loads(resp.text))
+                return False
+
+        except (ValueError, IndexError, RequestException, json.JSONDecodeError) as err:
             logger.error("error in sending repo info, %s" % err)
             return False
         else:

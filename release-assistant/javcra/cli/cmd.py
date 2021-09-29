@@ -14,14 +14,14 @@
 Description: register method for all commands
 Class: JavcraCommand
 """
-import os
-import sys
-
-ABSPATH = os.path.dirname(os.path.dirname(os.path.abspath(os.path.realpath(os.path.dirname(__file__)))))
-sys.path.insert(0, ABSPATH)
 
 from javcra.cli.base import BaseCommand
 from javcra.common.exc import Error
+# 'import xxxxCommand' would be used in the args_parser() to register command
+from javcra.cli.commands.startpart import StartCommand  # pylint: disable=unused-import
+from javcra.cli.commands.releasepart import ReleaseCommand  # pylint: disable=unused-import
+from javcra.cli.commands.modifypart import ModifyCommand  # pylint: disable=unused-import
+from javcra.cli.commands.checkpart import CheckCommand  # pylint: disable=unused-import
 
 
 def main():
@@ -39,7 +39,4 @@ def main():
         BaseCommand().args_parser()
     except Error:
         print('Command execution error please try again')
-
-
-if __name__ == '__main__':
-    main()
+        print(Error)

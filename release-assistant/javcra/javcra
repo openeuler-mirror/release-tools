@@ -10,11 +10,14 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 # ******************************************************************************/
+import os
 import sys
+
+ABSPATH = os.path.dirname(os.path.abspath(os.path.realpath(os.path.dirname(__file__))))
+sys.path.insert(0, ABSPATH)
+
 from javcra.cli.cmd import main
 
-try:
+if __name__ == '__main__':
     main()
-except Exception as error:
-    print('Command execution error please try again ')
-    print(error)
+
