@@ -81,22 +81,39 @@ class ReleaseCommand(BaseCommand):
         Returns:
         """
 
-        def publish_rpms(obs_project, pkg_family):
+        def publish_or_delete_rpms(obs_project, pkg_family, action, pkgname_list=None):
             """
             publish the rpm package
             """
             obs_job_params = {
                 "ScanOSSAPIURL": constant.JENKINS_API_URL,
                 "ScanOSSResultRepo": constant.JENKINS_SERVER_REPO,
-                "action": "release",
+                "action": action,
                 "obs_project": obs_project,
                 "update_dir": "update_" + release_date,
                 "package_family": pkg_family,
             }
+
+            if action == "del_pkg_rpm":
+                obs_job_params["pkgnamelist"] = pkgname_list
+
             jenkins_obs_res = jenkins_server.get_specific_job_comment(
                 obs_job_params, constant.OBS_RELEASE_JOB
             )
             return jenkins_obs_res
+
+        def process_stand_epol_rpms(pkg_list, obs_prj_name, action):
+            """
+            process standard and epol pkg rpms
+            """
+            standard_list, epol_list = issue.get_standard_epol_list(branch_name, pkg_list)
+            stand_transfer_res = publish_or_delete_rpms(obs_prj_name, "standard", action, standard_list)
+            self.create_comment("{action} standard rpm jenkins res".format(action=action), stand_transfer_res, issue)
+
+            if epol_list:
+                obs_prj_name = obs_prj_name + ":" + "Epol"
+                epol_transfer_res = publish_or_delete_rpms(obs_prj_name, "EPOL", action, epol_list)
+                self.create_comment("{action} standard rpm jenkins res".format(action=action), epol_transfer_res, issue)
 
         issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
         branch_name, update_pkgs, release_date = self.get_release_info(issue)
@@ -113,17 +130,16 @@ class ReleaseCommand(BaseCommand):
             branch_name,
             release_date,
         )
+        obs_prj = branch_name.replace("-", ":")
+
+        # delete remain pkg rpms
+        remain_pkgs = issue.get_remain_packages()
+        if remain_pkgs:
+            print("remain issues exists, need to delete rpms for repo.")
+            process_stand_epol_rpms(remain_pkgs, obs_prj, "del_pkg_rpm")
 
         # publish pkg rpms
-        obs_prj = branch_name.replace("-", ":")
-        standard_list, epol_list = issue.get_standard_epol_list(branch_name, update_pkgs)
-        stand_transfer_res = publish_rpms(obs_prj, "standard")
-        self.create_comment("transfer standard rpm jenkins res", stand_transfer_res, issue)
-
-        if epol_list:
-            obs_prj = obs_prj + ":" + "Epol"
-            epol_transfer_res = publish_rpms(obs_prj, "EPOL")
-            self.create_comment("transfer epol rpm jenkins res", epol_transfer_res, issue)
+        process_stand_epol_rpms(update_pkgs, obs_prj, "release")
 
     def cvrfok_operation(self, params):
         """

@@ -81,6 +81,7 @@ class Issue:
                 retry_count += 1
 
             if resp.status_code not in success_code:
+                logger.error("api request failed, url: %s, response: %s." % (url, resp.text))
                 return None
         except RequestException as e:
             logger.error("RequestException occurred. %s" % e)

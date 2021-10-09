@@ -900,7 +900,8 @@ class IssueOperation(Operation):
             return self.init_md_table(t_head=t_header, body_info=repos, block_title=block_name)
         return repos
 
-    def _process_issue_id(self, body):
+    @staticmethod
+    def _process_issue_id(body):
         """
         Process the MD string to get the issue ID
         Args:
@@ -1007,6 +1008,48 @@ class IssueOperation(Operation):
             return False
         return True
 
+    def get_remain_issues(self):
+        """
+        get issues in remain block
+        Returns:
+            remain issues
+        """
+        issue_body = self.get_issue_body(self.issue_num)
+        if not issue_body:
+            logger.error("empty body of release issue.")
+            return []
+
+        remain_res = re.compile("(?P<remain>4、遗留问题.*?\\n\\n)", re.S).search(issue_body)
+        if not remain_res:
+            logger.error("can not find remain issues label in release issue.")
+            return []
+
+        remain_issues = self._process_issue_id(remain_res["remain"])
+        if not remain_issues:
+            logger.info("can not find any remain issues in release issue.")
+        return list(set(remain_issues))
+
+    def get_remain_packages(self):
+        """
+        get packages in remain block
+        Returns:
+            remain package list
+        """
+        remain_issues = self.get_remain_issues()
+        remain_pkgs = []
+
+        for issue_number in remain_issues:
+            issue_content = self.get_issue_info(issue_number=issue_number)
+            if not issue_content:
+                logger.error("can not get the content of issue %s, perhaps this issue not exist." % issue_number)
+                continue
+
+            repository = issue_content.get("repository", {})
+            if repository.get("name"):
+                remain_pkgs.append(repository.get("name"))
+
+        return list(set(remain_pkgs))
+
     def check_issue_state(self):
         """
         Check the issue status under the bugfix and install_build headers
@@ -1020,10 +1063,13 @@ class IssueOperation(Operation):
                 raise ValueError("failed to get issue description information")
             # get the bugfix and the issue number under the install_build and cve table headers
             install_build_issues, bugfix_issues, _ = self._get_install_build_bugfix_issue_id(body)
+            remain_issues = self.get_remain_issues()
             if install_build_issues:
+                install_build_issues = [issue for issue in install_build_issues if issue not in remain_issues]
                 self.operate_release_issue(operation="update", operate_block="install_build",
                                            issues=install_build_issues)
             if bugfix_issues:
+                bugfix_issues = [issue for issue in bugfix_issues if issue not in remain_issues]
                 self.operate_release_issue(operation="update", operate_block="bugfix",
                                            issues=bugfix_issues)
         except (ValueError, TypeError, KeyError, AttributeError) as error:
