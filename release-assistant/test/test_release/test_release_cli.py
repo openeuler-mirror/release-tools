@@ -32,17 +32,28 @@ class TestRelease(TestMixin):
         test checkok success
         """
         self.expect_str = """
-[INFO] successfully create transfer standard rpm jenkins res
-[INFO] successfully create transfer epol rpm jenkins res
+remain issues exists, need to delete rpms for repo.
+[INFO] successfully create del_pkg_rpm standard rpm jenkins res
+[INFO] successfully create del_pkg_rpm epol rpm jenkins res
+[INFO] successfully create release standard rpm jenkins res
+[INFO] successfully create release epol rpm jenkins res
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'releasepart.txt')
         self.prepare_jenkins_data()
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
-        mock_create_standard_comment = self.make_need_content('create_standard_comments_success.txt', MOCK_DATA_FILE)
-        mock_create_epol_comment = self.make_need_content('create_epol_comments_success.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, resp, resp, mock_create_standard_comment, mock_create_epol_comment])
+        mock_remain_issue_data = self.make_need_content('mock_remain_issue.txt', MOCK_DATA_FILE)
+        mock_delete_remain_standard_comment = self.make_need_content('delete_remain_standard_comments_success.txt',
+                                                                     MOCK_DATA_FILE)
+        mock_delete_remain_epol_comment = self.make_need_content('delete_remain_epol_comments_success.txt',
+                                                                 MOCK_DATA_FILE)
+        mock_publish_standard_comment = self.make_need_content('publish_standard_comments_success.txt', MOCK_DATA_FILE)
+        mock_publish_epol_comment = self.make_need_content('publish_epol_comments_success.txt', MOCK_DATA_FILE)
+        self.mock_request(
+            side_effect=[resp, resp, resp, resp, resp, resp, mock_remain_issue_data,
+                         mock_delete_remain_standard_comment, mock_delete_remain_epol_comment,
+                         mock_publish_standard_comment, mock_publish_epol_comment])
         self.assert_result()
 
     def test_checkok_failed(self):
@@ -50,15 +61,16 @@ class TestRelease(TestMixin):
         test checkok failed
         """
         self.expect_str = """
-during the operation checkok, a failure occurred, and the cause of the error was transfer standard rpm jenkins res: No comment information
+during the operation checkok, a failure occurred, and the cause of the error was release standard rpm jenkins res: No comment information
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
-        resp = self.make_expect_data(200, 'releasepart.txt')
+        resp = self.make_need_content('releasepart_not_exist_remain_issue.txt', MOCK_DATA_FILE)
         self.prepare_jenkins_data()
         self.mock_jenkins_build_job(return_value=0)
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
-        self.mock_request(side_effect=[resp, resp, resp, resp])
+        mock_remain_issue_data = self.make_need_content('mock_remain_issue.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, mock_remain_issue_data])
         self.assert_result()
 
     def test_cvrfok_success(self):
@@ -125,7 +137,21 @@ Parameter validation failed
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'mock_incorrect_issue.txt')
-        self.mock_request(side_effect=[resp])
+        self.mock_request(side_effect=[resp, resp])
+        self.assert_result()
+
+    def test_verify_start_update_failed(self):
+        """
+        test verify start update failed
+        """
+        self.expect_str = """
+[ERROR] not allowed operation, please start release issue first.
+        """
+        self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
+                               "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
+        resp = self.make_expect_data(200, 'modifypart.txt')
+        mock_verify_start_update_data = self.make_need_content('verify_start_update_failed.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, mock_verify_start_update_data])
         self.assert_result()
 
     def prepare_jenkins_data(self):

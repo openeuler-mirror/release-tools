@@ -48,7 +48,12 @@ if __name__ == "__main__":
     runner = unittest.TextTestRunner()
     args = sys.argv
     cov.start()
-    test_case_files = []
+    test_case_files = [
+        os.path.join(TEST_CASE_PATH, "test_start/"),
+        os.path.join(TEST_CASE_PATH, "test_modify/"),
+        os.path.join(TEST_CASE_PATH, "test_check/"),
+        os.path.join(TEST_CASE_PATH, "test_release/"),
+    ]
 
     errors = []
     failures = []
