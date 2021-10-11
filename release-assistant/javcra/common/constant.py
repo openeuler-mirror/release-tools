@@ -38,6 +38,7 @@ PERMISSION_INFO = {
         "/cve-ok",
         "/check-ok",
         "/cvrf-ok",
+        "/start-update"
     ],
     "developer": [
         "/add-bugfix",

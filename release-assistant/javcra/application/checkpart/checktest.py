@@ -57,6 +57,22 @@ class CheckTest(Issue):
             logger.error("Error parsing issue description information %s" % error)
             return {}
 
+    def verify_start_update(self):
+        """
+        verify that the issue has been initialized
+        Returns:
+            True: has been successfully initialized
+            False: not initialized yet
+        """
+        body = self.get_issue_body(self.issue_num)
+        if not body:
+            logger.error("The description information of issue is not obtained")
+            return False
+
+        if "发布范围" in body:
+            return True
+        return False
+
     def people_review(self):
         """
         relevant people make an issue comment
