@@ -15,12 +15,12 @@ from javcra.application.serialize.validate import validate, validate_giteeid
 from javcra.common.constant import GITEE_REPO
 
 
-def personnel_authority(param_dict):
+def personnel_authority(param_dict, comment):
     """
     personnel name and responsibilities acquisition
     Args:
         param_dict: parameter dictionary
-
+        comment: comment
     Returns:
         personnel_dict: personnel Information Dictionary
     """
@@ -29,6 +29,11 @@ def personnel_authority(param_dict):
     if not personnel_dict:
         print("[ERROR] Failed to get the list of personnel permissions")
         return {}
+    if "start" not in comment:
+        verify_res = check.verify_start_update()
+        if not verify_res:
+            print("[ERROR] not allowed operation, please start release issue first.")
+            return {}
     return personnel_dict
 
 
@@ -46,7 +51,7 @@ def parameter_permission_validate(schema, param_dict, comment):
     if error:
         print("Parameter validation failed")
         return False
-    personnel_dict = personnel_authority(param_dict)
+    personnel_dict = personnel_authority(param_dict, comment)
     if not personnel_dict:
         return False
     permission = validate_giteeid(param_dict.get("giteeid"), comment, personnel_dict)
