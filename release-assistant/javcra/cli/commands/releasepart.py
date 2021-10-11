@@ -113,7 +113,7 @@ class ReleaseCommand(BaseCommand):
             if epol_list:
                 obs_prj_name = obs_prj_name + ":" + "Epol"
                 epol_transfer_res = publish_or_delete_rpms(obs_prj_name, "EPOL", action, epol_list)
-                self.create_comment("{action} standard rpm jenkins res".format(action=action), epol_transfer_res, issue)
+                self.create_comment("{action} epol rpm jenkins res".format(action=action), epol_transfer_res, issue)
 
         issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
         branch_name, update_pkgs, release_date = self.get_release_info(issue)
