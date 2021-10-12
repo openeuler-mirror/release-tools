@@ -294,6 +294,13 @@ class TestMixin(TestBase):
             **kwargs,
         )
 
+    def mock_requests_post(self, **kwargs):
+        """mock_requests_post"""
+        self._to_update_kw_and_make_mock(
+            "requests.post",
+            **kwargs,
+        )
+
     def mock_obs_cloud_list_objects(self, **kwargs):
         """mock_obs_cloud_list_objects"""
         self._to_update_kw_and_make_mock(
@@ -308,10 +315,115 @@ class TestMixin(TestBase):
             **kwargs,
         )
 
+    def mock_obs_cloud_head_bucket(self, **kwargs):
+        """mock_obs_cloud_headBucket"""
+        self._to_update_kw_and_make_mock(
+            "obs.ObsClient.headBucket",
+            **kwargs,
+        )
+
+    def mock_obs_cloud_delete_object(self, **kwargs):
+        """mock_obs_cloud_deleteObject"""
+        self._to_update_kw_and_make_mock(
+            "obs.ObsClient.deleteObject",
+            **kwargs,
+        )
+
+    def mock_obs_cloud_put_file(self, **kwargs):
+        """mock_obs_cloud_putFile"""
+        self._to_update_kw_and_make_mock(
+            "obs.ObsClient.putFile",
+            **kwargs,
+        )
+
+    def mock_jenkins_build_job(self, **kwargs):
+        """mock_jenkins_build_job"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.build_job",
+            **kwargs,
+        )
+
+    def mock_jenkins_create_job(self, **kwargs):
+        """mock_jenkins_create_job"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.create_job",
+            **kwargs,
+        )
+
+    def mock_jenkins_create_folder(self, **kwargs):
+        """mock_jenkins_create_folder"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.create_folder",
+            **kwargs,
+        )
+
+    def mock_jenkins_get_job_info(self, **kwargs):
+        """mock_jenkins_get_job_info"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.get_job_info",
+            **kwargs,
+        )
+
+    def mock_jenkins_get_build_info(self, **kwargs):
+        """mock_jenkins_get_build_info"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.get_build_info",
+            **kwargs,
+        )
+
+    def mock_jenkins_get_build_console_output(self, **kwargs):
+        """mock_jenkins_get_build_console_output"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.get_build_console_output",
+            **kwargs,
+        )
+
+    def mock_jenkins_get_queue_item(self, **kwargs):
+        """mock_jenkins_get_queue_item"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.get_queue_item",
+            **kwargs,
+        )
+
+    def mock_jenkins_get_job_config(self, **kwargs):
+        """mock_jenkins_get_job_config"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.get_job_config",
+            **kwargs,
+        )
+
+    def mock_jenkins_build_job_url(self, **kwargs):
+        """mock_jenkins_build_job_url"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.build_job_url",
+            **kwargs,
+        )
+
+    def mock_jenkins_job_exists(self, **kwargs):
+        """mock_jenkins_job_exists"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.job_exists",
+            **kwargs,
+        )
+
+    def mock_jenkins_delete_job(self, **kwargs):
+        """mock_jenkins_delete_job"""
+        self._to_update_kw_and_make_mock(
+            "jenkins.Jenkins.delete_job",
+            **kwargs,
+        )
+
     def mock_pandas_read_excel(self, **kwargs):
         """mock_pandas_read_excel"""
         self._to_update_kw_and_make_mock(
             "pandas.read_excel",
+            **kwargs,
+        )
+
+    def mock_subprocess_check_output(self, **kwargs):
+        """mock_subprocess_check_output"""
+        self._to_update_kw_and_make_mock(
+            "subprocess.check_output",
             **kwargs,
         )
 
@@ -362,3 +474,29 @@ class TestMixin(TestBase):
         mock_r.status_code = status
         mock_r.body = dict_2_object(body)
         return mock_r
+
+    def make_need_content(self, file_name, mock_data_file, is_json=False):
+        """
+        make need data
+        Args:
+            file_name: file name
+            mock_data_file: file path
+            is_json: json flag
+        Returns:
+        """
+        read_data = self.read_file_content(file_name, folder=mock_data_file, is_json=is_json)
+        need_content = self.make_object_data(200, read_data)
+        return need_content
+
+    def make_need_obs_cloud_data(self, file_name, mock_data_file, status_code):
+        """
+        make need obs cloud data
+        Args:
+            file_name: file name
+            mock_data_file: file path
+            status_code: status code
+        Returns:
+        """
+        read_data = self.read_file_content(file_name, folder=mock_data_file)
+        need_obs_content = self.make_obs_cloud_data(status_code, read_data)
+        return need_obs_content

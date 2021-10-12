@@ -1,0 +1,3 @@
+[ERROR] failed to get requires.
+[INFO] successfully create transfer standard rpm jenkins res
+during the operation requires, a failure occurred, and the cause of the error was failed to add repo in release issue.
