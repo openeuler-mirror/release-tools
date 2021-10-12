@@ -123,6 +123,8 @@ class TestBase(unittest.TestCase):
         BaseCommand.subparsers = BaseCommand.parser.add_subparsers(
             help="Just A Very Convenient Release Assistant"
         )
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
         self._to_add_cleanup()
         return super().tearDown()
 
