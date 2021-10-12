@@ -52,7 +52,7 @@ if __name__ == "__main__":
         os.path.join(TEST_CASE_PATH, "test_start/"),
         os.path.join(TEST_CASE_PATH, "test_modify/"),
         os.path.join(TEST_CASE_PATH, "test_check/"),
-        os.path.join(TEST_CASE_PATH, "test_release/"),
+        os.path.join(TEST_CASE_PATH, "test_release/")
     ]
 
     errors = []
