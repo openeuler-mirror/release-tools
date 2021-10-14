@@ -27,7 +27,8 @@ BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file_
 
 TEST_CASE_PATH = os.path.join(BASE_PATH, "test")
 
-cov = coverage.coverage(include=[BASE_PATH + "/javcra/*"], )
+cov = coverage.coverage(include=[BASE_PATH + "/javcra/*"],
+                        omit=["*__init__.py", "*/check_requires/*.py", "*/api/obscloud.py"])
 
 
 def specify_case(file_path):

@@ -61,7 +61,7 @@ remain issues exists, need to delete rpms for repo.
         test checkok failed
         """
         self.expect_str = """
-during the operation checkok, a failure occurred, and the cause of the error was release standard rpm jenkins res: No comment information
+during the operation checkok, a failure occurred, and the cause of the error was release standard rpm jenkins res: No comment information. The content is:  [].
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]

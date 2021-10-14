@@ -49,8 +49,8 @@ class TestCheck(TestMixin):
         mock_post_data = self.make_need_content('mock_post_data.txt', MOCK_DATA_FILE)
         self.mock_requests_post(return_value=mock_post_data)
         self.mock_request(
-            side_effect=[resp, resp, resp, mock_install_r, resp, resp, resp, resp, mock_bugfix_r, mock_check_r, resp,
-                         mock_install_r, mock_bugfix_r, resp, resp, resp, resp, resp, resp])
+            side_effect=[resp, resp, resp, resp, resp, mock_install_r, resp, resp, resp, mock_bugfix_r, mock_check_r,
+                         resp, resp, mock_install_r, mock_bugfix_r, resp, resp, resp, resp, resp, resp])
         self.assert_result()
 
     def test_check_status_failed(self):
@@ -81,10 +81,9 @@ during the operation status, a failure occurred, and the cause of the error was 
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
         mock_install_r = self.make_need_content('mock_install_issue.txt', MOCK_DATA_FILE)
         mock_check_r = self.make_need_content('check_status_success.txt', MOCK_DATA_FILE)
-        mock_issue_is_none = self.make_need_content('mock_issue_is_none.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, mock_install_r, resp, resp, resp, resp, mock_bugfix_r, mock_check_r,
-                         mock_issue_is_none])
+            side_effect=[resp, resp, resp, resp, resp, mock_install_r, resp, resp, resp, mock_bugfix_r, mock_check_r,
+                         resp, RequestException])
         self.assert_result()
 
     def test_send_repo_info_failed(self):
@@ -105,8 +104,8 @@ during the operation status, a failure occurred, and the cause of the error was 
         mock_check_r = self.make_need_content('check_status_success.txt', MOCK_DATA_FILE)
         self.mock_requests_post(return_value=None)
         self.mock_request(
-            side_effect=[resp, resp, resp, mock_install_r, resp, resp, resp, resp, mock_bugfix_r, mock_check_r, resp,
-                         mock_install_r, mock_bugfix_r, resp, resp, resp, resp, resp, resp])
+            side_effect=[resp, resp, resp, resp, resp, mock_install_r, resp, resp, resp, mock_bugfix_r, mock_check_r,
+                         resp, resp, mock_install_r, mock_bugfix_r, resp, resp, resp, resp, resp, resp])
         self.assert_result()
 
     def test_block_has_no_related_issues(self):
@@ -115,14 +114,17 @@ during the operation status, a failure occurred, and the cause of the error was 
         """
         self.expect_str = """
 [INFO] successfully update status in check part.
-during the operation status, a failure occurred, and the cause of the error was the status of the issue is not all completed, please complete first
+[INFO] All issues are completed, the next step is sending repo to test platform.
+[ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
         resp = self.make_expect_data(200, 'checkpart.txt')
+        self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_no_related_issues_r = self.make_need_content('mock_no_related_issues.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, mock_no_related_issues_r, mock_no_related_issues_r, mock_no_related_issues_r])
+            side_effect=[resp, resp, mock_no_related_issues_r, mock_no_related_issues_r, mock_no_related_issues_r,
+                         RequestException])
         self.assert_result()
 
     def test_people_review_success(self):
@@ -210,10 +212,10 @@ Parameter validation failed
         mock_checkpart_add_build = self.make_need_content('checkpart_add_build_success.txt', MOCK_DATA_FILE)
         mock_checkpart_add_install = self.make_need_content('checkpart_add_install_success.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
+            side_effect=[resp, resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
                          mock_add_repo_r, mock_create_build_jenkins_comment, mock_create_install_jenkins_comment, resp,
-                         mock_exist_issues, mock_create_build_issue, resp, mock_create_build_issue,
-                         mock_checkpart_add_build, resp, mock_exist_issues, mock_create_install_issue, resp,
+                         mock_exist_issues, mock_create_build_issue, resp, resp, mock_create_build_issue,
+                         mock_checkpart_add_build, resp, mock_exist_issues, mock_create_install_issue, resp, resp,
                          mock_create_install_issue, mock_checkpart_add_install])
         self.assert_result()
 
@@ -228,7 +230,7 @@ Parameter validation failed
         self.prepare_jenkins_data()
         self.prepare_obs_data(delete_status_code=400)
         resp = self.make_expect_data(200, 'checkpart.txt')
-        self.mock_request(side_effect=[resp, resp, resp, resp, resp])
+        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp])
         self.assert_result()
 
     def test_get_repo_in_table_failed(self):
@@ -245,7 +247,7 @@ Parameter validation failed
         resp = self.make_expect_data(200, 'checkpart.txt')
 
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
+            side_effect=[resp, resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
                          RequestException])
         self.assert_result()
 
@@ -267,10 +269,11 @@ Parameter validation failed
         mock_checkpart_add_build = self.make_need_content('checkpart_add_build_success.txt', MOCK_DATA_FILE)
         mock_checkpart_add_install = self.make_need_content('checkpart_add_install_success.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, RequestException, resp, resp, resp, resp, mock_add_repo_r,
-                         RequestException, RequestException, resp, mock_exist_issues, mock_create_build_issue, resp,
-                         mock_create_build_issue, mock_checkpart_add_build, resp, mock_exist_issues,
-                         mock_create_install_issue, resp, mock_create_install_issue, mock_checkpart_add_install])
+            side_effect=[resp, resp, resp, resp, resp, resp, resp, RequestException, resp, resp, resp, resp,
+                         mock_add_repo_r, RequestException, RequestException, resp, mock_exist_issues,
+                         mock_create_build_issue, resp, resp, mock_create_build_issue, mock_checkpart_add_build, resp,
+                         mock_exist_issues, mock_create_install_issue, resp, resp, mock_create_install_issue,
+                         mock_checkpart_add_install])
         self.assert_result()
 
     def test_check_requires_epol_list_failed(self):
@@ -287,7 +290,8 @@ Parameter validation failed
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
         mock_create_jenkins_comment = self.make_need_content('create_jenkins_comments_success.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp, resp,
+            side_effect=[resp, resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
+                         resp,
                          RequestException])
         self.assert_result()
 
@@ -326,15 +330,15 @@ during the operation requires, a failure occurred, and the cause of the error wa
         """
         self.expect_str = """
 [ERROR] failed to get requires.
-during the operation requires, a failure occurred, and the cause of the error was transfer standard rpm jenkins res: No comment information
-                """
+during the operation requires, a failure occurred, and the cause of the error was transfer standard rpm jenkins res: No comment information. The content is:  [].
+        """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.prepare_jenkins_data()
         self.prepare_obs_data()
         self.mock_jenkins_build_job(return_value=0)
-        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp])
+        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, resp])
         self.assert_result()
 
     def test_write_back_create_install_build_issue_failed(self):
@@ -356,7 +360,7 @@ during the operation requires, a failure occurred, and the cause of the error wa
         mock_create_build_jenkins_comment = self.make_need_content('create_build_jenkins_comments_success.txt',
                                                                    MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
+            side_effect=[resp, resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
                          mock_add_repo_r, mock_create_build_jenkins_comment, mock_create_install_jenkins_comment, resp,
                          mock_exist_issues, RequestException, RequestException])
         self.assert_result()
@@ -382,9 +386,9 @@ during the operation requires, a failure occurred, and the cause of the error wa
         mock_create_build_issue = self.make_need_content('create_build_issue_success.txt', MOCK_DATA_FILE)
         mock_create_install_issue = self.make_need_content('create_install_issue_success.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
+            side_effect=[resp, resp, resp, resp, resp, resp, resp, mock_create_jenkins_comment, resp, resp, resp, resp,
                          mock_add_repo_r, mock_create_build_jenkins_comment, mock_create_install_jenkins_comment, resp,
-                         mock_exist_issues, mock_create_build_issue, resp, mock_create_build_issue,
+                         mock_exist_issues, mock_create_build_issue, resp, resp, mock_create_build_issue,
                          RequestException, resp, mock_exist_issues, mock_create_install_issue, resp,
                          mock_create_install_issue, RequestException])
         self.assert_result()
