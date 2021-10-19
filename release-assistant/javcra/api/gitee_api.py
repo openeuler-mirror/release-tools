@@ -54,7 +54,7 @@ class Issue:
         params.update(**kwargs)
         return params
 
-    def gitee_api_request(self, method, url, params=None, retry=3):
+    def gitee_api_request(self, method, url, data=None, params=None, retry=3):
         """
         requesting gitee api
 
@@ -62,6 +62,7 @@ class Issue:
             method : http request method
             url : request url
             params : request params
+            data: request data
             retry: retry count
 
         Returns:
@@ -72,12 +73,12 @@ class Issue:
         success_code = {201, 200}
 
         try:
-            resp = requests.request(method.lower(), url, params=params, headers=self.headers)
+            resp = requests.request(method.lower(), url, params=params, data=data, headers=self.headers)
 
             retry_count = 0
             while resp.status_code == 408 and retry_count < retry:
                 logger.error("api request timed out, retrying %s." % retry_count)
-                resp = requests.request(method.lower(), url, params=params, headers=self.headers)
+                resp = requests.request(method.lower(), url, params=params, data=data, headers=self.headers)
                 retry_count += 1
 
             if resp.status_code not in success_code:
@@ -147,24 +148,24 @@ class Issue:
         logger.error("failed to get the issue info of %s. " % issue_number)
         return None
 
-    def create_issue(self, params):
+    def create_issue(self, data):
         """
         create issue in gitee
         Args:
-            params: parameters to create issue
+            data: data to create issue
 
         Returns:
             created_issue_id
         """
         # get all the open state issue's title
-        exist_issues = self.__get_pkg_issues(params.get("repo"))
+        exist_issues = self.__get_pkg_issues(data.get("repo"))
         exist_issue_title_dict = dict()
         for issue in exist_issues:
             issue_id = issue.get("number")
             issue_title = issue.get("title")
             exist_issue_title_dict[issue_id] = issue_title
 
-        issue_title = params.get("title")
+        issue_title = data.get("title")
 
         # if already exist the same title issue, then return the existed issue id
         if issue_title in exist_issue_title_dict.values():
@@ -174,8 +175,8 @@ class Issue:
                         issue_title, created_issue_id))
                     return created_issue_id
         else:
-            prj_issue_url = self.__get_gitee_api_url("create_issue_url", owner=params["owner"])
-            post_res = self.gitee_api_request("post", prj_issue_url, params)
+            prj_issue_url = self.__get_gitee_api_url("create_issue_url", owner=data["owner"])
+            post_res = self.gitee_api_request("post", prj_issue_url, data=data)
             if not post_res:
                 logger.error("failed to create the issue: {}".format(issue_title))
                 return None
@@ -191,13 +192,13 @@ class Issue:
         Returns:
             update issue result
         """
-        params = self.__generate_request_params(**kwargs)
+        data = self.__generate_request_params(**kwargs)
         update_issue_url = self.__get_gitee_api_url("update_issue_url", owner=owner)
 
         return self.gitee_api_request(
             "patch",
             url=update_issue_url,
-            params=params
+            data=data
         )
 
     def create_issue_comment(self, comment):
@@ -208,8 +209,8 @@ class Issue:
             comment (str): comment str
         """
         url = self.__get_gitee_api_url("create_comment_url", owner="openeuler")
-        params = {"body": comment, "access_token": self.token}
-        resp = self.gitee_api_request("post", url=url, params=params)
+        data = {"body": comment, "access_token": self.token}
+        resp = self.gitee_api_request("post", url=url, data=data)
         return resp
 
     def get_update_issue_branch(self):
