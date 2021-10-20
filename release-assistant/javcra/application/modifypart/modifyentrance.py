@@ -789,11 +789,17 @@ class IssueOperation(Operation):
             logger.error("failed to create install build issue because the release issue branch not found.")
             return None
 
+        release_time = self.get_release_time()
+        if not release_time:
+            logger.error("failed to create install build issue because the release time not found.")
+            return None
+
         params = {
             "repo": pkg_name,
             "owner": self.owner,
             "access_token": self.token,
-            "title": "[{brh}] {pkg} {verify_type} failed".format(pkg=pkg_name, verify_type=failed_type, brh=branch)
+            "title": "[{brh}] {pkg} {verify_type} failed {release_date}".format(pkg=pkg_name, verify_type=failed_type,
+                                                                                brh=branch, release_date=release_time)
         }
 
         command = ""
