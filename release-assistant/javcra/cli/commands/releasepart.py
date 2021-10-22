@@ -21,7 +21,7 @@ from javcra.application.serialize.serialize import ReleaseSchema
 from javcra.cli.base import BaseCommand
 from javcra.cli.commands import parameter_permission_validate
 from javcra.common import constant
-from javcra.common.constant import MAX_PARAL_NUM, GITEE_REPO
+from javcra.common.constant import MAX_PARAL_NUM, GITEE_REPO, EPOL_DICT
 
 
 class ReleaseCommand(BaseCommand):
@@ -110,9 +110,13 @@ class ReleaseCommand(BaseCommand):
             stand_transfer_res = publish_or_delete_rpms(obs_prj_name, "standard", action, standard_list)
             self.create_comment("{action} standard rpm jenkins res".format(action=action), stand_transfer_res, issue)
 
+            pkg_family = EPOL_DICT.get(branch_name)
+            if not pkg_family:
+                raise ValueError("failed to get epol name of jenkins job for %s." % branch_name)
+
             if epol_list:
                 obs_prj_name = obs_prj_name + ":" + "Epol"
-                epol_transfer_res = publish_or_delete_rpms(obs_prj_name, "EPOL", action, epol_list)
+                epol_transfer_res = publish_or_delete_rpms(obs_prj_name, pkg_family, action, epol_list)
                 self.create_comment("{action} epol rpm jenkins res".format(action=action), epol_transfer_res, issue)
 
         issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)

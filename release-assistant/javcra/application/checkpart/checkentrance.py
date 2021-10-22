@@ -57,6 +57,7 @@ class CheckEntrance(IssueOperation):
         Returns:
             True or False
         """
+        logger.info("Start to detect whether the repo exists.")
         for repo_info in repos_list:
             url = repo_info.get("url")
             if not self.gitee_api_request("get", url):

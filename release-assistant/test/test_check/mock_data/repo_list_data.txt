@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style type="text/css">
+    body,html {
+        background:#fff;
+        font-family:"Bitstream Vera Sans","Lucida Grande",
+        "Lucida Sans Unicode",Lucidux,Verdana,Lucida,sans-serif;
+    }
+    tr:nth-child(even) {
+        background: rgba(0,0,0,.03);
+    }
+    th,td {
+        padding:12px 0 12px 10px;
+        word-wrap: break-word;
+    }
+    th {
+        text-align: left;
+        font-weight: bold;
+        background: rgba(0,0,0,.05);
+    }
+    th a {
+        color: #000;
+    }
+    #list {
+        width: 1120px;
+        margin: 0 auto;
+    }
+    a {
+        color: #002fa7;
+        text-decoration: none;
+    }
+    a:hover {
+        color:#002fa7;
+    }
+    body>h1 {
+        width: 1120px;
+        margin: 20px auto;
+    }
+    @media screen and (max-width: 1120px){
+        #list,body>h1 {width: 100%;}
+        #list th{font-size: 14px;}
+        #list td{font-size: 12px;}
+        body>h1{font-size: 18px;}
+    }
+    </style>
+    <link rel="stylesheet" href="/fancySource/css/index.css">
+</head>
+<body>
+    <header>
+        <div class="header">
+            <div class="content">
+                <a href="https://openeuler.org/zh/">
+                    <img src="/fancySource/img/openeuler.png" alt="" class="pc-logo" />
+                    <img src="/fancySource/img/logo-mobile.png" alt="" class="mobile-logo" />
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="header-banner">
+        <div class="content">
+            <div class="text">
+                <h1>openEuler Repo</h1>
+                <p>Please follow the document to setup openEuler repo. Also, we has mirror sites globally,  go visiting our official
+                    <a href="https://openeuler.org/zh/mirror/list/">mirror list</a> and select the suitable site.</p>
+                <p>Don't be hesitate to <a href="mailto:admin@openeuler.io">contact us</a> if you have any question.</p>
+            </div>
+            <div class="image">
+                <h1>openEuler Repo</h1>
+                <img src="/fancySource/img/repo-banner.png" alt="" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<h1>Index of
+/repo.openeuler.org/openEuler-20.03-LTS/update_20210721/</h1>
+<table id="list"><thead><tr><th style="width:55%"><a href="?C=N&amp;O=A">File Name</a>&nbsp;<a href="?C=N&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:20%"><a href="?C=S&amp;O=A">File Size</a>&nbsp;<a href="?C=S&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:25%"><a href="?C=M&amp;O=A">Date</a>&nbsp;<a href="?C=M&amp;O=D">&nbsp;&darr;&nbsp;</a></th></tr></thead>
+<tbody><tr><td class="link"><a href="../">Parent directory/</a></td><td class="size">-</td><td class="date">-</td></tr>
+<tr><td class="link"><a href="aarch64/" title="aarch64">aarch64/</a></td><td class="size">-</td><td class="date">2021-Jul-23 11:58</td></tr>
+<tr><td class="link"><a href="source/" title="source">source/</a></td><td class="size">-</td><td class="date">2021-Jul-23 11:58</td></tr>
+<tr><td class="link"><a href="x86_64/" title="x86_64">x86_64/</a></td><td class="size">-</td><td class="date">2021-Jul-23 11:58</td></tr>
+<tr><td class="link"><a href="pkglist" title="pkglist">pkglist</a></td><td class="size">311 B</td><td class="date">2021-Jul-23 11:58</td></tr>
+</tbody></table><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <div class="center-box"></div>
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <img src="/fancySource/img/footer-logo.svg" class="footer-logo" />
+                    <div class="footer-mail">contact@openeuler.io</div>
+                </div>
+                <div class="footer-center">
+                    <ul class="right-list">
+                        <li>
+                            <a href="https://openeuler.org/zh/other/brand/">品牌</a>
+                        </li>
+                        <li>
+                            <a href="https://openeuler.org/zh/other/privacy/">隐私政策</a>
+                        </li>
+                        <li>
+                            <a href="https://openeuler.org/zh/other/legal/">法律声明</a>
+                        </li>
+                    </ul>
+                    <p class="footer-copyright">
+                        版权所有 © 2021 openEuler 保留一切权利
+                    </p>
+                </div>
+                <div class="footer-right">
+                    <img src="/fancySource/img/qrcode.png" class="footer-qrcode" />
+                    <div class="qrcode-desc">扫码关注公众号</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -126,7 +126,7 @@ REALSE_TOOLS_BUCKET_NAME = "release-tools"
 REALSE_TOOLS_SERVER = "obs.cn-north-4.myhuaweicloud.com"
 
 # max parallel jenkins num
-MAX_PARAL_NUM = 6
+MAX_PARAL_NUM = 5
 
 # obs_project
 OBS_PRJ = "openEuler:20.09"
@@ -140,3 +140,9 @@ CHECK_COMMENT_DICT = {
 
 # release url
 RELEASE_URL = "https://www.openeuler.org/api-cve/cve-security-notice-server/syncAll"
+
+EPOL_DICT = {
+    "openEuler-20.03-LTS": "EPOL",
+    "openEuler-20.03-LTS-SP1": "EPOL",
+    "openEuler-20.03-LTS-SP2": "EPOL-main"
+}

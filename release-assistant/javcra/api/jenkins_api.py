@@ -90,7 +90,7 @@ class JenkinsJob(object):
             base_path
         """
         path_prefix = self.get_path_prefix()
-        base_path = path_prefix + "/update_" + self.release_date
+        base_path = path_prefix + "/" + self.branch
         return base_path
 
     def create_folder(self):
@@ -116,9 +116,9 @@ class JenkinsJob(object):
         base_path = self.get_base_path()
         for index in range(1, self.paral_job_num + 1):
             parallel_job_dict[AARCH_FRAME].append(base_path + "/" + AARCH_FRAME + "/" +
-                                                  self.branch + "_" + str(index))
+                                                  "selfbuild_" + str(index))
             parallel_job_dict[X86_FRAME].append(base_path + "/" + X86_FRAME + "/" +
-                                                self.branch + "_" + str(index))
+                                                "selfbuild_" + str(index))
         return parallel_job_dict
 
     @staticmethod

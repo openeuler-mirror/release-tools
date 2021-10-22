@@ -1,5 +1,6 @@
 [ERROR] failed to get requires.
+already exists the repo url, then update the pkglist in repo.
 [ERROR] failed to create transfer standard rpm jenkins res
 [INFO] successful to add repo in release issue.
 [ERROR] failed to create selfbuild jenkins res
-[ERROR] failed to create install jenkins res
+[ERROR] failed to create standard install jenkins res

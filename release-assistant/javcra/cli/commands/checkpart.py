@@ -29,7 +29,7 @@ from javcra.common.constant import (
     MAX_PARAL_NUM,
     REALSE_TOOLS_BUCKET_NAME,
     REALSE_TOOLS_SERVER,
-    X86_FRAME, CHECK_COMMENT_DICT)
+    X86_FRAME, CHECK_COMMENT_DICT, EPOL_DICT)
 
 from javcra.api.obscloud import ObsCloud
 
@@ -202,7 +202,7 @@ class CheckCommand(BaseCommand):
         Returns:
         """
 
-        def transfer_pkg_rpm(obs_project, pkg_family, pkgs):
+        def transfer_pkg_rpm(obs_project, pkg_family, pkgs, obs_action):
             """
             transfer the rpm package to the server, and comment on the Jenkins
             job result on the release issue
@@ -210,7 +210,7 @@ class CheckCommand(BaseCommand):
             obs_job_params = {
                 "ScanOSSAPIURL": constant.JENKINS_API_URL,
                 "ScanOSSResultRepo": constant.JENKINS_SERVER_REPO,
-                "action": "create",
+                "action": obs_action,
                 "obs_project": obs_project,
                 "update_dir": "update_" + release_date,
                 "package_family": pkg_family,
@@ -226,7 +226,11 @@ class CheckCommand(BaseCommand):
             verify selfbuild for update pkg_list
 
             """
-            jenkins_server.delete_jenkins_job(constant.JENKINS_PATH_PREFIX)
+            jenkins_server.delete_jenkins_job(
+                constant.JENKINS_PATH_PREFIX
+                + "/"
+                + branch_name
+            )
             created_res = jenkins_server.create_selfbuild_jenkins_jobs(update_pkgs)
             if not created_res:
                 raise ValueError("failed to create selfbuild jenkins job.")
@@ -234,7 +238,7 @@ class CheckCommand(BaseCommand):
             build_status_res = jenkins_server.get_selfbuild_job_comment()
             return build_status_res
 
-        def verify_install():
+        def verify_install(epol_flag, install_pkgs):
             """
             verify install for pkgs list
             """
@@ -245,7 +249,7 @@ class CheckCommand(BaseCommand):
                 "EPOL": epol_flag,
                 "UPDATE_TIME": release_date,
                 "BRANCH": branch_name,
-                "PKGLIST": ",".join(update_pkgs),
+                "PKGLIST": ",".join(install_pkgs)
             }
             install_status_res = jenkins_server.get_specific_job_comment(
                 install_jobs_params, constant.INSTALL_JOB_PREFIX + branch_name
@@ -277,7 +281,6 @@ class CheckCommand(BaseCommand):
         branch_name, update_pkgs, release_date = self.get_release_info(issue)
 
         standard_list, epol_list = issue.get_standard_epol_list(branch_name, update_pkgs)
-        epol_flag = "True" if epol_list else "False"
 
         # get parallel jenkins job num according to length of pkg_list and max parallel num
         paral_num = min(MAX_PARAL_NUM, len(update_pkgs))
@@ -302,14 +305,24 @@ class CheckCommand(BaseCommand):
         else:
             print("[INFO] successfully get requires.")
 
-        # upload the rpm package to the server
+        # upload or update the rpm package to the server
+        action = "create"
+        repo_list = check_issue.get_repo(md_type=False)
+        if check_issue.request_repo_url(repo_list):
+            print("already exists the repo url, then update the pkglist in repo.")
+            action = "update"
+
         obs_prj = branch_name.replace("-", ":")
-        stand_transfer_res = transfer_pkg_rpm(obs_prj, "standard", standard_list)
+        stand_transfer_res = transfer_pkg_rpm(obs_prj, "standard", standard_list, action)
         self.create_comment("transfer standard rpm jenkins res", stand_transfer_res, issue)
+
+        pkg_family = EPOL_DICT.get(branch_name)
+        if not pkg_family:
+            raise ValueError("failed to get epol name of jenkins job for %s." % branch_name)
 
         if epol_list:
             obs_prj = obs_prj + ":" + "Epol"
-            epol_transfer_res = transfer_pkg_rpm(obs_prj, "EPOL", epol_list)
+            epol_transfer_res = transfer_pkg_rpm(obs_prj, pkg_family, epol_list, action)
             self.create_comment("transfer epol rpm jenkins res", epol_transfer_res, issue)
 
         # add the repo content to the release issue
@@ -323,8 +336,11 @@ class CheckCommand(BaseCommand):
         self.create_comment("selfbuild jenkins res", selfbuild_res, issue)
 
         # installation verification
-        install_res = verify_install()
-        self.create_comment("install jenkins res", install_res, issue)
+        stand_install_res = verify_install("false", standard_list)
+        self.create_comment("standard install jenkins res", stand_install_res, issue)
+        if epol_list:
+            epol_install_res = verify_install("true", epol_list)
+            self.create_comment("epol install jenkins res", epol_install_res, issue)
 
         # obtain and analyze the self-build installation results from file server
         parsed_install_build_res = cloud_server.parse_install_build_content(branch_name)
