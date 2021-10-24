@@ -14,7 +14,8 @@
 Description: check method's entrance for custom commands
 Class:CheckCommand
 """
-
+import os
+import uuid
 from javcra.api.jenkins_api import JenkinsJob
 from javcra.application.checkpart.checkentrance import CheckEntrance
 from javcra.application.checkpart.checktest import CheckTest
@@ -32,6 +33,7 @@ from javcra.common.constant import (
     X86_FRAME, CHECK_COMMENT_DICT, EPOL_DICT)
 
 from javcra.api.obscloud import ObsCloud
+from javcra.libs.log import logger
 
 
 class CheckCommand(BaseCommand):
@@ -68,20 +70,18 @@ class CheckCommand(BaseCommand):
             action="store",
             required=True,
         )
-        self.sub_parse.add_argument(
-            "--jenkinsuser",
-            type=str,
-            help="provide your jenkinsuser",
-            action="store",
-            required=True,
-        )
-        self.sub_parse.add_argument(
-            "--jenkinskey",
-            type=str,
-            help="provide your jenkins key",
-            action="store",
-            required=True,
-        )
+        self.sub_parse.add_argument("--jenkinsuser",
+                                    type=str,
+                                    help="provide your jenkinsuser",
+                                    action="store",
+                                    required=True,
+                                    )
+        self.sub_parse.add_argument("--jenkinskey",
+                                    type=str,
+                                    help="provide your jenkins key",
+                                    action="store",
+                                    required=True,
+                                    )
 
     @staticmethod
     def jenkins_server(params, paral_num, branch_name, release_date):
@@ -193,6 +193,58 @@ class CheckCommand(BaseCommand):
             return
         print("[INFO] successfully to send repo info.")
 
+    def read_log_data(self, cloud_server, pkg_log, tem_pkg_log_path, pkg_name):
+        """
+        read pkg log data
+        Args:
+            cloud_server: cloud_server
+            pkg_log: pkg log
+            tem_pkg_log_path: tem_pkg_log_path
+            pkg_name: pkg_name
+
+        Returns:
+            None
+        """
+        try:
+            resp = cloud_server.down_load_file(pkg_log, tem_pkg_log_path)
+            if not resp:
+                logger.error("failed to download archived %s package "
+                             "compilation log" % pkg_name)
+                return ""
+            with open(tem_pkg_log_path, "r", encoding="utf-8") as file:
+                pkg_log_data = file.readlines()
+                return "".join(pkg_log_data[-50:])
+        except (OSError, IOError, IndexError) as error:
+            logger.error("failed to extract archived %s package "
+                         "compilation information,because %s" % (pkg_name, error))
+            return ""
+        finally:
+            if os.path.exists(tem_pkg_log_path):
+                os.remove(tem_pkg_log_path)
+
+    def download_pkg_log(self, pkg_name, install_or_build, branch_name, cloud_server):
+        """
+        download the archived information and read the last 50 lines of log information
+        Args:
+            pkg_name: pkg_name
+            install_or_build: install_or_build
+            branch_name: branch_name
+            cloud_server: cloud_server
+
+        Returns:
+            part_log_data: part log data
+        """
+        choose_dict = {"build_list": "build_result", "install_list": "check_result"}
+        pkg_logs = cloud_server.bucket_list(
+            "install_build_log/{}".format(branch_name)
+        )
+        for pkg_log in pkg_logs:
+            if pkg_name in pkg_log and choose_dict.get(install_or_build) in pkg_log:
+                tem_pkg_log_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                                "{}_{}_{}_{}".format(branch_name, install_or_build, pkg_name,
+                                                                     str(uuid.uuid1().hex)))
+                return self.read_log_data(cloud_server, pkg_log, tem_pkg_log_path, pkg_name)
+
     def requires_operation(self, params):
         """
         Description: operation for get requires
@@ -200,6 +252,7 @@ class CheckCommand(BaseCommand):
             params: Command line parameters
 
         Returns:
+            jenkins_obs_res: jenkins_obs_res
         """
 
         def transfer_pkg_rpm(obs_project, pkg_family, pkgs, obs_action):
@@ -262,9 +315,11 @@ class CheckCommand(BaseCommand):
             """
             install_or_build_dict = {"build_list": "build", "install_list": "install"}
             for pkg in pkgs:
-                issue_id = issue.create_install_build_issue(
-                    install_or_build_dict.get(install_or_build), pkg
+                log_data = self.download_pkg_log(
+                    pkg, install_or_build, branch_name, cloud_server
                 )
+                issue_id = issue.create_install_build_issue(
+                    install_or_build_dict.get(install_or_build), pkg, log_data)
                 if not issue_id:
                     print("failed to create %s issue for %s." % (install_or_build, pkg))
                 else:

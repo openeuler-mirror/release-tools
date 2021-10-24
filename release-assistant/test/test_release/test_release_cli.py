@@ -73,6 +73,57 @@ during the operation checkok, a failure occurred, and the cause of the error was
         self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, mock_remain_issue_data])
         self.assert_result()
 
+    def test_checkok_date_info_not_in_issue_body(self):
+        """
+        test checkok date info not in issue body
+        """
+        self.expect_str = """
+during the operation checkok, a failure occurred, and the cause of the error was can not get the release time, please check.
+        """
+        self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
+                               "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
+        resp = self.make_expect_data(200, 'releasepart.txt')
+        not_exist_date_info_data = self.make_need_content('releasepart_not_exist_date_info.txt', MOCK_DATA_FILE)
+        self.prepare_jenkins_data()
+        self.mock_jenkins_build_job(return_value=0)
+        self.mock_subprocess_check_output(return_value=b'published-Epol-src')
+        self.mock_request(side_effect=[resp, resp, resp, resp, not_exist_date_info_data])
+        self.assert_result()
+
+    def test_checkok_abnormal_date_info(self):
+        """
+        test checkok date info not in issue body
+        """
+        self.expect_str = """
+during the operation checkok, a failure occurred, and the cause of the error was can not get the release time, please check.
+        """
+        self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
+                               "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
+        resp = self.make_expect_data(200, 'releasepart.txt')
+        abnormal_date_info_data = self.make_need_content('releasepart_abnormal_date_info.txt', MOCK_DATA_FILE)
+        self.prepare_jenkins_data()
+        self.mock_jenkins_build_job(return_value=0)
+        self.mock_subprocess_check_output(return_value=b'published-Epol-src')
+        self.mock_request(side_effect=[resp, resp, resp, resp, abnormal_date_info_data])
+        self.assert_result()
+
+    def test_checkok_date_info_index_error(self):
+        """
+        test checkok date info index error
+        """
+        self.expect_str = """
+during the operation checkok, a failure occurred, and the cause of the error was can not get the release time, please check.
+        """
+        self.command_params = ["--giteeid=Mary", "--token=example", "--type=checkok", "--jenkinsuser=mary",
+                               "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
+        resp = self.make_expect_data(200, 'releasepart.txt')
+        abnormal_date_info_data = self.make_need_content('releasepart_date_info_index_error.txt', MOCK_DATA_FILE)
+        self.prepare_jenkins_data()
+        self.mock_jenkins_build_job(return_value=0)
+        self.mock_subprocess_check_output(return_value=b'published-Epol-src')
+        self.mock_request(side_effect=[resp, resp, resp, resp, abnormal_date_info_data])
+        self.assert_result()
+
     def test_cvrfok_success(self):
         """
         test cvrfok success
@@ -84,6 +135,21 @@ successful announcement
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'releasepart.txt')
         mock_post_data = self.make_need_content('mock_post_data.txt', MOCK_DATA_FILE)
+        self.mock_request(return_value=resp)
+        self.mock_requests_post(return_value=mock_post_data)
+        self.assert_result()
+
+    def test_cvrfok_successfully_not_in_text(self):
+        """
+        test cvrfok success
+        """
+        self.expect_str = """
+during the operation cvrfok, a failure occurred, and the cause of the error was failed to publish announcement
+        """
+        self.command_params = ["--giteeid=Mary", "--token=example", "--type=cvrfok", "--jenkinsuser=mary",
+                               "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
+        resp = self.make_expect_data(200, 'releasepart.txt')
+        mock_post_data = self.make_need_content('mock_post_failed_data.txt', MOCK_DATA_FILE)
         self.mock_request(return_value=resp)
         self.mock_requests_post(return_value=mock_post_data)
         self.assert_result()

@@ -42,8 +42,7 @@ class ReleaseCommand(BaseCommand):
             '--type',
             help='Specify the release check type, only allow checkok and cvrfok',
             action='store',
-            choices=['checkok', 'cvrfok']
-        )
+            choices=['checkok', 'cvrfok'])
         self.sub_parse.add_argument(
             "--jenkinsuser",
             type=str,
@@ -95,7 +94,7 @@ class ReleaseCommand(BaseCommand):
             }
 
             if action == "del_pkg_rpm":
-                obs_job_params["pkgnamelist"] = pkgname_list
+                obs_job_params["pkgnamelist"] = ",".join(pkgname_list)
 
             jenkins_obs_res = jenkins_server.get_specific_job_comment(
                 obs_job_params, constant.OBS_RELEASE_JOB

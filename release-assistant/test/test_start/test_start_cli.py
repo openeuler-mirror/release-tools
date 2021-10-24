@@ -22,7 +22,7 @@ from requests.exceptions import RequestException
 from javcra.cli.commands.startpart import StartCommand
 import pandas as pd
 
-EXPECT_DATA_FILE = os.path.join(os.path.abspath(os.path.dirname(__file__)), "mock_data")
+MOCK_DATA_FILE = os.path.join(os.path.abspath(os.path.dirname(__file__)), "mock_data")
 
 
 class TestStart(TestMixin):
@@ -39,12 +39,10 @@ class TestStart(TestMixin):
 [INFO] start update successfully.
         """
         resp = self.make_expect_data(200, 'startpart.txt')
-        mock_init_success_data = self.read_file_content('init_success_data.txt', folder=EXPECT_DATA_FILE,
-                                                        is_json=False)
-        mock_init_r = self.make_object_data(200, mock_init_success_data)
+        mock_init_r = self.make_need_content('init_success_data.txt', MOCK_DATA_FILE)
         self.command_params = ["--giteeid=Mary", "--token=example", "--useremail=mary@123.com", "--ak=forexample",
                                "--sk=forexample", "I40321"]
-        con = self.read_file_content('mock_obs_data.json', folder=EXPECT_DATA_FILE)
+        con = self.read_file_content('mock_obs_data.json', folder=MOCK_DATA_FILE)
         for con_key in con['contents']:
             con_key["key"] = "cve-manager-updateinfo/{}/{}".format(
                 datetime.date(datetime.date.today().year, datetime.date.today().month,
@@ -52,7 +50,7 @@ class TestStart(TestMixin):
         mock_r = self.make_obs_cloud_data(200, con)
         self.mock_obs_cloud_list_objects(return_value=mock_r)
         self.mock_obs_cloud_get_objects(return_value=mock_r)
-        read_excel = pd.read_excel(Path(EXPECT_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
+        read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
         self.mock_request(side_effect=[resp, resp, resp, mock_init_r])
         mock_get_r = self.make_object_data(200)
@@ -69,7 +67,7 @@ class TestStart(TestMixin):
         resp = self.make_expect_data(200, 'startpart.txt')
         self.command_params = ["--giteeid=Mary", "--token=example", "--useremail=mary@123.com", "--ak=forexample",
                                "--sk=forexample", "I40321"]
-        con = self.read_file_content('mock_obs_data.json', folder=EXPECT_DATA_FILE)
+        con = self.read_file_content('mock_obs_data.json', folder=MOCK_DATA_FILE)
         for con_key in con['contents']:
             con_key["key"] = "cve-manager-updateinfo/{}/{}".format(
                 datetime.date(datetime.date.today().year, datetime.date.today().month,
@@ -77,7 +75,7 @@ class TestStart(TestMixin):
         mock_r = self.make_obs_cloud_data(200, con)
         self.mock_obs_cloud_list_objects(return_value=mock_r)
         self.mock_obs_cloud_get_objects(return_value=mock_r)
-        read_excel = pd.read_excel(Path(EXPECT_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
+        read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
         self.mock_request(side_effect=[resp, resp, resp, RequestException])
         mock_get_r = self.make_object_data(200)
@@ -153,7 +151,7 @@ Parameter validation failed
         self.command_params = ["--giteeid=Mary", "--token=example", "--useremail=mary@123.com", "--ak=forexample",
                                "--sk=forexample", "I40321"]
         resp = self.make_expect_data(200, 'startpart.txt')
-        issue_body_is_none_data = self.read_file_content('mock_issue_is_none.txt', folder=EXPECT_DATA_FILE,
+        issue_body_is_none_data = self.read_file_content('mock_issue_is_none.txt', folder=MOCK_DATA_FILE,
                                                          is_json=False)
         mock_issue_body_is_none_r = self.make_object_data(200, issue_body_is_none_data)
         self.mock_request(side_effect=[resp, mock_issue_body_is_none_r])
@@ -169,7 +167,7 @@ Parameter validation failed
         self.command_params = ["--giteeid=Mary", "--token=example", "--useremail=mary@123.com", "--ak=forexample",
                                "--sk=forexample", "I40321"]
         resp = self.make_expect_data(200, 'startpart.txt')
-        already_operated_data = self.read_file_content('already_operated.txt', folder=EXPECT_DATA_FILE,
+        already_operated_data = self.read_file_content('already_operated.txt', folder=MOCK_DATA_FILE,
                                                        is_json=False)
         mock_already_operated_r = self.make_object_data(200, already_operated_data)
         self.mock_request(side_effect=[resp, mock_already_operated_r])
@@ -185,7 +183,7 @@ Parameter validation failed
         resp = self.make_expect_data(200, 'startpart.txt')
         self.command_params = ["--giteeid=Mary", "--token=example", "--useremail=mary@123.com", "--ak=forexample",
                                "--sk=forexample", "I40321"]
-        con = self.read_file_content('mock_obs_data.json', folder=EXPECT_DATA_FILE)
+        con = self.read_file_content('mock_obs_data.json', folder=MOCK_DATA_FILE)
         for con_key in con['contents']:
             con_key["key"] = "cve-manager-updateinfo/{}/{}".format(
                 datetime.date(datetime.date.today().year, datetime.date.today().month,
@@ -194,7 +192,7 @@ Parameter validation failed
         self.mock_obs_cloud_list_objects(return_value=mock_listobjects_r)
         mock_getobjects_r = self.make_object_data(400)
         self.mock_obs_cloud_get_objects(return_value=mock_getobjects_r)
-        read_excel = pd.read_excel(Path(EXPECT_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
+        read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
         self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, resp])
         mock_get_r = self.make_object_data(200)

@@ -773,14 +773,14 @@ class IssueOperation(Operation):
         table_str = self.init_md_table(table_head)
         return block_name + table_str
 
-    def create_install_build_issue(self, failed_type, pkg_name):
+    def create_install_build_issue(self, failed_type, pkg_name, log_data):
         """
         create issue when install failed or build failed
 
         Args:
             failed_type: install failed or build failed
             pkg_name: package name
-
+            log_data: Compilation log information
         return:
             issue_id
         """
@@ -812,8 +812,13 @@ class IssueOperation(Operation):
                    Component: {pkg}
                    Instructions to reappear the problem : {command}
                    Expected results: successfully {_type}
-                   Actual results: failed to {_type}""".format(brh=branch, pkg=pkg_name, command=command,
-                                                               _type=failed_type)
+                   Actual results: failed to {_type}
+                   Actual results: failed to {_type}
+                   <b>Partial failure log:</b>
+                   <P>
+                   {log_data}
+                   """.format(brh=branch, pkg=pkg_name, command=command,
+                              _type=failed_type, log_data=log_data)
         issue_id = self.create_issue(params)
         return issue_id
 

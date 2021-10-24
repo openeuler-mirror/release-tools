@@ -94,7 +94,7 @@ class Issue:
         url_prefix = "https://gitee.com/api/v5/"
 
         url_dict = {
-            "pkg_issues_url": url_prefix + "repos/{owner}/{repo}/issues?access_token={access_token}&state=open"
+            "pkg_issues_url": url_prefix + "repos/{owner}/{repo}/issues?access_token={access_token}&state=all"
                 .format(owner=self.owner, repo=kwargs.get("pkg"), access_token=self.token),
 
             "issue_url": url_prefix + "enterprises/{enterprise}/issues/{number}?access_token={token}".format(
@@ -106,7 +106,12 @@ class Issue:
                                                                                     number=self.issue_num),
 
             "create_comment_url": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments".format(
-                owner=kwargs.get("owner"), repo=self.repo, number=self.issue_num)
+                owner=kwargs.get("owner"), repo=self.repo, number=self.issue_num),
+            "get_issue_comments": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments?access_token={token}"
+                                               "&page=1&per_page=100&order=asc".format(
+                owner=kwargs.get("owner"), repo=kwargs.get("repo"), number=kwargs.get("issue_id"), token=self.token),
+            "update_issue_status": url_prefix + "repos/{owner}/issues/{number}".format(owner=kwargs.get("owner"),
+                                                                                       number=kwargs.get("issue_id"))
         }
 
         return url_dict.get(url_name)
@@ -148,6 +153,64 @@ class Issue:
         logger.error("failed to get the issue info of %s. " % issue_number)
         return None
 
+    def _issue_state(self, data, issue_title, created_issue_id):
+        """
+        Determine whether to update the status of the issue
+        Args:
+            data: data
+            issue_title: issue_title
+            created_issue_id:created_issue_id
+
+        Returns:
+
+        """
+
+        def judge_false_positive(issue_comments_resp):
+            """
+            Determine if the false positive is in the comment
+            Args:
+                issue_comments_resp: issue_comments_resp
+
+            Returns:
+                True: exists
+                False: not in
+            """
+            for comment in issue_comments_resp:
+                if "误报" in comment.get("body"):
+                    return True
+            return False
+
+        kwargs = {"owner": "src-openeuler", "repo": data.get("repo"), "issue_id": created_issue_id}
+        issue_comments_url = self.__get_gitee_api_url(
+            "get_issue_comments", **kwargs
+        )
+        issue_comments = self.gitee_api_request("get", url=issue_comments_url)
+        if not issue_comments:
+            logger.error("failed to get the comment of the issue, the route is %s" % issue_comments_url)
+            return created_issue_id
+        try:
+            issue_comments_resp = json.loads(issue_comments.text)
+        except json.JSONDecodeError as error:
+            logger.error("failed to parse json data, the reason for the error is %s" % error)
+            return created_issue_id
+        # determine whether the false positive is in the comment information
+        if judge_false_positive(issue_comments_resp):
+            logger.info("An issue with the same content already exists,"
+                        "a false positive was detected in the comment area,"
+                        "and the issue number is %s" % created_issue_id)
+        else:
+            logger.info(
+                "There is an issue with the same content, no false positives are detected in "
+                "the comment area, the status is updated to agent, the issue number is %s"
+                % created_issue_id)
+            update_issue_status_url = self.__get_gitee_api_url("update_issue_status", **kwargs)
+            update_res = self.gitee_api_request("patch", url=update_issue_status_url,
+                                                data={"access_token": self.token, "repo": data.get("repo"),
+                                                      "state": "open"})
+            if not update_res:
+                logger.error("failed to update the issue: %s" % issue_title)
+        return created_issue_id
+
     def create_issue(self, data):
         """
         create issue in gitee
@@ -167,13 +230,15 @@ class Issue:
 
         issue_title = data.get("title")
 
-        # if already exist the same title issue, then return the existed issue id
+        # If an issue with the same title already exists,
+        # and there is no false positive in the comment information,
+        # change the status of the issue to open.
+        # If there is a false positive in the comment, it will not be processed,
+        # and the issue id will be returned.
         if issue_title in exist_issue_title_dict.values():
             for created_issue_id, title in exist_issue_title_dict.items():
                 if title == issue_title:
-                    logger.info("already exists the issue: {}, issue number is {}.".format(
-                        issue_title, created_issue_id))
-                    return created_issue_id
+                    return self._issue_state(data, issue_title, created_issue_id)
         else:
             prj_issue_url = self.__get_gitee_api_url("create_issue_url", owner=data["owner"])
             post_res = self.gitee_api_request("post", prj_issue_url, data=data)
@@ -183,6 +248,7 @@ class Issue:
 
             resp_content = json.loads(post_res.text)
             created_issue_id = resp_content["number"]
+            logger.info("an issue with %s id has been created" % created_issue_id)
             return created_issue_id
 
     def update_issue(self, owner="openEuler", **kwargs):
