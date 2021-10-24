@@ -4,7 +4,7 @@
     {
       "etag": "d41d8cd98f00b204e9800998ecf8427e",
       "isAppendable": false,
-      "key": "install-build-log/openEuler-20.03-LTS-SP1/build-result/failed_log/a-test",
+      "key": "install-build-log/openEuler-20.03-LTS-SP1/build_result/failed_log/a-test",
       "lastModified": "2021/07/30 09:51:42",
       "owner": {
         "owner_id": "060600ffbe00251e0f6fc0176531c800"

@@ -6,7 +6,7 @@
   "comments_url": "https://gitee.com/api/v5/enterprises/open_euler/issues/I3TFOK/comments",
   "html_url": "https://gitee.com/src-openeuler/gupnp/issues/I3TFOK",
   "parent_url": null,
-  "number": "I3TFOK",
+  "number": "I3TXFG",
   "parent_id": 0,
   "depth": 0,
   "state": "open",
@@ -178,7 +178,7 @@
   "issue_type": "CVE和安全问题",
   "program": null,
   "security_hole": false,
-  "issue_state": "已完成",
+  "issue_state": "待办的",
   "branch": null,
   "issue_type_detail": {
     "id": 210726,

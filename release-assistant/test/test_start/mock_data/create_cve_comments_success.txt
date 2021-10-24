@@ -1,0 +1,40 @@
+[
+  {
+    "id": 6274335,
+    "body": "## 1、CVE
+修复CVE 1个
+|CVE|仓库|status|score|version|abi是否变化|
+|-|-|-|-|-|-|
+|#I3AQ2G:CVE-2020-8020|obs-server|已完成|6.1|2.10.1|否|
+",
+    "user": {
+      "id": 2234080,
+      "login": "MementoMoriCheng",
+      "name": "魔箭胖胖",
+      "avatar_url": "https://portrait.gitee.com/uploads/avatars/user/744/2234080_MementoMoriCheng_1578969378.png",
+      "url": "https://gitee.com/api/v5/users/MementoMoriCheng",
+      "html_url": "https://gitee.com/MementoMoriCheng",
+      "followers_url": "https://gitee.com/api/v5/users/MementoMoriCheng/followers",
+      "following_url": "https://gitee.com/api/v5/users/MementoMoriCheng/following_url{/other_user}",
+      "gists_url": "https://gitee.com/api/v5/users/MementoMoriCheng/gists{/gist_id}",
+      "starred_url": "https://gitee.com/api/v5/users/MementoMoriCheng/starred{/owner}{/repo}",
+      "subscriptions_url": "https://gitee.com/api/v5/users/MementoMoriCheng/subscriptions",
+      "organizations_url": "https://gitee.com/api/v5/users/MementoMoriCheng/orgs",
+      "repos_url": "https://gitee.com/api/v5/users/MementoMoriCheng/repos",
+      "events_url": "https://gitee.com/api/v5/users/MementoMoriCheng/events{/privacy}",
+      "received_events_url": "https://gitee.com/api/v5/users/MementoMoriCheng/received_events",
+      "type": "User"
+    },
+    "source": null,
+    "target": {
+      "issue": {
+        "id": 6674816,
+        "number": "I3Z2BK",
+        "title": "你好"
+      },
+      "pull_request": null
+    },
+    "created_at": "2021-08-17T15:40:25+08:00",
+    "updated_at": "2021-08-17T15:40:25+08:00"
+  }
+]

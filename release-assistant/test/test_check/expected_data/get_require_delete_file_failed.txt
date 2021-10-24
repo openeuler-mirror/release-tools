@@ -1,2 +1,2 @@
-ERROR:root:Failed to delete install-build-log/openEuler-20.03-LTS-SP1/build-result/failed_log/a-test file
+ERROR:root:Failed to delete install-build-log/openEuler-20.03-LTS-SP1/build_result/failed_log/a-test file
 during the operation requires, a failure occurred, and the cause of the error was obs cloud delete last archived file failed

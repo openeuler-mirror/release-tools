@@ -9,7 +9,7 @@
   "number": "I3J655",
   "parent_id": 0,
   "depth": 0,
-  "state": "closed",
+  "state": "open",
   "title": "【20.03】安装i40e有错误信息，且安装后无法插入 i40iw",
   "body": "【环境信息】\n硬件信息：   \n2288v6 + x722\n软件信息：\n20.03-LTS-SP1\n【问题复现步骤】\n1. yum install i40e\n2. modprobe -r i40iw i40e ; insmod /lib/modules/4.19.90-2104.1.0.0063.oe1.x86_64/updates/drivers/net/ethernet/intel/i40e/i40e.ko\n\n【预期结果】\n1. 安装成功无报错\n2. i40e和i40iw都能成功插入\n\n【实际结果】\n![输入图片说明](https://images.gitee.com/uploads/images/2021/0416/164418_c012277a_5424667.png \"屏幕截图.png\")\n![输入图片说明](https://images.gitee.com/uploads/images/2021/0416/163232_58a25d33_5424667.png \"屏幕截图.png\")\n",
   "user": {
