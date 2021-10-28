@@ -545,10 +545,12 @@ class CveIssue(Operation):
               start_time + "&typeName=" + email_name
         try:
             response = requests.get(url, headers=self.headers)
-            if response.status_code == 200:
+            if response.status_code == 200 and "a task being processed" in response.text:
                 logger.info("The CVE-Manager is triggered to generate the CVE list and archive the CVE list")
                 return True
-            logger.error("The CVE List file fails to be archived %s" % response.status_code)
+            logger.error("The CVE List file fails to be archived,"
+                         "The response status code is %s,"
+                         "the response body is %s" % (response.status_code, response.text))
             return False
         except (requests.RequestException, AttributeError) as error:
             logger.error("The CVE List file fails to be archived because %s " % error)
@@ -565,7 +567,7 @@ class CveIssue(Operation):
         # trigger cve_manger to archive
         resp = self.create_cve_list(user_email)
         if not resp:
-            return []
+            raise ValueError("trigger cve-manege archive failure")
 
         @retry(stop_max_attempt_number=5, wait_fixed=60000)
         def get_list():
@@ -812,7 +814,6 @@ class IssueOperation(Operation):
                    Component: {pkg}
                    Instructions to reappear the problem : {command}
                    Expected results: successfully {_type}
-                   Actual results: failed to {_type}
                    Actual results: failed to {_type}
                    <b>Partial failure log:</b>
                    <P>
