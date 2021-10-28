@@ -53,7 +53,8 @@ class TestStart(TestMixin):
         read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
         self.mock_request(side_effect=[resp, resp, resp, mock_init_r])
-        mock_get_r = self.make_object_data(200)
+        mock_get_r = self.make_object_data(200, "The number of requests is too frequent, "
+                                                "please try again later, there is currently a task being processed")
         self.mock_requests_get(side_effect=[mock_get_r])
         self.assert_result()
 
