@@ -111,9 +111,9 @@ during the operation status, a failure occurred, and the cause of the error was 
                          resp, resp, mock_install_r, mock_bugfix_r, resp, resp, resp, resp, mock_repo_list_data, resp])
         self.assert_result()
 
-    def test_send_repo_info_requestException(self):
+    def test_send_repo_info_request_exception(self):
         """
-        test send repo info test_send_repo_info_requestException
+        test send repo info test send repo info request exception
         """
         self.expect_str = """
 [INFO] successfully update status in check part.
