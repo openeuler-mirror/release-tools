@@ -103,7 +103,7 @@ class CheckEntrance(IssueOperation):
                 else:
                     update_data["epol_update_url"] = repo_info.get("url")
 
-            url_for_test = "http://" + TEST_IP_PORT + "/api/tce/testsuite/run"
+            url_for_test = "http://" + TEST_IP_PORT + "/api/v1/openeuler/task/update"
             headers = {"Content-Type": "application/json; charset=utf8"}
             resp = requests.post(url_for_test, data=json.dumps(update_data), headers=headers, timeout=3)
 
@@ -111,7 +111,7 @@ class CheckEntrance(IssueOperation):
                 logger.error("failed to send repo info.")
                 return False
 
-            if json.loads(resp.text).get("error_code") != 200:
+            if json.loads(resp.text).get("error_code") != '2000':
                 logger.error("failed to send repo info. Response: %s." % json.loads(resp.text))
                 return False
 

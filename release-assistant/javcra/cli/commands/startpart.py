@@ -19,7 +19,7 @@ from javcra.application.modifypart.modifyentrance import IssueOperation
 from javcra.application.serialize.serialize import StartSchema
 from javcra.cli.base import BaseCommand
 from javcra.cli.commands import parameter_permission_validate
-from javcra.common.constant import GITEE_REPO
+from javcra.common.constant import GITEE_REPO, LABEL_DICT
 
 
 class StartCommand(BaseCommand):
@@ -79,3 +79,9 @@ class StartCommand(BaseCommand):
             print("[INFO] start update successfully.")
         else:
             print("[ERROR] failed to start update.")
+            return
+
+        label_params = {"owner": "openEuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
+        create_res = issue.create_issue_label([LABEL_DICT.get("start")], label_params)
+        if not create_res:
+            print("failed to create start label for release issue.")

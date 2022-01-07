@@ -19,7 +19,7 @@ import re
 import requests
 from retrying import retry
 from javcra.api.gitee_api import Issue
-from javcra.common.constant import REPO_BASE_URL, RELEASE_URL
+from javcra.common.constant import REPO_BASE_URL, RELEASE_URL, MULTI_VERSION_BRANCHS
 from javcra.libs.log import logger
 from javcra.libs.read_excel import download_file
 
@@ -810,6 +810,7 @@ class IssueOperation(Operation):
         elif failed_type == "install":
             command = "yum install"
 
+        remind_str = "说明：此issue为机器自动创建，若验证后为误报，请在评论区评论‘误报’两字,并说明具体原因"
         params["body"] = """Branch: {brh}
                    Component: {pkg}
                    Instructions to reappear the problem : {command}
@@ -818,8 +819,9 @@ class IssueOperation(Operation):
                    <b>Partial failure log:</b>
                    <P>
                    {log_data}
+                   {remind_str}
                    """.format(brh=branch, pkg=pkg_name, command=command,
-                              _type=failed_type, log_data=log_data)
+                              _type=failed_type, log_data=log_data, remind_str=remind_str)
         issue_id = self.create_issue(params)
         return issue_id
 
@@ -900,7 +902,7 @@ class IssueOperation(Operation):
         if epol_list:
             repo_dict = dict()
             repo_dict["repo_type"] = "epol"
-            if "sp2" in branch or "SP2" in branch:
+            if any(mul_branch in branch for mul_branch in MULTI_VERSION_BRANCHS):
                 repo_dict["url"] = base_url + "/EPOL/update_" + release_date + "/main/"
             else:
                 repo_dict["url"] = base_url + "/EPOL/update_" + release_date + "/"

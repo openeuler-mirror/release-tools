@@ -17,6 +17,8 @@ from marshmallow import Schema
 from marshmallow import fields
 from marshmallow import validate
 
+from javcra.common.constant import CHECK_PART_LIST
+
 
 class BaseSchema(Schema):
     """
@@ -42,7 +44,7 @@ class CheckSchema(BaseSchema):
     check command parameter verification
     """
     type = fields.String(
-        required=True, validate=validate.OneOf(["status", "requires", "test"])
+        required=True, validate=validate.OneOf(CHECK_PART_LIST)
     )
     ak = fields.String(required=False, validate=validate.Length(min=1))
     sk = fields.String(required=False, validate=validate.Length(min=1))

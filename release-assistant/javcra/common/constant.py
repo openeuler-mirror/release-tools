@@ -39,6 +39,7 @@ PERMISSION_INFO = {
         "/check-ok",
         "/cvrf-ok",
         "/start-update"
+        "/check-cve-bugfix"
     ],
     "developer": [
         "/add-bugfix",
@@ -46,6 +47,7 @@ PERMISSION_INFO = {
         "/bugfix-ok",
         "/check-status",
         "/get-requires",
+        "/check-cve-bugfix"
     ],
     "tester": ["/test-ok"],
     "tc": ["/check-ok"],
@@ -71,7 +73,7 @@ AARCH_FRAME = "aarch64"
 X86_FRAME = "x86_64"
 
 # branch list for standard epol list
-BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS"]
+BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS-SP3", "openEuler-20.03-LTS"]
 
 # lts branch
 LTS_BRANCH = "openEuler-20.03-LTS"
@@ -100,6 +102,7 @@ TRIGGER_TM_JOB = "function-item/release-manager/update_template_jobs/trigger"
 ACTUATOR_DICT = {
     "openEuler-20.03-LTS-SP1": "openeuler-20.03-lts-sp1",
     "openEuler-20.03-LTS-SP2": "openeuler-20.03-lts-sp2",
+    "openEuler-20.03-LTS-SP3": "openeuler-20.03-lts-sp3",
     "openEuler-20.03-LTS": "openeuler-20.03-lts"
 }
 
@@ -136,6 +139,7 @@ CHECK_COMMENT_DICT = {
     "status": "/check-status",
     "requires": "/get-requires",
     "test": "/test-ok",
+    "cve_bugfix": "/check-cve-bugfix"
 }
 
 # release url
@@ -144,5 +148,16 @@ RELEASE_URL = "https://www.openeuler.org/api-cve/cve-security-notice-server/sync
 EPOL_DICT = {
     "openEuler-20.03-LTS": "EPOL",
     "openEuler-20.03-LTS-SP1": "EPOL",
-    "openEuler-20.03-LTS-SP2": "EPOL-main"
+    "openEuler-20.03-LTS-SP2": "EPOL-main",
+    "openEuler-20.03-LTS-SP3": "EPOL-main"
 }
+
+# comment dict
+COMMENT_DICT = {"cve": "/cve-ok", "bugfix": "/bugfix-ok", "test": "/test-ok"}
+
+# label dict
+LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "release-check"}
+
+MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3"]
+
+CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]

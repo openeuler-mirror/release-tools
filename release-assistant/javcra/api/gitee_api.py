@@ -90,6 +90,16 @@ class Issue:
         return resp
 
     def __get_gitee_api_url(self, url_name, **kwargs):
+        """
+        get specific gitee api url
+
+        Args:
+            url_name(string) : url name
+            kwargs(dict): params to get url
+
+        Returns:
+            gitee api url
+        """
 
         url_prefix = "https://gitee.com/api/v5/"
 
@@ -107,11 +117,17 @@ class Issue:
 
             "create_comment_url": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments".format(
                 owner=kwargs.get("owner"), repo=self.repo, number=self.issue_num),
+
             "get_issue_comments": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments?access_token={token}"
                                                "&page=1&per_page=100&order=asc".format(
                 owner=kwargs.get("owner"), repo=kwargs.get("repo"), number=kwargs.get("issue_id"), token=self.token),
+
             "update_issue_status": url_prefix + "repos/{owner}/issues/{number}".format(owner=kwargs.get("owner"),
-                                                                                       number=kwargs.get("issue_id"))
+                                                                                       number=kwargs.get("issue_id")),
+
+            "creat_issue_label_url": url_prefix + "repos/{owner}/{repo}/issues/{number}/labels?access_token={token}"
+                                                  "".format(owner=kwargs.get("owner"), repo=kwargs.get("repo"),
+                                                            number=kwargs.get("issue_id"), token=self.token)
         }
 
         return url_dict.get(url_name)
@@ -463,3 +479,71 @@ class Issue:
             elif shell_cmd(basis_cmd, repo_file_condition, epol_repo_condition):
                 pkglist_epol.append(pkg)
         return pkglist_standard, pkglist_epol
+
+    def get_issue_comments(self, params):
+        """
+        get comments according to params
+
+        Args:
+            params: comment params
+        Returns:
+            comment_list: comment list in release issue
+        """
+        issue_comments_url = self.__get_gitee_api_url(
+            "get_issue_comments", **params
+        )
+        issue_comments = self.gitee_api_request("get", url=issue_comments_url)
+        if not issue_comments:
+            logger.error("failed to get the comment of the issue, the route is %s" % issue_comments_url)
+            return []
+        try:
+            comment_list = []
+            issue_comments_resp = json.loads(issue_comments.text)
+            for comment_dict in issue_comments_resp:
+                if comment_dict.get("body"):
+                    comment_list.append(comment_dict.get("body").strip())
+            return comment_list
+
+        except json.JSONDecodeError as error:
+            logger.error("failed to parse json data %s" % error)
+            return []
+
+    def judge_specific_comment_exists(self, comment_list, issue_params):
+        """
+        judge whether the specific comment exists
+
+        Args:
+            comment_list: comment list in release issue
+            issue_params: params for issue
+
+        Returns:
+            True or False
+        """
+        issue_comments = self.get_issue_comments(issue_params)
+        if not issue_comments:
+            return False
+
+        lower_comment_list = [comment.lower() for comment in issue_comments]
+        for comment in comment_list:
+            if comment not in lower_comment_list:
+                logger.info("%s not in issue comments." % comment)
+                return False
+
+        return True
+
+    def create_issue_label(self, label_list, params):
+        """
+        create label for release issue
+
+        Args:
+            label_list: labels to create
+            params: params for issue
+
+        Returns:
+            True or False
+        """
+        create_label_url = self.__get_gitee_api_url("creat_issue_label_url", **params)
+        json_data = json.dumps(label_list)
+        resp = self.gitee_api_request("post", url=create_label_url, data=json_data)
+        return True if resp else False
+

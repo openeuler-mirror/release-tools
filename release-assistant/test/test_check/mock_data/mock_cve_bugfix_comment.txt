@@ -1,0 +1,134 @@
+[
+  {
+    "id": 5785714,
+    "body": "/bugfix-ok.\nThat means the developers can comment below every pull request or issue to trigger Bot Commands.\nPlease follow instructions at \u003Chttps://gitee.com/openeuler/community/blob/master/en/sig-infrastructure/command.md\u003E to find the details.",
+    "user": {
+      "id": 5329419,
+      "login": "openeuler-ci-bot",
+      "name": "openeuler-ci-bot",
+      "avatar_url": "https://portrait.gitee.com/uploads/avatars/user/1776/5329419_openeuler-ci-bot_1578984659.png",
+      "url": "https://gitee.com/api/v5/users/openeuler-ci-bot",
+      "html_url": "https://gitee.com/openeuler-ci-bot",
+      "followers_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/followers",
+      "following_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/following_url{/other_user}",
+      "gists_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/gists{/gist_id}",
+      "starred_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/subscriptions",
+      "organizations_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/orgs",
+      "repos_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/repos",
+      "events_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/events{/privacy}",
+      "received_events_url": "https://gitee.com/api/v5/users/openeuler-ci-bot/received_events",
+      "type": "User"
+    },
+    "source": null,
+    "target": {
+      "issue": {
+        "id": 6720618,
+        "number": "I401NU",
+        "title": "test"
+      },
+      "pull_request": null
+    },
+    "created_at": "2021-07-10T15:41:18+08:00",
+    "updated_at": "2021-07-10T15:41:18+08:00"
+  },
+  {
+    "id": 6004607,
+    "body": "@Mary  Please review this issue",
+    "user": {
+      "id": 7558519,
+      "login": "jiangpengjuj",
+      "name": "jiangpengjuj",
+      "avatar_url": "https://gitee.com/assets/no_portrait.png",
+      "url": "https://gitee.com/api/v5/users/jiangpengjuj",
+      "html_url": "https://gitee.com/jiangpengjuj",
+      "followers_url": "https://gitee.com/api/v5/users/jiangpengjuj/followers",
+      "following_url": "https://gitee.com/api/v5/users/jiangpengjuj/following_url{/other_user}",
+      "gists_url": "https://gitee.com/api/v5/users/jiangpengjuj/gists{/gist_id}",
+      "starred_url": "https://gitee.com/api/v5/users/jiangpengjuj/starred{/owner}{/repo}",
+      "subscriptions_url": "https://gitee.com/api/v5/users/jiangpengjuj/subscriptions",
+      "organizations_url": "https://gitee.com/api/v5/users/jiangpengjuj/orgs",
+      "repos_url": "https://gitee.com/api/v5/users/jiangpengjuj/repos",
+      "events_url": "https://gitee.com/api/v5/users/jiangpengjuj/events{/privacy}",
+      "received_events_url": "https://gitee.com/api/v5/users/jiangpengjuj/received_events",
+      "type": "User"
+    },
+    "source": null,
+    "target": {
+      "issue": {
+        "id": 6720618,
+        "number": "I401NU",
+        "title": "test"
+      },
+      "pull_request": null
+    },
+    "created_at": "2021-07-27T18:57:57+08:00",
+    "updated_at": "2021-07-27T18:57:57+08:00"
+  },
+  {
+    "id": 6176316,
+    "body": "/cve-ok",
+    "user": {
+      "id": 2234080,
+      "login": "Mary",
+      "name": "Mary",
+      "avatar_url": "https://portrait.gitee.com/uploads/avatars/user/744/2234080_Mary_1578969378.png",
+      "url": "https://gitee.com/api/v5/users/Mary",
+      "html_url": "https://gitee.com/Mary",
+      "followers_url": "https://gitee.com/api/v5/users/Mary/followers",
+      "following_url": "https://gitee.com/api/v5/users/Mary/following_url{/other_user}",
+      "gists_url": "https://gitee.com/api/v5/users/Mary/gists{/gist_id}",
+      "starred_url": "https://gitee.com/api/v5/users/Mary/starred{/owner}{/repo}",
+      "subscriptions_url": "https://gitee.com/api/v5/users/Mary/subscriptions",
+      "organizations_url": "https://gitee.com/api/v5/users/Mary/orgs",
+      "repos_url": "https://gitee.com/api/v5/users/Mary/repos",
+      "events_url": "https://gitee.com/api/v5/users/Mary/events{/privacy}",
+      "received_events_url": "https://gitee.com/api/v5/users/Mary/received_events",
+      "type": "User"
+    },
+    "source": null,
+    "target": {
+      "issue": {
+        "id": 6720618,
+        "number": "I401NU",
+        "title": "test"
+      },
+      "pull_request": null
+    },
+    "created_at": "2021-08-10T10:37:52+08:00",
+    "updated_at": "2021-08-10T10:37:52+08:00"
+  },
+  {
+    "id": 6176331,
+    "body": "/bugfix-ok",
+    "user": {
+      "id": 2234080,
+      "login": "Mary",
+      "name": "Mary",
+      "avatar_url": "https://portrait.gitee.com/uploads/avatars/user/744/2234080_Mary_1578969378.png",
+      "url": "https://gitee.com/api/v5/users/Mary",
+      "html_url": "https://gitee.com/Mary",
+      "followers_url": "https://gitee.com/api/v5/users/Mary/followers",
+      "following_url": "https://gitee.com/api/v5/users/Mary/following_url{/other_user}",
+      "gists_url": "https://gitee.com/api/v5/users/Mary/gists{/gist_id}",
+      "starred_url": "https://gitee.com/api/v5/users/Mary/starred{/owner}{/repo}",
+      "subscriptions_url": "https://gitee.com/api/v5/users/Mary/subscriptions",
+      "organizations_url": "https://gitee.com/api/v5/users/Mary/orgs",
+      "repos_url": "https://gitee.com/api/v5/users/Mary/repos",
+      "events_url": "https://gitee.com/api/v5/users/Mary/events{/privacy}",
+      "received_events_url": "https://gitee.com/api/v5/users/Mary/received_events",
+      "type": "User"
+    },
+    "source": null,
+    "target": {
+      "issue": {
+        "id": 6720618,
+        "number": "I401NU",
+        "title": "test"
+      },
+      "pull_request": null
+    },
+    "created_at": "2021-08-10T10:38:23+08:00",
+    "updated_at": "2021-08-10T10:38:23+08:00"
+  }
+]
