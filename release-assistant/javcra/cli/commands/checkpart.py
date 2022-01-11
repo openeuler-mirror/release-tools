@@ -30,7 +30,12 @@ from javcra.common.constant import (
     MAX_PARAL_NUM,
     REALSE_TOOLS_BUCKET_NAME,
     REALSE_TOOLS_SERVER,
-    X86_FRAME, CHECK_COMMENT_DICT, EPOL_DICT)
+    X86_FRAME,
+    CHECK_COMMENT_DICT,
+    EPOL_DICT,
+    COMMENT_DICT,
+    LABEL_DICT,
+    CHECK_PART_LIST)
 
 from javcra.api.obscloud import ObsCloud
 from javcra.libs.log import logger
@@ -54,7 +59,7 @@ class CheckCommand(BaseCommand):
             action="store",
             nargs=None,
             required=True,
-            choices=["status", "requires", "test"],
+            choices=CHECK_PART_LIST,
         )
         self.sub_parse.add_argument(
             "--ak",
@@ -146,6 +151,51 @@ class CheckCommand(BaseCommand):
         check_issue = CheckEntrance(GITEE_REPO, params.token, params.releaseIssueID)
         return check_issue
 
+    def judge_cve_bugfix_comment(self, issue, params):
+        """
+        Description: judge whether /bugfix-ok and /cve-ok in comment area
+        Args:
+            issue: issue object
+            params: Command line parameters
+
+        Returns:
+            True or False
+        """
+        comment_params = {"owner": "openEuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
+        comment_list = [COMMENT_DICT.get("cve"), COMMENT_DICT.get("bugfix")]
+        judge_res = issue.judge_specific_comment_exists(comment_list, comment_params)
+        if not judge_res:
+            print("[ERROR] cve list or bugfix list not OK, please check.")
+            return False
+        return True
+
+    def create_specific_label(self, issue_object, params, label_part):
+        """
+        Description: create specific issue label
+        Args:
+            issue_object: issue object
+            params: Command line parameters
+            label_part: create label like release label or requires label
+        """
+        label_params = {"owner": "openEuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
+        create_res = issue_object.create_issue_label([LABEL_DICT.get("requires")], label_params)
+        if not create_res:
+            raise ValueError("failed to create %s label for release issue." % label_part)
+
+    def cve_bugfix_operation(self, params):
+        """
+        Description: the operation for cve and bugfix list check
+        Args:
+            params: Command line parameters
+        """
+        issue = self.issue(params)
+        judege_res = self.judge_cve_bugfix_comment(issue, params)
+        if not judege_res:
+            return
+
+        self.create_specific_label(issue, params, "requires")
+        print("[INFO] successfuly operate cve and bugfix in check part.")
+
     def test_operation(self, params):
         """
         Description: the operation for test
@@ -159,6 +209,9 @@ class CheckCommand(BaseCommand):
         if not review_res:
             print("[ERROR] failed to operate test in check part.")
             return False
+
+        issue = self.issue(params)
+        self.create_specific_label(issue, params, "release")
         print("[INFO] successfully operate test in check part.")
         return True
 
@@ -332,6 +385,10 @@ class CheckCommand(BaseCommand):
                         print("failed to write back to install_build issue %s in release issue" % issue_id)
 
         issue = self.issue(params)
+        judege_res = self.judge_cve_bugfix_comment(issue, params)
+        if not judege_res:
+            return
+
         check_issue = self.check_issue(params)
         branch_name, update_pkgs, release_date = self.get_release_info(issue)
 
@@ -412,6 +469,7 @@ class CheckCommand(BaseCommand):
 
         """
         comment = CHECK_COMMENT_DICT.get(params.type)
+
         if not comment:
             print("[ERROR] not allowed operation, please check.")
             return

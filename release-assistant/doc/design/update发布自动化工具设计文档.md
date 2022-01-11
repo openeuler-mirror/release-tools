@@ -37,16 +37,16 @@ update发布自动化工具通过码云issue串联起整个update发布流程，
 #### 2.4.2 评论说明
 |编号|评论|标签|操作人员|说明|
 |:--|:---|:--|:---|:-----|
-|①|/start-update|update-check-pkg|版本经理|启动发布流程，工具获取cve和bugfix发布范围，回写到issue描述中，添加标签update-check-pkg|
+|①|/start-update|update-check-pkg|版本经理|启动发布流程，工具获取cve和bugfix发布范围，回写到issue描述中，添加标签check-pkg|
 |②|/add cve I3NQ1A|NA|安全委员会|添加cve，工具自动修改版本issue描述中的cve清单|
 |②|/delete cve #I3NQ1A|NA|安全委员会|删除cve，工具自动修改版本issue描述中的cve清单|
 |②|/add bugfix #I3AZ9M|NA|开发人员|添加bugfix，工具自动修改版本issue描述中的bugfix清单|
 |②|/delete bugfix #I3AZ9M|NA|开发人员|删除bugfix，工具自动修改版本issue描述中的bugfix清单|
-|③|/cve-ok|update-check-requires|安全委员会成员|审核完cve清单且没有问题，满足/cve-ok和/bugfix-ok触发检查依赖操作，添加标签update-check-requires|
-|③|/bugfix-ok|update-check-requires|开发人员|审核完bugfix清单且没有问题，满足/cve-ok和/bugfix-ok触发检查依赖操作，添加标签update-check-requires|
+|③|/cve-ok|update-check-requires|安全委员会成员|审核完cve清单且没有问题，满足/cve-ok和/bugfix-ok触发检查依赖操作，添加标签check-requires|
+|③|/bugfix-ok|update-check-requires|开发人员|审核完bugfix清单且没有问题，满足/cve-ok和/bugfix-ok触发检查依赖操作，添加标签check-requires|
 |④|/check-status|NA|开发人员|检查issue清单中的最新issue状态，并更新到版本发布issue的描述中|
 |⑤|/get-requires|NA|开发人员|触发检查依赖操作|
-|⑥|/test-ok|update-release-check|测试人员|测试回归通过，触发发布评审，添加标签update-release-check|
+|⑥|/test-ok|update-release-check|测试人员|测试回归通过，触发发布评审，添加标签release-check|
 |⑦|/check-ok|update-release|tc、release、qa、安全委员会|发布评审通过，触发发布包及发布列表归档，添加标签update-release|
 |⑧|/cvrf-ok|NA|安全委员会|安全公告检查完成且没有问题，满足/check-ok和/cvrf-ok触发发布安全公告|
 |⑨|/no-release #I3NQ1A|NA|版本经理|问题未解决，评审决策本次版本不发布，遗留到下一版本|

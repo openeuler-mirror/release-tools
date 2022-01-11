@@ -21,7 +21,7 @@ from javcra.application.serialize.serialize import ReleaseSchema
 from javcra.cli.base import BaseCommand
 from javcra.cli.commands import parameter_permission_validate
 from javcra.common import constant
-from javcra.common.constant import MAX_PARAL_NUM, GITEE_REPO, EPOL_DICT
+from javcra.common.constant import MAX_PARAL_NUM, GITEE_REPO, EPOL_DICT, COMMENT_DICT
 
 
 class ReleaseCommand(BaseCommand):
@@ -72,6 +72,24 @@ class ReleaseCommand(BaseCommand):
             required=True,
         )
 
+    def judge_test_comment(self, issue, params):
+        """
+        Description: judge whether /test-ok in comment area
+        Args:
+            issue: issue object
+            params: Command line parameters
+
+        Returns:
+            True or False
+        """
+        comment_params = {"owner": "openEuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
+        comment_list = [COMMENT_DICT.get("test")]
+        judge_res = issue.judge_specific_comment_exists(comment_list, comment_params)
+        if not judge_res:
+            print("[ERROR] test not OK, please check.")
+            return False
+        return True
+
     def checkok_operation(self, params):
         """
         Description: operation for check ok
@@ -119,6 +137,11 @@ class ReleaseCommand(BaseCommand):
                 self.create_comment("{action} epol rpm jenkins res".format(action=action), epol_transfer_res, issue)
 
         issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
+
+        judege_res = self.judge_test_comment(issue, params)
+        if not judege_res:
+            return
+
         branch_name, update_pkgs, release_date = self.get_release_info(issue)
 
         # get parallel jenkins job num according to length of pkg_list and max parallel num
@@ -153,6 +176,10 @@ class ReleaseCommand(BaseCommand):
         Returns:
 
         """
+        issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
+        judege_res = self.judge_test_comment(issue, params)
+        if not judege_res:
+            return
 
         release_resp = IssueOperation.release_announcement(params.publishuser, params.publishkey)
         if not release_resp:

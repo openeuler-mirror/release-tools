@@ -50,8 +50,9 @@ remain issues exists, need to delete rpms for repo.
                                                                  MOCK_DATA_FILE)
         mock_publish_standard_comment = self.make_need_content('publish_standard_comments_success.txt', MOCK_DATA_FILE)
         mock_publish_epol_comment = self.make_need_content('publish_epol_comments_success.txt', MOCK_DATA_FILE)
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, mock_remain_issue_data,
+            side_effect=[resp, resp, test_comment_data, resp, resp, resp, resp, mock_remain_issue_data,
                          mock_delete_remain_standard_comment, mock_delete_remain_epol_comment,
                          mock_publish_standard_comment, mock_publish_epol_comment])
         self.assert_result()
@@ -70,7 +71,8 @@ during the operation checkok, a failure occurred, and the cause of the error was
         self.mock_jenkins_build_job(return_value=0)
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
         mock_remain_issue_data = self.make_need_content('mock_remain_issue.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, mock_remain_issue_data])
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data, resp, resp, resp, resp, mock_remain_issue_data])
         self.assert_result()
 
     def test_checkok_date_info_not_in_issue_body(self):
@@ -87,7 +89,8 @@ during the operation checkok, a failure occurred, and the cause of the error was
         self.prepare_jenkins_data()
         self.mock_jenkins_build_job(return_value=0)
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
-        self.mock_request(side_effect=[resp, resp, resp, resp, not_exist_date_info_data])
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data, resp, resp, not_exist_date_info_data])
         self.assert_result()
 
     def test_checkok_abnormal_date_info(self):
@@ -104,7 +107,8 @@ during the operation checkok, a failure occurred, and the cause of the error was
         self.prepare_jenkins_data()
         self.mock_jenkins_build_job(return_value=0)
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
-        self.mock_request(side_effect=[resp, resp, resp, resp, abnormal_date_info_data])
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data, resp, resp, abnormal_date_info_data])
         self.assert_result()
 
     def test_checkok_date_info_index_error(self):
@@ -121,7 +125,8 @@ during the operation checkok, a failure occurred, and the cause of the error was
         self.prepare_jenkins_data()
         self.mock_jenkins_build_job(return_value=0)
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
-        self.mock_request(side_effect=[resp, resp, resp, resp, abnormal_date_info_data])
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data, resp, resp, abnormal_date_info_data])
         self.assert_result()
 
     def test_cvrfok_success(self):
@@ -135,8 +140,10 @@ successful announcement
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'releasepart.txt')
         mock_post_data = self.make_need_content('mock_post_data.txt', MOCK_DATA_FILE)
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
         self.mock_request(return_value=resp)
         self.mock_requests_post(return_value=mock_post_data)
+        self.mock_request(side_effect=[resp, resp, test_comment_data])
         self.assert_result()
 
     def test_cvrfok_successfully_not_in_text(self):
@@ -150,7 +157,8 @@ during the operation cvrfok, a failure occurred, and the cause of the error was 
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'releasepart.txt')
         mock_post_data = self.make_need_content('mock_post_failed_data.txt', MOCK_DATA_FILE)
-        self.mock_request(return_value=resp)
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data])
         self.mock_requests_post(return_value=mock_post_data)
         self.assert_result()
 
@@ -166,6 +174,10 @@ during the operation cvrfok, a failure occurred, and the cause of the error was 
         resp = self.make_expect_data(200, 'releasepart.txt')
         mock_post_data = self.make_object_data(404, "404 not found")
         self.mock_request(return_value=resp)
+
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data])
+
         self.mock_requests_post(return_value=mock_post_data)
         self.assert_result()
 
@@ -180,7 +192,8 @@ during the operation cvrfok, a failure occurred, and the cause of the error was 
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'releasepart.txt')
         mock_post_data = self.make_object_data(200, "")
-        self.mock_request(return_value=resp)
+        test_comment_data = self.make_need_content('mock_test_comments.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, test_comment_data])
         self.mock_requests_post(return_value=mock_post_data)
         self.assert_result()
 

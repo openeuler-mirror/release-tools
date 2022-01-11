@@ -226,13 +226,14 @@ during the operation status, a failure occurred, and the cause of the error was 
         test people review success
         """
         self.expect_str = """
-[INFO] successfully operate test in check part.   
+[INFO] successfully operate test in check part.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=test", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         mock_comment_r = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, resp, mock_comment_r])
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, resp, mock_comment_r, mock_cve_bigfix_comment])
         self.assert_result()
 
     def test_create_issue_comment_failed(self):
@@ -312,8 +313,9 @@ Parameter validation failed
         mock_create_install_issue = self.make_need_content('create_install_issue_success.txt', MOCK_DATA_FILE)
         mock_checkpart_add_build = self.make_need_content('checkpart_add_build_success.txt', MOCK_DATA_FILE)
         mock_checkpart_add_install = self.make_need_content('checkpart_add_install_success.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          mock_repo_list_data, mock_create_jenkins_comment, mock_create_jenkins_comment, resp, resp,
                          resp, resp, mock_add_repo_r, mock_create_build_jenkins_comment,
                          mock_create_install_jenkins_comment, mock_create_install_jenkins_comment, resp, resp,
@@ -333,7 +335,8 @@ Parameter validation failed
         self.prepare_jenkins_data()
         self.prepare_obs_data(delete_status_code=400)
         resp = self.make_expect_data(200, 'checkpart.txt')
-        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp])
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp])
         self.assert_result()
 
     def test_get_repo_in_table_failed(self):
@@ -349,8 +352,9 @@ Parameter validation failed
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_create_jenkins_comment = self.make_need_content('create_jenkins_comments_success.txt', MOCK_DATA_FILE)
         resp = self.make_expect_data(200, 'checkpart.txt')
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          mock_create_jenkins_comment, resp, resp, resp, resp, RequestException])
         self.assert_result()
 
@@ -372,8 +376,9 @@ Parameter validation failed
         mock_create_install_issue = self.make_need_content('create_install_issue_success.txt', MOCK_DATA_FILE)
         mock_checkpart_add_build = self.make_need_content('checkpart_add_build_success.txt', MOCK_DATA_FILE)
         mock_checkpart_add_install = self.make_need_content('checkpart_add_install_success.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          RequestException, resp, resp, resp, resp, mock_add_repo_r, RequestException, RequestException,
                          resp, resp, mock_exist_issues, mock_create_build_issue, resp, resp, mock_create_build_issue,
                          mock_checkpart_add_build, resp, resp, mock_exist_issues, mock_create_install_issue, resp, resp,
@@ -394,8 +399,9 @@ Parameter validation failed
         mock_repo_list_data = self.make_need_content('repo_list_data.txt', MOCK_DATA_FILE)
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
         mock_create_jenkins_comment = self.make_need_content('create_jenkins_comments_success.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          mock_create_jenkins_comment, resp, resp, resp, resp, RequestException])
         self.assert_result()
 
@@ -410,7 +416,8 @@ during the operation requires, a failure occurred, and the cause of the error wa
                                "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         branch_abnormal_r = self.make_need_content('check_branch_abnormal.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, branch_abnormal_r, branch_abnormal_r, RequestException])
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, resp, mock_cve_bigfix_comment, branch_abnormal_r, branch_abnormal_r, RequestException])
         self.assert_result()
 
     def test_branch_name_is_none_and_get_update_list_failed(self):
@@ -424,8 +431,9 @@ during the operation requires, a failure occurred, and the cause of the error wa
                                "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         branch_abnormal_r = self.make_need_content('branch_name_is_none.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, branch_abnormal_r, branch_abnormal_r, RequestException])
+            side_effect=[resp, resp, mock_cve_bigfix_comment, branch_abnormal_r, branch_abnormal_r, RequestException])
         self.assert_result()
 
     def test_create_jenkins_comment_failed(self):
@@ -443,7 +451,11 @@ during the operation requires, a failure occurred, and the cause of the error wa
         self.prepare_jenkins_data()
         self.prepare_obs_data()
         self.mock_jenkins_build_job(return_value=0)
-        self.mock_request(return_value=resp)
+        mock_repo_list_data = self.make_need_content('repo_list_data.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp,
+                         mock_repo_list_data])
         self.assert_result()
 
     def test_download_pkg_log_write_back_create_install_build_issue_failed(self):
@@ -467,8 +479,9 @@ during the operation requires, a failure occurred, and the cause of the error wa
                                                                    MOCK_DATA_FILE)
         mock_issue_comment = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
         mock_create_build_issue = self.make_need_content('create_build_issue_success.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          mock_create_jenkins_comment, resp, resp, resp, resp, mock_add_repo_r,
                          mock_create_build_jenkins_comment, mock_create_install_jenkins_comment, resp, resp,
                          mock_exist_issues, mock_issue_comment, mock_create_build_issue, RequestException,
@@ -494,8 +507,9 @@ during the operation requires, a failure occurred, and the cause of the error wa
                                                                      MOCK_DATA_FILE)
         mock_create_build_jenkins_comment = self.make_need_content('create_build_jenkins_comments_success.txt',
                                                                    MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          mock_create_jenkins_comment, resp, resp, resp, resp, mock_add_repo_r,
                          mock_create_build_jenkins_comment, mock_create_install_jenkins_comment, resp, resp,
                          mock_exist_issues, RequestException, RequestException])
@@ -522,8 +536,9 @@ during the operation requires, a failure occurred, and the cause of the error wa
                                                                    MOCK_DATA_FILE)
         mock_create_build_issue = self.make_need_content('create_build_issue_success.txt', MOCK_DATA_FILE)
         mock_create_install_issue = self.make_need_content('create_install_issue_success.txt', MOCK_DATA_FILE)
+        mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
         self.mock_request(
-            side_effect=[resp, resp, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
+            side_effect=[resp, resp, mock_cve_bigfix_comment, resp, resp, resp, resp, resp, resp, resp, resp, mock_repo_list_data,
                          mock_create_jenkins_comment, resp, resp, resp, resp, mock_add_repo_r,
                          mock_create_build_jenkins_comment, mock_create_install_jenkins_comment, resp, resp,
                          mock_exist_issues, mock_create_build_issue, resp, resp, mock_create_build_issue,
