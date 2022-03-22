@@ -1,0 +1,9 @@
+access_token: xxxxxxxxxxxxxxxxxxxxxxxxxx
+gitee_api_home_page: "https://gitee.com/api/{version}"
+gitee_api_common_id:
+        src-openeuler: 5460189
+        openEuler: 5292411
+        issue_type:
+            task: 118736
+            bug: 118738
+            CVE: 210726

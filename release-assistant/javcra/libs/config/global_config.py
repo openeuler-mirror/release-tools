@@ -57,3 +57,15 @@ LOG_DIR = "./"
 
 # ip and port for sending update info to test
 TEST_IP_PORT = "123.60.114.22:21510"
+
+
+# OBS 实时日志链接
+OBS_PROJECT_LIVE_LOG= DEFAULT_OSCRC_APIURL + "/package/live_build_log/{obs_project}/{package}/{repo}/{arch}"
+# oect top dir
+LIBS_CONFIG_FOLDER = os.path.abspath(os.path.dirname(__file__))
+# path of user-agent.json
+USER_AGENT_JSON = f'{LIBS_CONFIG_FOLDER}/user-agent.json'
+# gitee api config
+GITEE_API_CONFIG = f'{LIBS_CONFIG_FOLDER}/gitee_api_config.yaml'
+# gitee memebers id
+GITEE_OPENEULER_MEMBERS_ID_YAML = f'{LIBS_CONFIG_FOLDER}/oe_memebers_id.yaml'
