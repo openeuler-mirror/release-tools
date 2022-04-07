@@ -1,0 +1,86 @@
+#generic-repos is licensed under the Mulan PSL v2.
+#You can use this software according to the terms and conditions of the Mulan PSL v2.
+#You may obtain a copy of Mulan PSL v2 at:
+#    http://license.coscl.org.cn/MulanPSL2
+#THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
+#PURPOSE.
+#See the Mulan PSL v2 for more details.
+
+#binary repo
+ 
+[published-everything]
+name=published-everything
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/everything/$basearch/
+enabled=1
+gpgcheck=0
+priority=2
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/everything/$basearch/RPM-GPG-KEY-openEuler
+
+[published-update]
+name=published-update
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/update/$basearch/
+enabled=1
+gpgcheck=0
+priority=1
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/update/$basearch/RPM-GPG-KEY-openEuler
+
+[published-debuginfo]
+name=published-debuginfo
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/debuginfo/$basearch/
+enabled=0
+gpgcheck=0
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/debuginfo/$basearch/RPM-GPG-KEY-openEuler
+
+[devel-obs]
+name=devel-obs
+baseurl=http://119.3.219.20:82/openEuler:/22.03:/LTS/standard_$basearch/
+enabled=1
+gpgcheck=0
+priority=3
+
+#source repo
+
+[published-everything-src]
+name=published-everything-src
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/source
+enabled=0
+gpgcheck=0
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/source/$basearch/RPM-GPG-KEY-openEuler
+
+[published-update-src]
+name=published-update-src
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/update/source
+enabled=0
+gpgcheck=0
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/update/source/RPM-GPG-KEY-openEuler
+
+#EPOL binary repo
+
+[published-EPOL]
+name=published-EPOL
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/EPOL/$basearch/
+enabled=0
+gpgcheck=0
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/OS/$basearch/RPM-GPG-KEY-openEuler
+
+[published-Epol-src]
+name=published-Epol-src
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/EPOL/main/source/
+enabled=0
+gpgcheck=0
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/EPOL/main/source/RPM-GPG-KEY-openEuler
+
+[published-Epol-update-src]
+name=published-Epol-update-src
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/EPOL/update/main/source
+enabled=0
+gpgcheck=0
+gpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/EPOL/update/main/source/RPM-GPG-KEY-openEuler
+
+[devel-obs]
+name=devel-obs
+baseurl=http://119.3.219.20:82/openEuler:/22.03:/LTS/standard_$basearch/
+enabled=1
+gpgcheck=0
+priority=3
