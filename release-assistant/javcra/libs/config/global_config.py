@@ -56,7 +56,7 @@ SUPPORTED_BRANCHES_LIST = ["openEuler"]
 LOG_DIR = "./"
 
 # ip and port for sending update info to test
-TEST_IP_PORT = "https://radiatest.openeuler.org"
+TEST_IP_PORT = "radiatest.openeuler.org"
 
 
 # OBS 实时日志链接
