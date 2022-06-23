@@ -103,7 +103,7 @@ class CheckEntrance(IssueOperation):
                 else:
                     update_data["epol_update_url"] = repo_info.get("url")
 
-            url_for_test = "https://" + TEST_IP_PORT + "/api/v1/openeuler/task/update"
+            url_for_test = "https://{}/api/v1/openeuler/task/update".format(TEST_IP_PORT)
             headers = {"Content-Type": "application/json; charset=utf8"}
             resp = requests.post(url_for_test, data=json.dumps(update_data), headers=headers, timeout=3)
 
