@@ -87,6 +87,10 @@ class CheckCommand(BaseCommand):
                                     action="store",
                                     required=True,
                                     )
+        self.sub_parse.add_argument("--buildcheck",
+                                    help="the option for build checking",
+                                    action="store_false",
+                                    )
 
     @staticmethod
     def jenkins_server(params, paral_num, branch_name, release_date):
@@ -442,7 +446,10 @@ class CheckCommand(BaseCommand):
         if not add_res:
             raise ValueError("failed to add repo in release issue.")
         print("[INFO] successful to add repo in release issue.")
-
+        
+        if not params.buildcheck:
+            return
+        
         # self-build verification
         selfbuild_res = verify_selfbuild()
         self.create_comment("selfbuild jenkins res", selfbuild_res, issue)
