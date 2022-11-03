@@ -11,7 +11,7 @@
     "parent_id": 0,
     "depth": 0,
     "state": "open",
-    "title": "[openEuler-20.03-LTS] a-test build failed 20210420",
+    "title": "[openEuler-20.03-LTS-SP1] a-test build failed 20210420",
     "body": "just for test",
     "user": {
       "id": 8079354,

@@ -15,6 +15,7 @@ Description: check method's entrance for custom commands
 Class:CheckCommand
 """
 import os
+import stat
 import uuid
 from javcra.api.jenkins_api import JenkinsJob
 from javcra.application.checkpart.checkentrance import CheckEntrance
@@ -165,7 +166,7 @@ class CheckCommand(BaseCommand):
         Returns:
             True or False
         """
-        comment_params = {"owner": "openEuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
+        comment_params = {"owner": "openeuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
         comment_list = [COMMENT_DICT.get("cve"), COMMENT_DICT.get("bugfix")]
         judge_res = issue.judge_specific_comment_exists(comment_list, comment_params)
         if not judge_res:
@@ -301,6 +302,26 @@ class CheckCommand(BaseCommand):
                                                 "{}_{}_{}_{}".format(branch_name, install_or_build, pkg_name,
                                                                      str(uuid.uuid1().hex)))
                 return self.read_log_data(cloud_server, pkg_log, tem_pkg_log_path, pkg_name)
+
+    def versions_operation(self, params):
+        """
+        Description: operation for check the version of pacakges
+        Args:
+            params: Command line parameters
+        """
+        issue = self.issue(params)
+        judege_res = self.judge_cve_bugfix_comment(issue, params)
+        if not judege_res:
+            return
+
+        update_pkgs = issue.get_update_list()
+        if not update_pkgs:
+            raise ValueError("failed to get obs_pkgs.")
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        modes = stat.S_IWUSR | stat.S_IRUSR
+        with os.fdopen(os.open('update_packages.txt', flags, modes), 'w') as f:
+            for pkg in update_pkgs:
+                f.write("{}\n".format(pkg))
 
     def requires_operation(self, params):
         """
@@ -446,10 +467,9 @@ class CheckCommand(BaseCommand):
         if not add_res:
             raise ValueError("failed to add repo in release issue.")
         print("[INFO] successful to add repo in release issue.")
-        
+
         if not params.buildcheck:
             return
-        
         # self-build verification
         selfbuild_res = verify_selfbuild()
         self.create_comment("selfbuild jenkins res", selfbuild_res, issue)
@@ -490,6 +510,7 @@ class CheckCommand(BaseCommand):
             "sk": params.sk,
             "jenkinsuser": params.jenkinsuser,
             "jenkinskey": params.jenkinskey,
+            "buildcheck": params.buildcheck
         }
         validate_result = parameter_permission_validate(
             CheckSchema, param_dict, comment

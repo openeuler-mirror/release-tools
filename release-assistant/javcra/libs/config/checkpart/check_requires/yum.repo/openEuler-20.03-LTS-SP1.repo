@@ -78,9 +78,9 @@ enabled=0
 gpgcheck=0
 gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP1/EPOL/update/source/RPM-GPG-KEY-openEuler
 
-[devel-obs]
+[devel-Epol-obs]
 name=devel-obs
-baseurl=http://119.3.219.20:82/openEuler:/20.03:/LTS:/SP1/standard_$basearch/
+baseurl=http://119.3.219.20:82/openEuler:/20.03:/LTS:/SP1:/Epol/standard_$basearch/
 enabled=1
 gpgcheck=0
 priority=3

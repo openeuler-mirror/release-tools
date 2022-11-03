@@ -36,7 +36,7 @@
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>
           <name>BRANCH</name>
-          <defaultValue>openEuler-20.03-LTS</defaultValue>
+          <defaultValue>openEuler-20.03-LTS-SP1</defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
         <hudson.model.StringParameterDefinition>

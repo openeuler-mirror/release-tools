@@ -47,7 +47,8 @@ PERMISSION_INFO = {
         "/bugfix-ok",
         "/check-status",
         "/get-requires",
-        "/check-cve-bugfix"
+        "/check-cve-bugfix",
+        "/check-versions"
     ],
     "tester": ["/test-ok"],
     "tc": ["/check-ok"],
@@ -73,7 +74,7 @@ AARCH_FRAME = "aarch64"
 X86_FRAME = "x86_64"
 
 # branch list for standard epol list
-BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS-SP3", "openEuler-20.03-LTS", "openEuler-22.03-LTS"]
+BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP3", "openEuler-22.03-LTS"]
 
 # lts branch
 LTS_BRANCH = "openEuler-20.03-LTS"
@@ -140,7 +141,8 @@ CHECK_COMMENT_DICT = {
     "status": "/check-status",
     "requires": "/get-requires",
     "test": "/test-ok",
-    "cve_bugfix": "/check-cve-bugfix"
+    "cve_bugfix": "/check-cve-bugfix",
+    "versions": "/check-versions"
 }
 
 # release url
@@ -162,4 +164,14 @@ LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "re
 
 MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3"]
 
-CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]
+CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix", "versions"]
+
+VERSION_TABLE_HEADER = ["package_name", "gitee-sp1", "obs-sp1", "gitee-sp3", "obs-sp3", "gitee-sp2203", "obs-sp2203"]
+
+CHECK_RESULT_CSV_PATH = "update_packages2/src/check_result.csv"
+
+#staff
+VERSION_MANAGER = "@gitee-cmd @zhangtao2020"
+DEVELOPER = "@gitee-cmd @zhangtao2020 @caodongxia @yaoxin"
+SECURITY_COMMITTEE = "@yanxiaobing2020 @gitee-cmd @zhangtao2020"
+TESTER = "@gitee-cmd @zhangtao2020 @disnight"

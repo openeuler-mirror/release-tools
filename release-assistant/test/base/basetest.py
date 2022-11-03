@@ -67,6 +67,7 @@ class TestBase(unittest.TestCase):
         self.stdout_io = StringIO()
         self.expect_str = ""
         self.command_params = []
+        self.maxDiff = None
         sys.stdout = sys.stderr = self.stdout_io
 
     def _execute_command(self):
