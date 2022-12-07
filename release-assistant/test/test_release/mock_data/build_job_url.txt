@@ -1,1 +1,1 @@
-https://jenkins.openeuler.org/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/build
+https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/build

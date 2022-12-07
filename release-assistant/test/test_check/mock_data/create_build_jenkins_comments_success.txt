@@ -3,10 +3,10 @@
     "id": 6274335,
     "body": "|name|status|output|
              |-|-|-|
-             |function-item/release-manager/release_tools/update_20210819094245/aarch64/openEuler-20.03-LTS-SP1_1|SUCCESS|[#1](https://jenkins.openeuler.org/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|
-             |function-item/release-manager/release_tools/update_20210819094245/aarch64/openEuler-20.03-LTS-SP1_2|SUCCESS|[#1](https://jenkins.openeuler.org/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|
-             |function-item/release-manager/release_tools/update_20210819094245/x86_64/openEuler-20.03-LTS-SP1_1|SUCCESS|[#1](https://jenkins.openeuler.org/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|
-             |function-item/release-manager/release_tools/update_20210819094245/x86_64/openEuler-20.03-LTS-SP1_2|SUCCESS|[#1](https://jenkins.openeuler.org/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|",
+             |function-item/release-manager/release_tools/update_20210819094245/aarch64/openEuler-20.03-LTS-SP1_1|SUCCESS|[#1](https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|
+             |function-item/release-manager/release_tools/update_20210819094245/aarch64/openEuler-20.03-LTS-SP1_2|SUCCESS|[#1](https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|
+             |function-item/release-manager/release_tools/update_20210819094245/x86_64/openEuler-20.03-LTS-SP1_1|SUCCESS|[#1](https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|
+             |function-item/release-manager/release_tools/update_20210819094245/x86_64/openEuler-20.03-LTS-SP1_2|SUCCESS|[#1](https://openeulerjenkins.osinfra.cn/job/function-item/job/release-manager/job/release_tools/job/update_20210819094245/job/aarch64/job/openEuler-20.03-LTS-SP1_1/1/console)|",
     "user": {
       "id": 2234080,
       "login": "MementoMoriCheng",

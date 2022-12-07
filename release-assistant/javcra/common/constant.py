@@ -123,7 +123,7 @@ INSTALL_JOB_PREFIX = "function-item/release-manager/update_template_jobs/install
 OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
 
 # jenkins base url
-JENKINS_BASE_URL = 'https://jenkins.openeuler.org'
+JENKINS_BASE_URL = 'https://openeulerjenkins.osinfra.cn'
 
 REALSE_TOOLS_BUCKET_NAME = "release-tools"
 
