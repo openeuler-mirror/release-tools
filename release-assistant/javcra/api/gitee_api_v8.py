@@ -335,10 +335,10 @@ class GiteeAPI(object):
         necessary_paras['issue_type_id'] = issue_type_id
         necessary_paras['assignee_id'] = assignee_id
 
-        final_paras = parameters.update(necessary_paras)
-        logger.info(final_paras)
+        parameters.update(necessary_paras)
+        logger.info(parameters)
 
-        result = self._post_gitee(url, final_paras)
+        result = self._post_gitee(url, parameters)
         try:
             issue_url = result['issue_url']
         except KeyError as ke:
