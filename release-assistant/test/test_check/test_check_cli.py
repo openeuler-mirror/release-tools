@@ -40,7 +40,7 @@ class TestCheck(TestMixin):
 [INFO] successfully to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
@@ -62,7 +62,7 @@ class TestCheck(TestMixin):
 during the operation status, a failure occurred, and the cause of the error was failed to update status in check part.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_request(
             side_effect=[resp, resp, RequestException])
@@ -77,7 +77,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 during the operation status, a failure occurred, and the cause of the error was the status of the issue is not all completed, please complete first
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
         mock_install_r = self.make_need_content('mock_install_issue.txt', MOCK_DATA_FILE)
@@ -98,7 +98,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
@@ -121,7 +121,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
@@ -144,7 +144,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
@@ -168,7 +168,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
@@ -189,7 +189,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_bugfix_r = self.make_need_content('mock_bugfix_issue.txt', MOCK_DATA_FILE)
@@ -212,7 +212,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to send repo info.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=status", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_subprocess_check_output(return_value=b"published-everything-src")
         mock_no_related_issues_r = self.make_need_content('mock_no_related_issues.txt', MOCK_DATA_FILE)
@@ -229,7 +229,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [INFO] successfully operate test in check part.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=test", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         mock_comment_r = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
         mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)
@@ -244,7 +244,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to operate test in check part.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=test", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.mock_request(side_effect=[resp, resp, resp, RequestException])
         self.assert_result()
@@ -257,7 +257,7 @@ during the operation status, a failure occurred, and the cause of the error was 
 [ERROR] failed to operate test in check part.
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=test", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         mock_empty_related_personnel_r = self.make_need_content('mock_empty_related_personnel.txt', MOCK_DATA_FILE)
         self.mock_request(side_effect=[resp, resp, mock_empty_related_personnel_r])
@@ -291,7 +291,7 @@ Parameter validation failed
         """
         self.expect_str = self.read_file_content("requires_success.txt", folder=EXPECT_DATA_FILE, is_json=False)
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         self.prepare_jenkins_data()
         self.prepare_obs_data()
         resp = self.make_expect_data(200, 'checkpart.txt')
@@ -392,7 +392,7 @@ Parameter validation failed
         self.expect_str = self.read_file_content("check_requires_epol_list_failed.txt", folder=EXPECT_DATA_FILE,
                                                  is_json=False)
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         self.prepare_jenkins_data()
         self.prepare_obs_data()
         resp = self.make_expect_data(200, 'check_epol_list.txt', MOCK_DATA_FILE)
@@ -446,7 +446,7 @@ already exists the repo url, then update the pkglist in repo.
 during the operation requires, a failure occurred, and the cause of the error was transfer standard rpm jenkins res: No comment information. The content is:  [].
         """
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.prepare_jenkins_data()
         self.prepare_obs_data()
@@ -465,7 +465,7 @@ during the operation requires, a failure occurred, and the cause of the error wa
         self.expect_str = self.read_file_content("download_pkg_log_failed.txt",
                                                  folder=EXPECT_DATA_FILE, is_json=False)
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         self.prepare_jenkins_data()
         self.prepare_obs_data(get_objects_status_code=400)
         resp = self.make_expect_data(200, 'checkpart.txt')
@@ -495,7 +495,7 @@ during the operation requires, a failure occurred, and the cause of the error wa
         self.expect_str = self.read_file_content("write_back_create_install_build_issue_failed.txt",
                                                  folder=EXPECT_DATA_FILE, is_json=False)
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         self.prepare_jenkins_data()
         self.prepare_obs_data()
         resp = self.make_expect_data(200, 'checkpart.txt')
@@ -522,7 +522,7 @@ during the operation requires, a failure occurred, and the cause of the error wa
         self.expect_str = self.read_file_content("write_back_operate_release_issue_failed.txt", folder=EXPECT_DATA_FILE,
                                                  is_json=False)
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
-                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769"]
+                               "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         resp = self.make_expect_data(200, 'checkpart.txt')
         self.prepare_jenkins_data()
         self.prepare_obs_data()

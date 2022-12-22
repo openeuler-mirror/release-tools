@@ -10,7 +10,7 @@
   "parent_id": 0,
   "depth": 0,
   "state": "open",
-  "title": "openEuler-20.03-LTS Update 2021/7/29 release",
+  "title": "openEuler-20.03-LTS-SP1 Update 2021/7/29 release",
   "body": "版本目标：CVE、软件包引入升级和Bugfix修复\n版本：openEuler-20.03-LTS-SP1\n例行CVE冻结：20210420\n代码冻结：20210420\n\n版本发布负责人\n 版本经理：@Mary \n开发人员：@Mary@Jerry \n安全委员会：@Mary@Ben \n测试人员：@Mary@Harry@Robin \n\n# 1、发布范围\n## 1、CVE\n修复CVE 1个\n|CVE|仓库|status|score|version|abi是否变化|\n|-|-|-|-|-|-|\n|#I3V9IG|atril|遗留|9.0|10.3.9|否|\n|\n\n\n## 2、bugfix\n修复bugfix 1个\n|issue|仓库|status|\n|-|-|-|\n|#I3J655|bamf|遗留|\n\n\n## 3、requires\n|仓库|引入原因|\n|-|-|\n|blueman|接口变更|\n\n\n# 2、测试repo源\n|repo_type|architecture|url|\n|-|-|-|\n\n\n# 3、安装、自编译问题\n|issue|仓库|status|\n|-|-|-|\n\n\n# 4、遗留问题\n|issue|仓库|status|type|\n|-|-|-|-|\n\n",
   "user": {
     "id": 2234080,

@@ -2,7 +2,3 @@
 already exists the repo url, then update the pkglist in repo.
 [INFO] successfully create transfer standard rpm jenkins res
 [INFO] successful to add repo in release issue.
-[INFO] successfully create selfbuild jenkins res
-[INFO] successfully create standard install jenkins res
-failed to create build_list issue for a-test.
-failed to create install_list issue for a-test.

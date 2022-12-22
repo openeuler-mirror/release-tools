@@ -50,6 +50,7 @@ class CheckSchema(BaseSchema):
     sk = fields.String(required=False, validate=validate.Length(min=1))
     jenkinsuser = fields.String(required=False, validate=validate.Length(min=1))
     jenkinskey = fields.String(required=False, validate=validate.Length(min=1))
+    buildcheck = fields.Boolean(required=False)
 
 
 class ModifySchema(BaseSchema):

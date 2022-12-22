@@ -89,6 +89,12 @@ class Issue:
             return None
         return resp
 
+    def externel_gitee_api_url(self, url_name, **kwargs):
+        """
+        Description: externel usage of gitee url api
+        """
+        return self.__get_gitee_api_url(url_name, **kwargs)
+
     def __get_gitee_api_url(self, url_name, **kwargs):
         """
         get specific gitee api url
@@ -102,7 +108,6 @@ class Issue:
         """
 
         url_prefix = "https://gitee.com/api/v5/"
-
         url_dict = {
             "pkg_issues_url": url_prefix + "repos/{owner}/{repo}/issues?access_token={access_token}&state=all"
                 .format(owner=self.owner, repo=kwargs.get("pkg"), access_token=self.token),
@@ -114,6 +119,9 @@ class Issue:
 
             "update_issue_url": url_prefix + "repos/{owner}/issues/{number}".format(owner=kwargs.get("owner"),
                                                                                     number=self.issue_num),
+
+            "get_issue_url": url_prefix + "repos/{owner}/release-tools/issues/{number}?access_token={token}".format(
+                owner=kwargs.get("owner"), number=kwargs.get("issue_id"), token=self.token),
 
             "create_comment_url": url_prefix + "repos/{owner}/{repo}/issues/{number}/comments".format(
                 owner=kwargs.get("owner"), repo=self.repo, number=self.issue_num),
@@ -129,7 +137,6 @@ class Issue:
                                                   "".format(owner=kwargs.get("owner"), repo=kwargs.get("repo"),
                                                             number=kwargs.get("issue_id"), token=self.token)
         }
-
         return url_dict.get(url_name)
 
     def __get_pkg_issues(self, pkg):
@@ -479,6 +486,36 @@ class Issue:
             elif shell_cmd(basis_cmd, repo_file_condition, epol_repo_condition):
                 pkglist_epol.append(pkg)
         return pkglist_standard, pkglist_epol
+
+    def get_issue_tables(self):
+        """
+        use regex to get bugfix and cve tables
+
+        Args:
+            issue_body: issue body str
+
+        Returns:
+            str: string of bugfix and cve tables
+        """
+        issue_body = self.get_issue_body(self.issue_num)
+
+        if not issue_body:
+            logger.error("empty content of issue body, can not get update list.")
+            return []
+
+        pkgs = set()
+
+        # using regular to get the contents of the specified part
+        cve_res = re.compile("(?P<cve>1、CVE.*?\\n\\n)", re.S).search(issue_body)
+        bugfix_res = re.compile("(?P<bugfix>2、bugfix.*?\\n\\n)", re.S).search(issue_body)
+        req_res = re.compile("(?P<req>3、requires.*?\\n\\n)", re.S).search(issue_body)
+
+        # get packages from cve、bugfix、requires table
+        pkgs = self.__get_pkglist_from_specific_part(cve_res, "cve", pkgs)
+        pkgs = self.__get_pkglist_from_specific_part(bugfix_res, "bugfix", pkgs)
+        pkgs = self.__get_pkglist_from_specific_part(req_res, "req", pkgs)
+
+        return list(pkgs)
 
     def get_issue_comments(self, params):
         """

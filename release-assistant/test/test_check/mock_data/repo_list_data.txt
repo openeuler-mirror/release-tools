@@ -78,7 +78,7 @@
 </body>
 </html>
 <h1>Index of
-/repo.openeuler.org/openEuler-20.03-LTS/update_20210721/</h1>
+/repo.openeuler.org/openEuler-20.03-LTS-SP1/update_20210721/</h1>
 <table id="list"><thead><tr><th style="width:55%"><a href="?C=N&amp;O=A">File Name</a>&nbsp;<a href="?C=N&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:20%"><a href="?C=S&amp;O=A">File Size</a>&nbsp;<a href="?C=S&amp;O=D">&nbsp;&darr;&nbsp;</a></th><th style="width:25%"><a href="?C=M&amp;O=A">Date</a>&nbsp;<a href="?C=M&amp;O=D">&nbsp;&darr;&nbsp;</a></th></tr></thead>
 <tbody><tr><td class="link"><a href="../">Parent directory/</a></td><td class="size">-</td><td class="date">-</td></tr>
 <tr><td class="link"><a href="aarch64/" title="aarch64">aarch64/</a></td><td class="size">-</td><td class="date">2021-Jul-23 11:58</td></tr>

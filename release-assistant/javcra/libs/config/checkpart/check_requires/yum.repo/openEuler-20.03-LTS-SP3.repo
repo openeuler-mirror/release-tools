@@ -80,7 +80,7 @@ gpgkey=https://repo.openeuler.org/openEuler-20.03-LTS-SP3/EPOL/update/main/sourc
 
 [devel-obs]
 name=devel-obs
-baseurl=http://119.3.219.20:82/openEuler:/20.03:/LTS:/SP3/standard_$basearch/
+baseurl=http://119.3.219.20:82/openEuler:/20.03:/LTS:/SP3:/Epol/standard_$basearch/
 enabled=1
 gpgcheck=0
 priority=3
