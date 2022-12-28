@@ -163,3 +163,11 @@ LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "re
 MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3"]
 
 CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]
+# Number of retries
+WAIT_NUMBER = 7
+# Interval waiting times
+WAIT_TIME = 90000
+# majun callback url
+MAJUN_CALLBACK_URL = "https://majun-beta.osinfra.cn/api/ci-backend/ci-portal/ci-admin/saveJenkinsCallbackResult"
+# CVE MANAGE URL
+CVE_MANAGE_URL = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData"
