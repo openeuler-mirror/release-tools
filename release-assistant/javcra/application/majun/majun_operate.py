@@ -86,12 +86,8 @@ class MajunOperate:
         Returns:
             Return true on success and false on failure
         """
-        return (
-            True
-            if transfer_res and transfer_res[0].get("status") == "SUCCESS"
-            else False
-        )
-
+        return True if transfer_res and transfer_res[0].get("status") == "SUCCESS" else False
+        
     @staticmethod
     def jenkins_server(
         params,
