@@ -77,6 +77,7 @@ def download_file(now_time, file_name, obs_ak, obs_sk):
         obs_client = ObsCloud(obs_ak, obs_sk, CVE_MANAGE_SERVER, CVE_MANAGE_BUCKET_NAME)
         # Determine whether the file to be downloaded is in the object of the bucket
         files = obs_client.bucket_list("{}/{}".format(CVE_UPDATE_INFO, now_time))
+        logger.info(f"The current files on the cloud are {files}")
         file_object = ""
         for file in files:
             if "{CVE_UPDATE_INFO}/{date}/{title}".format(
