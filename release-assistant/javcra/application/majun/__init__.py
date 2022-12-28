@@ -151,3 +151,4 @@ def catch_majun_error(func):
             return send_content_majun(False, params.id)
 
     return inner
+
