@@ -73,7 +73,8 @@ AARCH_FRAME = "aarch64"
 X86_FRAME = "x86_64"
 
 # branch list for standard epol list
-BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS-SP3", "openEuler-20.03-LTS", "openEuler-22.03-LTS"]
+BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS-SP3", "openEuler-20.03-LTS",
+               "openEuler-22.03-LTS"]
 
 # lts branch
 LTS_BRANCH = "openEuler-20.03-LTS"
@@ -163,6 +164,7 @@ LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "re
 MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3"]
 
 CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]
+
 # Number of retries
 WAIT_NUMBER = 7
 # Interval waiting times
@@ -171,3 +173,21 @@ WAIT_TIME = 90000
 MAJUN_CALLBACK_URL = "https://majun-beta.osinfra.cn/api/ci-backend/ci-portal/ci-admin/saveJenkinsCallbackResult"
 # CVE MANAGE URL
 CVE_MANAGE_URL = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData"
+
+BRANCH_MAP = {
+    "openEuler-20.03-LTS-SP1": [
+        "openEuler:20.03:LTS:SP1",
+        "openEuler:20.03:LTS:SP1:Epol",
+    ],
+    "openEuler-20.03-LTS-SP3": [
+        "openEuler:20.03:LTS:SP3",
+        "openEuler:20.03:LTS:SP3:Epol",
+    ],
+    "openEuler-22.03-LTS": ["openEuler:22.03:LTS", "openEuler:22.03:LTS:Epol"],
+}
+
+OBS_PROJECT_MULTI_VERSION_MAP = {
+    "openEuler:22.03:LTS:Epol:Multi-Version:OpenStack:Train": "Multi-Version_OpenStack-Train_openEuler-22.03-LTS",
+    "openEuler:22.03:LTS:Epol:Multi-Version:OpenStack:Wallaby": "Multi-Version_OpenStack-Wallaby_openEuler-22.03-LTS",
+    "openEuler:22.03:LTS:Epol:Multi-Version:obs-server:2.10.11": "Multi-Version_obs-server-2.10.11_openEuler-22.03-LTS",
+}
