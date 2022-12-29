@@ -200,3 +200,5 @@ CVE_UPDATE_INFO_JOB_NAME = "function-item/update_repodata_by_updateinfo_automati
 
 # Test milestone routing
 TEST_MILESTONE_URL = "http://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
+
+MILESTONE_SUCCESS_CODE = "2000" 

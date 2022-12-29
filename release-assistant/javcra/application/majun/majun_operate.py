@@ -20,6 +20,7 @@ from javcra.common.constant import (
     CVRF_JOB_NAME,
     EPOL_DICT,
     MAX_PARAL_NUM,
+    MILESTONE_SUCCESS_CODE,
     MULTI_VERSION_BRANCHS,
     OBS_PROJECT_MULTI_VERSION_MAP,
     REPO_BASE_URL,
@@ -137,7 +138,7 @@ class MajunOperate:
             res_text = json.loads(resp.text)
         except json.JSONDecodeError as error:
             raise ValueError(f"JSONDecodeError,because {error}") from error
-        if not resp or resp.status_code != 200 or res_text.get("error_code") != "2000":
+        if not resp or resp.status_code != 200 or res_text.get("error_code") != MILESTONE_SUCCESS_CODE:
             raise ValueError(f"Request test failed,{resp.status_code} and {resp.text}")
         else:
             logger.info("Successful milestone acquisition")
@@ -391,11 +392,10 @@ class MajunOperate:
         """
         if params.choice == "cvrf":
             jenkins_params.update({"filename": params.cvrffilename})
+            jenkins_job =  CVRF_JOB_NAME
         else:
             jenkins_params.update({"filename": params.updatefilename})
-        jenkins_job = (
-            CVRF_JOB_NAME if params.choice == "cvrf" else CVE_UPDATE_INFO_JOB_NAME
-        )
+            jenkins_job = CVE_UPDATE_INFO_JOB_NAME
         jenkins_obs_res = self.jenkins_server_obj.get_specific_job_comment(
             jenkins_params, jenkins_job
         )
