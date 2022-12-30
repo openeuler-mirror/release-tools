@@ -34,6 +34,8 @@ from javcra.common.constant import TRIGGER_TM_JOB
 from javcra.common.constant import AARCH64_TM_JOB
 from javcra.common.constant import X86_TM_JOB
 from javcra.common.constant import ACTUATOR_DICT
+from javcra.common.constant import ISO_BUILD_WAIT_NUMBER
+from javcra.common.constant import MIN_JENKINS_BUILD_WAIT_TIME
 
 
 def catch_jenkins_error(func):
@@ -570,3 +572,55 @@ class JenkinsJob(object):
             }
             job_status_list.append(job_name_status_dict)
         return job_status_list
+
+
+    @catch_jenkins_error
+    def get_jenkins_job_build_result(self, params, job_name, wait_time=MIN_JENKINS_BUILD_WAIT_TIME):
+        """
+        get job status of jenkins job according to job name
+        Args:
+            params: params to build jenkins job
+            job_name: job name
+            wait_time: The amount of time it takes to get jenkins' result
+        Returns:
+            job_status_dict: jenkins build result
+        """
+        build_id = self.build_specific_job(job_name, params)
+
+        if build_id:
+            job_status = self.wait_job_result_status(job_name, build_id, wait_time)
+            job_status_dict = {
+                "name": job_name,
+                "status": job_status,
+                "output": self.get_output_hyperlink(job_name, build_id),
+            }
+            return [job_status_dict]
+
+        return []
+
+    @catch_jenkins_error
+    def wait_job_result_status(self, job_name, job_id, wait_time):
+        """
+        get jenkins job result status
+        Args:
+            job_name: job name
+            job_id: jenkins job build id
+            wait_time: The amount of time it takes to get jenkins' result
+        Returns:
+            build_res: SUCCESS, FAILURE, ABORTED, None(means the job is under building)
+        """
+        get_status_results = 0
+        while True:
+            time.sleep(wait_time)
+            build_res = self.server.get_build_info(job_name, job_id)["result"]
+            get_status_results += 1
+            if build_res:
+                break
+            if get_status_results > ISO_BUILD_WAIT_NUMBER:
+                build_res = "BUILD"
+                break
+        logger.info(
+            "%s %s build finished. The result status is %s"
+            % (job_name, job_id, build_res)
+        )
+        return build_res
