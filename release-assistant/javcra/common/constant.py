@@ -161,7 +161,7 @@ COMMENT_DICT = {"cve": "/cve-ok", "bugfix": "/bugfix-ok", "test": "/test-ok"}
 # label dict
 LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "release-check"}
 
-MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3"]
+MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3", "22.03-LTS"]
 
 CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]
 
@@ -191,3 +191,14 @@ OBS_PROJECT_MULTI_VERSION_MAP = {
     "openEuler:22.03:LTS:Epol:Multi-Version:OpenStack:Wallaby": "Multi-Version_OpenStack-Wallaby_openEuler-22.03-LTS",
     "openEuler:22.03:LTS:Epol:Multi-Version:obs-server:2.10.11": "Multi-Version_obs-server-2.10.11_openEuler-22.03-LTS",
 }
+
+# jenkins cvrf name
+CVRF_JOB_NAME = "obs/update_cve_xml_file_automatic"
+
+# jenkins update info name
+CVE_UPDATE_INFO_JOB_NAME = "function-item/update_repodata_by_updateinfo_automatic"
+
+# Test milestone routing
+TEST_MILESTONE_URL = "http://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
+
+MILESTONE_SUCCESS_CODE = "2000" 
