@@ -31,6 +31,13 @@ class MessageCode(Enum):
     FAILED_CODE = "400"
 
 
+@unique
+class ConstantNumber(Enum):
+    CON_NUMBER_ZERO = 0
+    CON_NUMBER_ONE = 1
+    CON_NUMBER_TWO = 2
+
+
 def combine_content(content, majun_id, multip_start):
     """
     jenkins run result
@@ -43,9 +50,19 @@ def combine_content(content, majun_id, multip_start):
     """
     content_dic = {"data": content, "id": majun_id}
     if any([content, multip_start]):
-        content_dic.update({"code": MessageCode.SUCCESS_CODE.value, "msg": MessageCode.SUCCESS_MESSAGE.value})
+        content_dic.update(
+            {
+                "code": MessageCode.SUCCESS_CODE.value,
+                "msg": MessageCode.SUCCESS_MESSAGE.value,
+            }
+        )
     else:
-        content_dic.update({"code": MessageCode.FAILED_CODE.value, "msg": MessageCode.FAILURE_MESSAGE.value})
+        content_dic.update(
+            {
+                "code": MessageCode.FAILED_CODE.value,
+                "msg": MessageCode.FAILURE_MESSAGE.value,
+            }
+        )
     return content_dic
 
 
@@ -89,9 +106,7 @@ def get_product_version(task_title):
     base_re_str = r"^(.+)_([a-zA-Z]+)(\d+)"
 
     if "Multi" in task_title:
-        re_content = re.compile(f"{base_re_str}_(.+)", re.MULTILINE).search(
-            task_title
-        )
+        re_content = re.compile(f"{base_re_str}_(.+)", re.MULTILINE).search(task_title)
         branch_name, release_date, multi_content = (
             re_content.group(1),
             re_content.group(3),
@@ -108,16 +123,17 @@ def get_product_version(task_title):
         raise ValueError(f"This branch {branch_name} is not supported yet")
     if release_date.isdigit():
         freeze_date = (
-                datetime.datetime.strptime(release_date, "%Y%m%d")
-                + datetime.timedelta(days=2)
+            datetime.datetime.strptime(release_date, "%Y%m%d")
+            + datetime.timedelta(days=2)
         ).strftime("%Y%m%d")
 
     else:
         re_release_date = re.compile(r"(\d+)(\D+)", re.MULTILINE).search(release_date)
         new_update_time, temporary_str = re_content.group(1), re_release_date.group(2)
-        freeze_date = (datetime.datetime.strptime(new_update_time, "%Y%m%d") +
-                       datetime.timedelta(days=2)).strftime(
-            "%Y%m%d") + temporary_str
+        freeze_date = (
+            datetime.datetime.strptime(new_update_time, "%Y%m%d")
+            + datetime.timedelta(days=2)
+        ).strftime("%Y%m%d") + temporary_str
     return branch_name, freeze_date, multi_content
 
 
@@ -140,15 +156,14 @@ def catch_majun_error(func):
                 )
             return func(*args, **kwargs)
         except (
-                ValueError,
-                AttributeError,
-                KeyError,
-                TypeError,
-                FileNotFoundError,
-                IndexError
+            ValueError,
+            AttributeError,
+            KeyError,
+            TypeError,
+            FileNotFoundError,
+            IndexError,
         ) as err:
             logger.error(f"repo {err}")
             return send_content_majun(False, params.id)
 
     return inner
-

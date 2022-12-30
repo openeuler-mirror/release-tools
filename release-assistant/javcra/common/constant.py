@@ -202,3 +202,42 @@ CVE_UPDATE_INFO_JOB_NAME = "function-item/update_repodata_by_updateinfo_automati
 TEST_MILESTONE_URL = "http://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
 
 MILESTONE_SUCCESS_CODE = "2000" 
+DAYLIBUILD_URL = "http://121.36.84.172/dailybuild/"
+
+ISO_ARCH_MAP = {"ARM64": "openeuler_ARM64", "X86": "openeuler_X86"}
+
+OBS_KEY_NAMES = ["obs_standard_prj", "obs_epol_prj", "obs_extras_prj"]
+
+OBS_VALUES_NAMES = {
+    "openEuler-22.09": [
+        "openEuler:22.09",
+        "openEuler:22.09:Epol",
+        "openEuler:22.09:Extras",
+    ],
+    "openEuler-20.03-LTS-SP1": [
+        "openEuler:20.03:LTS:SP1",
+        "openEuler:20.03:LTS:SP1:Epol",
+        "openEuler:20.03:LTS:SP1:Extras",
+    ],
+    "openEuler-20.03-LTS-SP3": [
+        "openEuler:20.03:LTS:SP3",
+        "openEuler:20.03:LTS:SP3:Epol",
+        "openEuler:20.03:LTS:SP3:Extras",
+    ],
+    "openEuler-22.03-LTS": [
+        "openEuler:22.03:LTS",
+        "openEuler:22.03:LTS:Epol",
+        "openEuler:22.03:LTS:Epol:Extras",
+    ],
+}
+
+VM_IP_MAP = {
+    "openEuler-22.09": "172.16.1.155",
+    "openEuler-20.03-LTS-SP1": "172.16.1.32",
+    "openEuler-20.03-LTS-SP3": "172.16.1.32",
+    "openEuler-22.03-LTS": "172.16.1.32",
+}
+
+MIN_JENKINS_BUILD_WAIT_TIME = 5
+MAX_ISO_BUILD_WAIT_TIME = 1200
+ISO_BUILD_WAIT_NUMBER = 6
