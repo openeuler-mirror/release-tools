@@ -17,6 +17,7 @@ Class:CheckCommand
 import os
 import stat
 import uuid
+
 from javcra.api.jenkins_api import JenkinsJob
 from javcra.application.checkpart.checkentrance import CheckEntrance
 from javcra.application.checkpart.checktest import CheckTest

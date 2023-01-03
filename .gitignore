@@ -2,3 +2,13 @@
 */.DS_Store
 *.pyc
 *.vscode
+.__log_info.lock
+*/.__log_info.lock
+.idea
+*/.idea
+*/log_info.log
+/release-assistant/doc/backup.py
+/release-assistant/tools/auto_email.py
+/release-assistant/tools/email_template.html
+/release-assistant/javcra/api/github_api.py
+/release-assistant/tools/test.xls
