@@ -17,7 +17,7 @@ import requests
 from pyrpm.spec import Spec, replace_macros
 from requests import RequestException
 from javcra.application.checkpart.check_requires.shell_api_tool import ShellCmdApi
-from javcra.application.majun import get_product_version, send_content_majun
+from javcra.application.majun import catch_majun_error, get_product_version, send_content_majun
 from javcra.common.constant import BRANCH_MAP, OBS_PROJECT_MULTI_VERSION_MAP
 from javcra.libs.log import logger
 
@@ -74,8 +74,12 @@ class PackageVersion:
         except AttributeError as error:
             logger.error(f"An error occurred parsing spec contents {error}")
             return version, release
-        version = replace_macros(spec.version, spec)
-        release = replace_macros(spec.release, spec)
+        try:
+            version = replace_macros(spec.version, spec)
+            release = replace_macros(spec.release, spec)
+        except TypeError as error:
+            logger.error(f"An error occurred parsing spec contents {error}")
+            return version, release
         return version, release
 
     def git_package_version(self, packagename, branch_name):
@@ -213,6 +217,7 @@ class PackageVersion:
             mutil_packages_version.update(package_versions)
         return mutil_packages_version
 
+    @catch_majun_error
     def run(self, params):
         """
         Check the software package version
