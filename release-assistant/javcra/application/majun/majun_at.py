@@ -24,6 +24,7 @@ from javcra.common.constant import (
     OBS_VALUES_NAMES,
     VM_IP_MAP,
     MAX_ISO_BUILD_WAIT_TIME,
+    ISO_BUILD_JOB_MAP
 )
 from javcra.application.majun import (
     ConstantNumber,
@@ -85,6 +86,8 @@ class MaJunAt:
         Returns:
             base_param: jenkins parameters after composition
         """
+        # jenkins parameter combination with multiple constants of the numbers 1 and 0, 
+        # which are obtained using the enumeration class
         base_param = {
             "set_release_dir": ConstantNumber.CON_NUMBER_ONE.value,
             "update_release_info": ConstantNumber.CON_NUMBER_ZERO.value,
@@ -138,7 +141,7 @@ class MaJunAt:
             params, MAX_PARAL_NUM, branch_name, freeze_date
         )
         jenkins_params = self.jenkins_param(branch_name)
-        jenkins_job = f"openEuler-OS-build/Main-{branch_name}-build"
+        jenkins_job = ISO_BUILD_JOB_MAP.get(branch_name)
         res = self.jenkins_server_obj.get_jenkins_job_build_result(
             jenkins_params, jenkins_job, MAX_ISO_BUILD_WAIT_TIME
         )
