@@ -169,7 +169,8 @@ WAIT_NUMBER = 7
 # Interval waiting times
 WAIT_TIME = 90000
 # majun callback url
-MAJUN_CALLBACK_URL = "https://majun-beta.osinfra.cn/api/ci-backend/ci-portal/ci-admin/saveJenkinsCallbackResult"
+MAJUN_CALLBACK_URL = \
+    "https://majun-beta.osinfra.cn/api/http/majun-platform-release/publish/jenkins/saveJenkinsCallbackResult"
 # CVE MANAGE URL
 CVE_MANAGE_URL = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData"
 
@@ -207,7 +208,7 @@ OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
 # Test milestone routing
 TEST_MILESTONE_URL = "http://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
 
-MILESTONE_SUCCESS_CODE = "2000" 
+MILESTONE_SUCCESS_CODE = "2000"
 DAYLIBUILD_URL = "http://121.36.84.172/dailybuild/"
 
 ISO_ARCH_MAP = {"ARM64": "openeuler_ARM64", "X86": "openeuler_X86"}
