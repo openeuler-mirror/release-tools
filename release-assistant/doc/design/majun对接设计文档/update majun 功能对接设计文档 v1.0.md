@@ -1,14 +1,64 @@
 
 
-# update mujun 功能对接设计文档 v1.0
+# update majun 功能对接设计文档 v1.0
 
-## 流程
+
+
+#  1、需求描述
+
+目前openEuler 维护版本发布流程主要依赖gitee issue。gitee 作为代码托管平台，对版本管理功能扩展的支持较弱。因此在增强版本功能的基础上，将openEuler 版本发布后台服务统一迁移至majun平台，提高版本发布效率，实现版本流程可一站式操作和追踪。
+
+
+
+## 1.1、受益人
+
+| 角色     | 角色描述                                    |
+| -------- | ------------------------------------------- |
+| 运维人员 | 负责机器运维管理的人员                      |
+| 版本经理 | openEuler 版本管理者                        |
+| 测试人员 | openEuler 社区QA SIG 和其他版本相关测试团队 |
+
+
+
+## 1.2、依赖组件
+
+| 组件              | 组件描述                                       |
+| ----------------- | ---------------------------------------------- |
+| majun             | majun 发布平台                                 |
+| cve-manager       | openEuler 社区 CVE 管理后台服务                |
+| openEuler发布后台 | openEuler 版本发布后台任务                     |
+| openEuler工程任务 | 部署在Jenkins 上的openEuler ISO 构建等工程任务 |
+| release-tools     | openEuler 维护版本后台服务                     |
+
+
+
+## 1.3、License
+
+Mulan V2
+
+
+
+# 2、设计概述
+
+## 2.1、设计原则
+
+- 数据与代码分离： 功能实现是需要考虑哪些数据是需要配置动态改变的，不可在代码中将数据写死，应提取出来做成可配置项。
+- 分层原则： 上层业务模块的数据查询应通过查询模块调用数据库获取数据，不可直接跨层访问数据库。
+- 接口与实现分离：外部依赖模块接口而不是依赖模块实现。
+- 模块划分： 模块之间只能单向调用，不能存在循环依赖。
+- 变更： 架构设计变更、外部接口变更、特性需求变更需要结合开发、测试等所有相关人员经过开会讨论后决策，不可擅自变更
+
+
+
+## 2.2 设计工作流程
 
 update 发布主体流程如下，请保障每部执行皆可回退至上一状态。
 
-![](.\流程设计majun.png)
+![](./img/流程设计majun.png)
 
-## 接口清单
+
+
+### 2.2.1 设计组件交互方式
 
 主要功能依靠于jenkins后台任务，jenkins任务远程触发方式如下：
 
@@ -18,13 +68,17 @@ jenkins 任务带参数触发：https://jenkinsjob_url/buildWithParameters?token
 
 
 
-### 需求页面
+### 2.2.2需求页面
 
-![image-20221021153540667](.\img\release_plan.png)
+#### 2.2.2.1 低保真
 
-#### 1、新建发布任务：[版本]_update[日期]， 如 openEuler-20.03-LTS-SP1_update20221013.（新增）
+![image-20221021153540667](./img/release_plan.png)
+
+#### 2.2.2.2、新建发布任务：
 
 当前支持每周一定时触发生成/手动触发生成 update release issue，后续是否考虑直接通过添加对majun前端支持。
+
+版本计划示例：[版本]_update[日期]， 如 openEuler-20.03-LTS-SP1_update20221013.（新增）
 
 - 旧请求参数 无
 
@@ -43,7 +97,7 @@ jenkins 任务带参数触发：https://jenkinsjob_url/buildWithParameters?token
   | 返回结果 | bool | 执行结果 |
 
 
-#### 2、获取待发布cve
+#### 2.2.2.3、获取待发布cve
 
 release issue 通过 /start-update 触发release tools 调取cve-manager 接口，获取近一年待发布CVE。
 
@@ -72,12 +126,13 @@ release issue 通过 /start-update 触发release tools 调取cve-manager 接口�
 
 
 - 返回参数
- | 参数     | 类型 | 说明          |
+
+| 参数     | 类型 | 说明          |
 | -------- | ---- | ------------- |
 | 返回结果 | bool | 执行结果      |
 | cve_list | list | 待发布cve列表 |
 
-#### 2、需求反馈
+#### 2.2.2.4、需求反馈
 
 开发者通过反馈 issue 软件包 pr 将相关需求提交到版本计划页面
 
@@ -100,7 +155,7 @@ release issue 通过 /start-update 触发release tools 调取cve-manager 接口�
 
 
 
-#### 3、修改 CVE 及 Bugfix 列表
+#### 2.2.2.5、修改 CVE 及 Bugfix 列表
 
 通过 add/del + issue id  修改release issue 需求列表。
 
@@ -132,7 +187,7 @@ release issue 通过 /start-update 触发release tools 调取cve-manager 接口�
 
 
 
-#### 4、版本基线范围确认
+#### 2.2.2.6、版本基线范围确认
 
 cve-ok、bugfix-ok、test-ok 确认版本基线。
 
@@ -169,7 +224,7 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#### 5、版本检查（新增）
+#### 2.2.2.7、版本检查
 
 /check-versions 检查软件包是否一致
 
@@ -206,7 +261,7 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#### 6、测试repo生成
+#### 2.2.2.8、测试repo生成
 
 通过/check-requires
 
@@ -243,11 +298,15 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
   | result           | bool  | 执行结果     |
   | repo jobs result | table | repo生成结果 |
 
-### 测试页面
 
-![image-20221021180341125](.\img\release_test.png)
 
-#### 7、操作测试repo
+### 2.2.3、测试页面
+
+#### 2.2.3.1、低保真
+
+![image-20221021180341125](./img/release_test.png)
+
+#### 2.2.3.2、操作测试repo
 
 删除、更新、发布测试源内容
 
@@ -280,7 +339,7 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#### 8、转测数据及转测邮件
+#### 2.2.3.3、转测数据及转测邮件
 
 通过前端按钮触发转测邮件及发送转测数据至raidatest
 
@@ -319,7 +378,7 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#### 9、触发生产安全公告
+#### 2.2.3.4、触发生产安全公告
 
 支持按cve触发或全量触发
 
@@ -339,14 +398,17 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
   | ------ | ---- | -------- |
   | result | bool | 执行结果 |
 
-### 发布页面
+### 2.2.4、发布页面
 
-![image-20221021180422171](.\img\release_page.png)
+#### 2.2.4.1、低保真
 
-#### 10、一键发布后台：
+![image-20221021180422171](./img/release_page.png)
 
-##### 1、删除CVE-输入CVE编号删除(cve-security-notice-server/deleteCVE)
+#### 
 
+#### 2.2.4.2、删除CVE-输入CVE编号删除
+
+- 接口：cve-security-notice-server/deleteCVE
 - 新请求参数：
 
 | 参数        | 类型 | 说明   |
@@ -365,8 +427,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-##### 2、删除安全公告-输入公告编号删除(cve-security-notice-server/deleteSA)
+#### 2.2.4.3、删除安全公告-输入公告编号删除
 
+- 接口：cve-security-notice-server/deleteSA
 - 新请求参数：
 
 | 参数       | 类型 | 说明     |
@@ -384,8 +447,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-##### 3、同步 unaffected CVE(cve-security-notice-server/syncUnCVE)
+#### 2.2.4.4、同步 unaffected CVE
 
+- 接口：cve-security-notice-server/syncUnCVE
 - 新请求参数：
 
 | 参数     | 说明 | 类型     |
@@ -403,8 +467,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#####  4、同步 SA(cve-security-notice-server/syncSA)
+####  2.2.4.5、同步 SA
 
+- 接口：cve-security-notice-server/syncSA
 - 新请求参数：
 
 | 参数     | 说明 | 类型     |
@@ -422,8 +487,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#####  5、一键发布(cve-security-notice-server/syncAll)
+####  2.2.4.6、一键发布
 
+- 接口：cve-security-notice-server/syncAll
 - 新请求参数：
 
 | 参数     | 类型 | 说明   |
@@ -440,8 +506,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#####  6、查询 CVE NVD解析(cve-security-notice-server/syncHardware)
+####  2.2.4.7、查询 CVE NVD解析
 
+- 接口：cve-security-notice-server/syncHardware
 - 新请求参数：
 
 | 参数        | 说明 | 类型   |
@@ -460,8 +527,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-##### 7、生成Unaffected文件(cve-security-notice-server/generateXml)
+#### 2.2.4.8、生成Unaffected文件
 
+- 接口：cve-security-notice-server/generateXml
 - 新请求参数：
 
 | 参数      | 说明 | 类型   |
@@ -479,7 +547,9 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-##### 8、检验updateinfo(cve-security-notice-server/inspectionXml)
+#### 2.2.4.9、检验updateinfo
+
+- 接口： cve-security-notice-server/inspectionXml
 
 - 新请求参数：
 
@@ -498,7 +568,7 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
  
 
-#### 11、cvrf 同步
+#### 2.2.4.10、cvrf 同步
 
 将CVRF 文件同步至官方归档地址
 
@@ -519,7 +589,7 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-#### 12、updateinfo 同步
+#### 2.2.4.11、updateinfo 同步
 
 根据软件包发布情况更新官网repodata
 
@@ -540,15 +610,15 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 
 
 
-## Release-tools 功能实现
+### 2.2.4、Release-tools 功能实现
 
-### 1. 获取待发布cve （start功能）
+#### 2.2.4.1、 获取待发布cve
 
-#### 1.1 实现流程
+##### 2.2.4.1.1、实现流程
 
-![本地路径](.\img\start.png)
+![本地路径](./img/start.png)
 
-#### 1.2 调用
+##### 2.2.4.1.2 调用
 
 **调用方式**：远程调用 GET 请求
 
@@ -585,13 +655,15 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 | cve_list_recombine     | cve list数据重新组合 key值重新命名 |
 | send_cve_list_to_majun | 函数总入口                         |
 
-### 2.  软件包的版本检查
 
-#### 2.1 实现流程
 
-![本地路径](.\img\package_version.png)
+#### 2.2.4.2、软件包的版本检查
 
-#### 2.2 调用
+##### 2.2.4.2.1 实现流程
+
+![本地路径](./img/package_version.png)
+
+##### 2.2.4.2.2、 调用
 
 **调用方式**：远程调用 GET 请求
 
@@ -620,13 +692,13 @@ cve-ok、bugfix-ok、test-ok 确认版本基线。
 | obs_package_version   | obs 上软件包的version release    |
 | gitee_package_version | gitee 上 软件包的version release |
 
-### 3.  操作repo
+#### 2.2.4.3、操作repo
 
-#### 3.1 实现流程
+##### 2.2.4.3.1 实现流程
 
-![本地路径](.\img\repo.png)
+![本地路径](./img/repo.png)
 
-#### 3.2 调用
+##### 2.2.4.3.2、调用
 
 **调用方式**：远程调用 GET 请求
 
@@ -682,13 +754,13 @@ action 为del_pkg_rpm
 
 
 
-### 4. 测试创建里程碑返回majun
+#### 2.2.4.4、测试创建里程碑返回majun
 
-#### 4.1 实现流程图
+##### 2.2.4.4.1 实现流程图
 
-![本地路径](.\img\sendtest.png)
+![本地路径](./img/sendtest.png)
 
-#### 4.2 调用
+##### 2.2.4.4.2、 调用
 
 **调用方式**：远程调用 GET 请求
 
@@ -716,13 +788,13 @@ action 为del_pkg_rpm
 | send_repo_info         | 发送数据给测试总入口，数据组合          |
 | send_data_test_platfor | 发送数据给测试平台，并将结果返回给majun |
 
-### 5. cvrf 同步 和 updateinfo 同步
+#### 2.2.4.5、cvrf 同步和updateinfo同步
 
-#### 5.1实现流程
+##### 2.2.4.5.1、实现流程
 
-![本地路径](.\img\update.png)
+![本地路径](./img/update.png)
 
-#### 5.2 调用
+##### 2.2.4.5.2、 调用
 
 **调用方式**：远程调用 GET 请求
 
@@ -757,13 +829,15 @@ action 为del_pkg_rpm
 | _all_sync        | 同时调用cvrf 同步和updateinfo 同步   |
 | _single_sync     | 调用调用cvrf 同步或者updateinfo 同步 |
 
-### 6. 协助获取at结果 
 
-#### 6.1实现流程
 
-![image-20230516142903048](.\img\at.png)
+#### 2.2.4.6、 协助获取at结果 
 
-#### 6.2 调用
+##### 2.2.4.6.1、实现流程
+
+![image-20230516142903048](./img/at.png)
+
+##### 2.2.4.6.2 调用
 
 **调用方式**：远程调用 GET 请求
 
@@ -793,3 +867,50 @@ action 为del_pkg_rpm
 | all_iso_time                 | 在dailybuild网站中获取release_iso文件中的内容    |
 | get_jenkins_job_build_result | 调用iso 构建的jenkins任务，将jenkins运行结果返回 |
 
+
+
+## 2.3、DFX设计
+
+### 2.3.1、系统可靠性设计
+
+1. **异常情况**： release-tools 后台服务在jenkins 平台部署，由jenkins 调度和监控服务的运行状态。各任务执行容器环境失效后可通过jenkins 重建生效，历史任务任务环境配置可追溯
+
+### 2.3.2、安全性设计
+
+1. **用户权限问题**
+
+   release-tools 用户分类：版本经理、开发者、安全委员、测试经理四类，用户权限与角色绑定。
+
+   版本经理，负责版本计划管理、版本需求管理、版本检查、版本构建工程触发、版本发布的权限；
+
+   开发者：特性自验证的权限；
+
+   安全委员：负责CVE需求管理，CVE需求基线变更的权限；
+
+   测试经理：负责测试评审的权限，测试通过版本方可发布.
+
+2. **文件权限问题**
+
+   采用权限最小化策略
+
+3. **restful接口安全**
+
+   发送请求时使用token进行身份验证，使用https服务确保请求参数被加密，后端接收请求后对接口参数做每个参数类型的校验。
+
+4. **命令注入问题**
+
+   命令行操作，入参有jenkins配置校验合法性，而且后台为解析参数后调用url接口，不存在入参拼接命令执行操作，所以不存在命令注入问题。
+
+### 2.3.3、兼容性设计
+
+1. 多实例任务之间消息通信采用kafka消息队列框架，生产者与消费者解耦。
+2. 服务对外接口使用restful接口，对外接口只能增量变化，新版本保证旧版本接口可用。
+3. 对于底层缓存，数据库的变更，对外不体现，由代码逻辑保证可用性。
+
+### 2.3.4、可服务性设计
+
+待考虑
+
+### 2.3.5、可测试性设计
+
+待考虑
