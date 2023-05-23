@@ -122,7 +122,7 @@ JENKINS_SERVER_REPO = "121.36.53.23"
 INSTALL_JOB_PREFIX = "function-item/release-manager/update_template_jobs/install_"
 
 # jenkins base url
-JENKINS_BASE_URL = 'https://jenkins.openeuler.org'
+JENKINS_BASE_URL = 'https://openeulerjenkins.osinfra.cn'
 
 REALSE_TOOLS_BUCKET_NAME = "release-tools"
 
