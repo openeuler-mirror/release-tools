@@ -177,3 +177,12 @@ VERSION_MANAGER = "@gitee-cmd @zhangtao2020"
 DEVELOPER = "@gitee-cmd @zhangtao2020 @caodongxia @yaoxin"
 SECURITY_COMMITTEE = "@yanxiaobing2020 @gitee-cmd @zhangtao2020"
 TESTER = "@gitee-cmd @zhangtao2020 @disnight"
+
+#check cvrf and package's configuration
+VERSION_LIST = ["openEuler-22.03-LTS", "openEuler-22.03-LTS-SP1", "openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP3",
+                "openEuler-22.03-LTS/EPOL", "openEuler-22.03-LTS-SP1/EPOL", "openEuler-20.03-LTS-SP1/EPOL",
+                "openEuler-20.03-LTS-SP3/EPOL"]
+ARCH_LIST = ["aarch64", "source", "x86_64", "noarch"]
+
+# openEuler test repo url
+BASE_URL = "http://121.36.84.172/repo.openeuler.org/{}/{}/{}/Packages/"
