@@ -11,3 +11,5 @@ openEuler :
     obs_alias: "openEuler:22.03:LTS"
   openEuler-22.03-LTS-SP1:
     obs_alias: "openEuler:22.03:LTS:SP1"
+  openEuler-22.03-LTS-SP2:
+    obs_alias: "openEuler:22.03:LTS:SP2"
