@@ -73,8 +73,8 @@ AARCH_FRAME = "aarch64"
 X86_FRAME = "x86_64"
 
 # branch list for standard epol list
-BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS-SP3", "openEuler-20.03-LTS",
-               "openEuler-22.03-LTS", "openEuler-22.03-LTS-SP1"]
+BRANCH_LIST = ["openEuler-22.03-LTS-SP2", "openEuler-22.03-LTS-SP1", "openEuler-20.03-LTS-SP1",
+               "openEuler-20.03-LTS-SP3", "openEuler-22.03-LTS"]
 
 # lts branch
 LTS_BRANCH = "openEuler-20.03-LTS"
@@ -107,6 +107,7 @@ ACTUATOR_DICT = {
     "openEuler-20.03-LTS": "openeuler-20.03-lts",
     "openEuler-22.03-LTS": "openeuler-22.03-lts",
     "openEuler-22.03-LTS-SP1": "openeuler-22.03-lts-sp1",
+    "openEuler-22.03-LTS-SP2": "openeuler-22.03-lts-sp2"
 }
 
 # git warehouse address for release issue
