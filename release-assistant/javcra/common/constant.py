@@ -47,7 +47,8 @@ PERMISSION_INFO = {
         "/bugfix-ok",
         "/check-status",
         "/get-requires",
-        "/check-cve-bugfix"
+        "/check-cve-bugfix",
+        "/check-versions"
     ],
     "tester": ["/test-ok"],
     "tc": ["/check-ok"],
@@ -122,6 +123,9 @@ JENKINS_SERVER_REPO = "121.36.53.23"
 # install jenkins job prefix
 INSTALL_JOB_PREFIX = "function-item/release-manager/update_template_jobs/install_"
 
+# job for upload package rpm to server
+OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
+
 # jenkins base url
 JENKINS_BASE_URL = 'https://openeulerjenkins.osinfra.cn'
 
@@ -140,7 +144,8 @@ CHECK_COMMENT_DICT = {
     "status": "/check-status",
     "requires": "/get-requires",
     "test": "/test-ok",
-    "cve_bugfix": "/check-cve-bugfix"
+    "cve_bugfix": "/check-cve-bugfix",
+    "versions": "/check-versions"
 }
 
 # release url
@@ -164,7 +169,11 @@ LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "re
 
 MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3", "22.03-LTS", "22.03-LTS-SP1"]
 
-CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]
+CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix", "versions"]
+
+VERSION_TABLE_HEADER = ["package_name", "gitee-sp1", "obs-sp1", "gitee-sp3", "obs-sp3", "gitee-sp2203", "obs-sp2203"]
+
+CHECK_RESULT_CSV_PATH = "update_packages2/src/check_result.csv"
 
 # Number of retries
 WAIT_NUMBER = 7
