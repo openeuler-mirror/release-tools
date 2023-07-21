@@ -47,8 +47,7 @@ PERMISSION_INFO = {
         "/bugfix-ok",
         "/check-status",
         "/get-requires",
-        "/check-cve-bugfix",
-        "/check-versions"
+        "/check-cve-bugfix"
     ],
     "tester": ["/test-ok"],
     "tc": ["/check-ok"],
@@ -74,7 +73,8 @@ AARCH_FRAME = "aarch64"
 X86_FRAME = "x86_64"
 
 # branch list for standard epol list
-BRANCH_LIST = ["openEuler-22.03-LTS-SP1", "openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP3", "openEuler-22.03-LTS"]
+BRANCH_LIST = ["openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP2", "openEuler-20.03-LTS-SP3", "openEuler-20.03-LTS",
+               "openEuler-22.03-LTS", "openEuler-22.03-LTS-SP1"]
 
 # lts branch
 LTS_BRANCH = "openEuler-20.03-LTS"
@@ -106,7 +106,7 @@ ACTUATOR_DICT = {
     "openEuler-20.03-LTS-SP3": "openeuler-20.03-lts-sp3",
     "openEuler-20.03-LTS": "openeuler-20.03-lts",
     "openEuler-22.03-LTS": "openeuler-22.03-lts",
-    "openEuler-22.03-LTS-SP1": "openeuler-22.03-lts-sp1"
+    "openEuler-22.03-LTS-SP1": "openeuler-22.03-lts-sp1",
 }
 
 # git warehouse address for release issue
@@ -120,9 +120,6 @@ JENKINS_SERVER_REPO = "121.36.53.23"
 
 # install jenkins job prefix
 INSTALL_JOB_PREFIX = "function-item/release-manager/update_template_jobs/install_"
-
-# job for upload package rpm to server
-OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
 
 # jenkins base url
 JENKINS_BASE_URL = 'https://openeulerjenkins.osinfra.cn'
@@ -142,8 +139,7 @@ CHECK_COMMENT_DICT = {
     "status": "/check-status",
     "requires": "/get-requires",
     "test": "/test-ok",
-    "cve_bugfix": "/check-cve-bugfix",
-    "versions": "/check-versions"
+    "cve_bugfix": "/check-cve-bugfix"
 }
 
 # release url
@@ -164,16 +160,98 @@ COMMENT_DICT = {"cve": "/cve-ok", "bugfix": "/bugfix-ok", "test": "/test-ok"}
 # label dict
 LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "release-check"}
 
-MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3"]
+MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3", "22.03-LTS", "22.03-LTS-SP1"]
 
-CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix", "versions"]
+CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix"]
 
-VERSION_TABLE_HEADER = ["package_name", "gitee-sp1", "obs-sp1", "gitee-sp3", "obs-sp3", "gitee-sp2203", "obs-sp2203"]
+# Number of retries
+WAIT_NUMBER = 7
+# Interval waiting times
+WAIT_TIME = 90000
+# majun callback url
+MAJUN_CALLBACK_URL = \
+    "https://majun-beta.osinfra.cn/api/http/majun-platform-release/publish/jenkins/saveJenkinsCallbackResult"
+# CVE MANAGE URL
+CVE_MANAGE_URL = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData"
 
-CHECK_RESULT_CSV_PATH = "update_packages2/src/check_result.csv"
+BRANCH_MAP = {
+    "openEuler-20.03-LTS-SP1": [
+        "openEuler:20.03:LTS:SP1",
+        "openEuler:20.03:LTS:SP1:Epol",
+    ],
+    "openEuler-20.03-LTS-SP3": [
+        "openEuler:20.03:LTS:SP3",
+        "openEuler:20.03:LTS:SP3:Epol",
+    ],
+    "openEuler-22.03-LTS": ["openEuler:22.03:LTS", "openEuler:22.03:LTS:Epol"],
+    "openEuler-22.03-LTS-SP1": [
+        "openEuler:22.03:LTS:SP1",
+        "openEuler:22.03:LTS:SP1:Epol",
+    ],
+}
 
-#staff
-VERSION_MANAGER = "@gitee-cmd @zhangtao2020"
-DEVELOPER = "@gitee-cmd @zhangtao2020 @caodongxia @yaoxin"
-SECURITY_COMMITTEE = "@yanxiaobing2020 @gitee-cmd @zhangtao2020"
-TESTER = "@gitee-cmd @zhangtao2020 @disnight"
+OBS_PROJECT_MULTI_VERSION_MAP = {
+    "openEuler:22.03:LTS:Epol:Multi-Version:OpenStack:Train": "Multi-Version_OpenStack-Train_openEuler-22.03-LTS",
+    "openEuler:22.03:LTS:Epol:Multi-Version:OpenStack:Wallaby": "Multi-Version_OpenStack-Wallaby_openEuler-22.03-LTS",
+    "openEuler:22.03:LTS:Epol:Multi-Version:obs-server:2.10.11": "Multi-Version_obs-server-2.10.11_openEuler-22.03-LTS",
+}
+
+# jenkins cvrf name
+CVRF_JOB_NAME = "obs/update_cve_xml_file_automatic"
+
+# jenkins update info name
+CVE_UPDATE_INFO_JOB_NAME = "function-item/update_repodata_by_updateinfo_automatic"
+
+# job for upload package rpm to server
+OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
+
+# Test milestone routing
+TEST_MILESTONE_URL = "http://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
+
+MILESTONE_SUCCESS_CODE = "2000"
+DAYLIBUILD_URL = "http://121.36.84.172/dailybuild/"
+
+ISO_ARCH_MAP = {"ARM64": "openeuler_ARM64", "X86": "openeuler_X86"}
+
+OBS_KEY_NAMES = ["obs_standard_prj", "obs_epol_prj", "obs_extras_prj"]
+
+OBS_VALUES_NAMES = {
+    "openEuler-20.03-LTS-SP1": [
+        "openEuler:20.03:LTS:SP1",
+        "openEuler:20.03:LTS:SP1:Epol",
+        "openEuler:20.03:LTS:SP1:Extras",
+    ],
+    "openEuler-20.03-LTS-SP3": [
+        "openEuler:20.03:LTS:SP3",
+        "openEuler:20.03:LTS:SP3:Epol",
+        "openEuler:20.03:LTS:SP3:Extras",
+    ],
+    "openEuler-22.03-LTS": [
+        "openEuler:22.03:LTS",
+        "openEuler:22.03:LTS:Epol",
+        "openEuler:22.03:LTS:Extras",
+    ],
+    "openEuler-22.03-LTS-SP1": [
+        "openEuler:22.03:LTS:SP1",
+        "openEuler:22.03:LTS:SP1:Epol",
+        "openEuler:22.03:LTS:SP1:Extras",
+    ],
+}
+
+VM_IP_MAP = {
+    "openEuler-20.03-LTS-SP1": "172.16.1.32",
+    "openEuler-20.03-LTS-SP3": "172.16.1.32",
+    "openEuler-22.03-LTS": "172.16.1.32",
+    "openEuler-22.03-LTS-SP1": "172.16.1.95",
+}
+
+ISO_BUILD_JOB_MAP = {
+    "openEuler-20.03-LTS-SP1": "openEuler-OS-build/Main-openEuler-20.03-LTS-SP1-build",
+    "openEuler-20.03-LTS-SP3": "openEuler-OS-build/Main-openEuler-20.03-LTS-SP3-build",
+    "openEuler-22.03-LTS": "openEuler-OS-build/Main-openEuler-22.03-LTS-build",
+    "openEuler-22.03-LTS-SP1": "openEuler-OS-build/Main-openEuler-22.03-LTS-SP1-build",
+}
+
+MIN_JENKINS_BUILD_WAIT_TIME = 5
+MAX_ISO_BUILD_WAIT_TIME = 1200
+ISO_BUILD_WAIT_NUMBER = 6
