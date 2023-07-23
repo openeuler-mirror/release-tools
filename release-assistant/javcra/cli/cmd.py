@@ -24,6 +24,22 @@ from javcra.cli.commands.releasepart import ReleaseCommand  # pylint: disable=un
 from javcra.cli.commands.modifypart import ModifyCommand  # pylint: disable=unused-import
 from javcra.cli.commands.checkpart import CheckCommand  # pylint: disable=unused-import
 from javcra.cli.commands.createpart import CreateCommand  # pylint: disable=unused-import
+from javcra.cli.commands.majun_start import (
+    StartMajunCommand,
+)  # pylint: disable=unused-import
+from javcra.cli.commands.majun_send_test import (
+    MajunSendCommand,
+)  # pylint: disable=unused-import
+from javcra.cli.commands.majun_operate_repo import (
+    MajunOperateRepoCommand,
+)  # pylint: disable=unused-import
+from javcra.cli.commands.majun_synchronous import (
+    MajunSynchronousCommand,
+)  # pylint: disable=unused-import
+from javcra.cli.commands.majun_check_version import (
+    CheckVersionMajunCommand,
+)  # pylint: disable=unused-import
+from javcra.cli.commands.majun_at import AtMajunCommand  # pylint: disable=unused-import
 
 
 def main():
@@ -40,5 +56,5 @@ def main():
         # add all arguments' attribution into instance
         BaseCommand().args_parser()
     except Error:
-        print('Command execution error please try again')
+        print("Command execution error please try again")
         print(Error)
