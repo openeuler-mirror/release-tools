@@ -149,7 +149,7 @@ CHECK_COMMENT_DICT = {
 }
 
 # release url
-RELEASE_URL = "https://www.openeuler.org/api-cve/cve-security-notice-server/syncAll"
+RELEASE_URL = "https://api-cve.openeuler.org/cve-security-notice-server/syncAll"
 
 EPOL_DICT = {
     "openEuler-20.03-LTS": "EPOL",
