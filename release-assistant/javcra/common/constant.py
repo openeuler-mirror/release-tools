@@ -181,7 +181,7 @@ WAIT_NUMBER = 7
 WAIT_TIME = 90000
 # majun callback url
 MAJUN_CALLBACK_URL = \
-    "https://majun-beta.osinfra.cn/api/http/majun-platform-release/publish/jenkins/saveJenkinsCallbackResult"
+    "https://majun.osinfra.cn/api/http/majun-platform-release/publish/jenkins/saveJenkinsCallbackResult"
 # CVE MANAGE URL
 CVE_MANAGE_URL = "https://api.openeuler.org/cve-manager/v1/download/excel/triggerCveData"
 
