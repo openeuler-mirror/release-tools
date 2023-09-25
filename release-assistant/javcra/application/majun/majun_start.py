@@ -45,6 +45,8 @@ class MaJunStart:
             The combined data
         """
         new_cve_list = list()
+        if not cve_list:
+            return new_cve_list
         for cve in cve_list[:]:
             if "abi是否变化" in cve.keys():
                 cve.update({"abiChange": cve.pop("abi是否变化")})
@@ -138,8 +140,15 @@ class MaJunStart:
         resp = self.trigger_cve_archive(user_email)
         if not resp:
             raise ValueError("trigger cve-manege archive failure")
-        cve_list = self.get_cve_list(branch_name, obs_ak, obs_sk)
+        cve_list = []
+        try:
+            cve_list = self.get_cve_list(branch_name, obs_ak, obs_sk)
+        except ValueError as e:
+            logger.error("get cve list failed!")
         new_cves = self.cve_list_recombine(cve_list)
+        if not new_cves:
+            logger.info("new_cves is empty,send it to majun")
+            return send_content_majun(new_cves, majun_id, multip_start=True)
         if multi_content:
             obs_project = f"{branch_name.replace('-', ':')}:{multi_content}"
             all_multi_packages = ShellCmdApi.call_subprocess(
