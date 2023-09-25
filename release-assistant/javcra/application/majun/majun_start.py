@@ -143,12 +143,9 @@ class MaJunStart:
         cve_list = []
         try:
             cve_list = self.get_cve_list(branch_name, obs_ak, obs_sk)
-        except Exception as e:
-            logger.error("get cve list failed!")
-        try:
-            new_cves = self.cve_list_recombine(cve_list)
         except ValueError as e:
-            logger.error("cve list recombine,detailed info:%s" % e)
+            logger.error("get cve list failed!")
+        new_cves = self.cve_list_recombine(cve_list)
         if not new_cves:
             logger.info("new_cves is empty,send it to majun")
             return send_content_majun(new_cves, majun_id, multip_start=True)
