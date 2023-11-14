@@ -196,7 +196,6 @@ class JenkinsJob(object):
         """
         try:
             queue_item = self.server.build_job(job_name, params)
-
             # If the task of build jenkins job fails, then retry
             count = 0
             while not queue_item and count < retry:
@@ -572,7 +571,6 @@ class JenkinsJob(object):
             }
             job_status_list.append(job_name_status_dict)
         return job_status_list
-
 
     @catch_jenkins_error
     def get_jenkins_job_build_result(self, params, job_name, wait_time=MIN_JENKINS_BUILD_WAIT_TIME):

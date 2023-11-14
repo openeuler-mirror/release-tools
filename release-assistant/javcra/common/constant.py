@@ -167,7 +167,7 @@ COMMENT_DICT = {"cve": "/cve-ok", "bugfix": "/bugfix-ok", "test": "/test-ok"}
 # label dict
 LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "release-check"}
 
-MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3", "22.03-LTS", "22.03-LTS-SP1"]
+MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3", "22.03-LTS", "22.03-LTS-SP1", "22.03-LTS-SP2"]
 
 CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix", "versions"]
 
@@ -199,6 +199,10 @@ BRANCH_MAP = {
         "openEuler:22.03:LTS:SP1",
         "openEuler:22.03:LTS:SP1:Epol",
     ],
+    "openEuler-22.03-LTS-SP2": [
+        "openEuler:22.03:LTS:SP2",
+        "openEuler:22.03:LTS:SP2:Epol",
+    ]
 }
 
 OBS_PROJECT_MULTI_VERSION_MAP = {
@@ -247,6 +251,11 @@ OBS_VALUES_NAMES = {
         "openEuler:22.03:LTS:SP1:Epol",
         "openEuler:22.03:LTS:SP1:Extras",
     ],
+    "openEuler-22.03-LTS-SP2": [
+        "openEuler:22.03:LTS:SP2",
+        "openEuler:22.03:LTS:SP2:Epol",
+        "openEuler:22.03:LTS:SP2:Extras",
+    ]
 }
 
 VM_IP_MAP = {
@@ -254,28 +263,30 @@ VM_IP_MAP = {
     "openEuler-20.03-LTS-SP3": "172.16.1.32",
     "openEuler-22.03-LTS": "172.16.1.32",
     "openEuler-22.03-LTS-SP1": "172.16.1.95",
+    "openEuler-22.03-LTS-SP2": "172.16.1.155"
 }
 
 ISO_BUILD_JOB_MAP = {
     "openEuler-20.03-LTS-SP1": "openEuler-OS-build/Main-openEuler-20.03-LTS-SP1-build",
     "openEuler-20.03-LTS-SP3": "openEuler-OS-build/Main-openEuler-20.03-LTS-SP3-build",
     "openEuler-22.03-LTS": "openEuler-OS-build/Main-openEuler-22.03-LTS-build",
-    "openEuler-22.03-LTS-SP1": "openEuler-OS-build/Main-openEuler-22.03-LTS-SP1-build",
+    "openEuler-22.03-LTS-SP1": "EBS-OS-build/Main-openEuler-22.03-LTS-SP1-EBS",
+    "openEuler-22.03-LTS-SP2": "EBS-OS-build/Main-openEuler-22.03-LTS-SP2-EBS"
 }
 
 MIN_JENKINS_BUILD_WAIT_TIME = 5
 MAX_ISO_BUILD_WAIT_TIME = 1200
 ISO_BUILD_WAIT_NUMBER = 6
-#staff
+# staff
 VERSION_MANAGER = "@gitee-cmd @zhangtao2020"
 DEVELOPER = "@gitee-cmd @zhangtao2020 @caodongxia @yaoxin"
 SECURITY_COMMITTEE = "@yanxiaobing2020 @gitee-cmd @zhangtao2020"
 TESTER = "@gitee-cmd @zhangtao2020 @disnight"
 
-#check cvrf and package's configuration
+# check cvrf and package's configuration
 VERSION_LIST = ["openEuler-22.03-LTS", "openEuler-22.03-LTS-SP1", "openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP3",
-                "openEuler-22.03-LTS/EPOL", "openEuler-22.03-LTS-SP1/EPOL", "openEuler-20.03-LTS-SP1/EPOL",
-                "openEuler-20.03-LTS-SP3/EPOL"]
+                "openEuler-22.03-LTS-SP2", "openEuler-22.03-LTS/EPOL", "openEuler-22.03-LTS-SP1/EPOL",
+                "openEuler-20.03-LTS-SP1/EPOL", "openEuler-20.03-LTS-SP3/EPOL", "openEuler-22.03-LTS-SP2/EPOL"]
 ARCH_LIST = ["aarch64", "source", "x86_64", "noarch"]
 
 # openEuler test repo url

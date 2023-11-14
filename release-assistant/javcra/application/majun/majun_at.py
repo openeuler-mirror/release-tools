@@ -59,6 +59,9 @@ class MaJunAt:
             iso_build_url: iso build url
 
         """
+        if branch_name in ['openEuler-22.03-LTS-SP1', 'openEuler-22.03-LTS-SP2', 'openEuler-22.03-LTS-SP3',
+                           'openEuler-20.03-LTS-SP4']:
+            branch_name = "EBS-" + branch_name
         try:
             resp = requests.get(f"{DAYLIBUILD_URL}{branch_name}/{arch_url}/release_iso")
         except requests.RequestException as error:
@@ -154,8 +157,8 @@ class MaJunAt:
         iso_urls = list()
         for arch_name, iso_info in self.iso_build_last_info.items():
             if (
-                iso_info.get("iso_build_time")
-                - self.iso_build_first_info.get(arch_name).get("iso_build_time")
+                    iso_info.get("iso_build_time")
+                    - self.iso_build_first_info.get(arch_name).get("iso_build_time")
             ).seconds <= 0:
                 raise ValueError(
                     "The iso url is not updated. Check the cause manually"
