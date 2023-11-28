@@ -430,6 +430,13 @@ class TestMixin(TestBase):
             **kwargs,
         )
 
+    def mock_osc_call_subprocess(self, **kwargs):
+        """mock_osc_call_subprocess"""
+        self._to_update_kw_and_make_mock(
+            "javcra.application.checkpart.check_requires.osc_api.OscApi.call_subprocess",
+            **kwargs,
+        )
+
     def make_expect_data(self, status_code, file_name, folder=MOCK_DATA_FOLDER):
         """
         make expected data
