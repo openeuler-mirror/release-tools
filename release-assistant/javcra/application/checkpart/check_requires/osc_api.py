@@ -99,6 +99,30 @@ class OscApi(ShellCmdApi):
         return name, ver, rel
 
     @staticmethod
+    def get_pkg_rpm_name(
+        pkg_name, proj, repo="standard_aarch64", arch="aarch64", rt_err=False
+    ):
+        """
+        parse src.rpm full-name to get package.src.rpm name
+        Args:
+            pkg_name: pkg_name
+            proj: proj
+            repo: repo
+            arch: arch
+            rt_err: True, return stdout and stderr; False only return stdout
+
+        Returns:
+            name: name
+        """
+        stdout = OscApi.ls_binaries_list(proj, pkg_name, repo, arch, rt_err)
+        name = ""
+        for line in stdout.splitlines():
+            if line.strip().endswith(".src.rpm"):
+                rpmver = RpmNameParser(line.strip(), auto_parse=True)
+                name = rpmver.name
+        return name
+
+    @staticmethod
     def get_all_bin_name_list(data):
         """
         parse binaries list from [osc ls -b] result

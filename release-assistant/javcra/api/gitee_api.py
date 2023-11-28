@@ -17,14 +17,17 @@ Class:
 
 import json
 import re
+import collections
 import time
 import requests
 from requests.exceptions import RequestException
 
 from javcra.application.checkpart.check_requires import init_env
 from javcra.application.checkpart.check_requires.dnf_api import DnfApi
+from javcra.application.checkpart.check_requires.osc_api import OscApi
 from javcra.application.checkpart.check_requires.shell_api_tool import ShellCmdApi
-from javcra.common.constant import BRANCH_LIST, LTS_BRANCH, REPO_EP_NAME, REPO_STA_NAME, EPOL_SRC_NAME
+from javcra.common.constant import BRANCH_LIST, LTS_BRANCH, REPO_EP_NAME, REPO_STA_NAME, EPOL_SRC_NAME, BRANCH_MAP, \
+    X86_FRAME
 from javcra.libs.log import logger
 
 
@@ -478,8 +481,23 @@ class Issue:
 
         pkglist_standard = []
         pkglist_epol = []
+        obs_branchs = collections.OrderedDict(BRANCH_MAP).get(branch)
         for pkg in pkg_list:
-            basis_cmd = ["dnf", "info", pkg]
+            # use "osc" to get pkg_name
+            pkg_name = OscApi.get_pkg_rpm_name(pkg, obs_branchs[0])
+            if len(pkg_name) == 0:
+                pkg_name = OscApi.get_pkg_rpm_name(pkg, obs_branchs[1])
+            if len(pkg_name) == 0:
+                # pkg is not built in aarch 64, get pkg_name from x86_64
+                pkg_name = OscApi.get_pkg_rpm_name(pkg, obs_branchs[0], '{}{}'.format("standard_", X86_FRAME),
+                                                   X86_FRAME)
+            if len(pkg_name) == 0:
+                pkg_name = OscApi.get_pkg_rpm_name(pkg, obs_branchs[1], '{}{}'.format("standard_", X86_FRAME),
+                                                   X86_FRAME)
+            if len(pkg_name) == 0:
+                logger.error(" %s did not compile successfully in %s" % (pkg, branch))
+                continue
+            basis_cmd = ["dnf", "info", pkg_name]
             # use "dnf" to query package info of specific repo
             if shell_cmd(basis_cmd, repo_file_condition, standard_repo_condition):
                 pkglist_standard.append(pkg)
@@ -583,4 +601,3 @@ class Issue:
         json_data = json.dumps(label_list)
         resp = self.gitee_api_request("post", url=create_label_url, data=json_data)
         return True if resp else False
-

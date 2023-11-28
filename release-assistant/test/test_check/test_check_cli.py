@@ -290,6 +290,7 @@ Parameter validation failed
         test check requires success
         """
         self.expect_str = self.read_file_content("requires_success.txt", folder=EXPECT_DATA_FILE, is_json=False)
+        self.mock_osc_call_subprocess(return_value="test-1.7-1.oe2309.src.rpm\n")
         self.command_params = ["--giteeid=Mary", "--token=example", "--type=requires", "--jenkinsuser=mary",
                                "--jenkinskey=marykey", "--ak=forexample", "--sk=forexample", "I40769", "--buildcheck"]
         self.prepare_jenkins_data()
@@ -397,6 +398,7 @@ Parameter validation failed
         self.prepare_obs_data()
         resp = self.make_expect_data(200, 'check_epol_list.txt', MOCK_DATA_FILE)
         mock_repo_list_data = self.make_need_content('repo_list_data.txt', MOCK_DATA_FILE)
+        self.mock_osc_call_subprocess(return_value="test-1.7-1.oe2309.src.rpm\n")
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
         mock_create_jenkins_comment = self.make_need_content('create_jenkins_comments_success.txt', MOCK_DATA_FILE)
         mock_cve_bigfix_comment = self.make_need_content('mock_cve_bugfix_comment.txt', MOCK_DATA_FILE)

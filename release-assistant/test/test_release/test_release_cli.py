@@ -42,6 +42,7 @@ remain issues exists, need to delete rpms for repo.
                                "--jenkinskey=marykey", "--publishuser=tom", "--publishkey=tomkey", "I40769"]
         resp = self.make_expect_data(200, 'releasepart.txt')
         self.prepare_jenkins_data()
+        self.mock_osc_call_subprocess(return_value="test-1.7-1.oe2309.src.rpm\n")
         self.mock_subprocess_check_output(return_value=b'published-Epol-src')
         mock_remain_issue_data = self.make_need_content('mock_remain_issue.txt', MOCK_DATA_FILE)
         mock_delete_remain_standard_comment = self.make_need_content('delete_remain_standard_comments_success.txt',
