@@ -101,12 +101,18 @@ class Comment(IssueOperation, JenkinsJob):
         for row in reader:
             table_comment = {VERSION_TABLE_HEADER[0]: row[1],  # package_name
                              VERSION_TABLE_HEADER[1]: row[2],  # gitee-sp1 version
-                             VERSION_TABLE_HEADER[2]: row[3],  # obs-sp1 version
-                             VERSION_TABLE_HEADER[3]: row[5],  # gitee-sp3 version
-                             VERSION_TABLE_HEADER[4]: row[6],  # obs-sp3 version
-                             VERSION_TABLE_HEADER[5]: row[8],  # gitee-sp2203 version
-                             VERSION_TABLE_HEADER[6]: row[9]}  # obs-sp2203 version
+                             VERSION_TABLE_HEADER[2]: row[3],  # obs-sp1-aarch64 version
+                             VERSION_TABLE_HEADER[3]: row[5],  # obs-sp1-x86_64 version
+                             VERSION_TABLE_HEADER[4]: row[7],  # gitee-sp3 version
+                             VERSION_TABLE_HEADER[5]: row[8],  # obs-sp3-aarch64 version
+                             VERSION_TABLE_HEADER[6]: row[10],  # obs-sp3-x86_64 version
+                             VERSION_TABLE_HEADER[7]: row[12],  # gitee-sp2203 version
+                             VERSION_TABLE_HEADER[8]: row[13],  # obs-sp2203-aarch64 version
+                             VERSION_TABLE_HEADER[9]: row[15]  # obs-sp2203-x86_64 version
+                             }
             table_body.append(table_comment)
+        print("lxxtest table_body is :")
+        print(table_comment)
         return table_body
 
 

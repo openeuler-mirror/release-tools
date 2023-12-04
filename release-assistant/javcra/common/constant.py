@@ -171,7 +171,8 @@ MULTI_VERSION_BRANCHS = ["sp2", "sp3", "SP2", "SP3", "22.03-LTS", "22.03-LTS-SP1
 
 CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix", "versions"]
 
-VERSION_TABLE_HEADER = ["package_name", "gitee-sp1", "obs-sp1", "gitee-sp3", "obs-sp3", "gitee-sp2203", "obs-sp2203"]
+VERSION_TABLE_HEADER = ["package_name", "gitee-sp1", "obs-sp1-aarch64", "obs-sp1-x86_64", "gitee-sp3",
+                        "obs-sp3-aarch64", "obs-sp3-x86_64", "gitee-sp2203", "obs-sp2203-aarch64", "obs-sp2203-x86_64"]
 
 CHECK_RESULT_CSV_PATH = "update_packages2/src/check_result.csv"
 
