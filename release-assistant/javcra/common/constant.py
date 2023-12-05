@@ -222,7 +222,7 @@ CVE_UPDATE_INFO_JOB_NAME = "function-item/update_repodata_by_updateinfo_automati
 OBS_RELEASE_JOB = "obs/update_release_pkg_rpm"
 
 # Test milestone routing
-TEST_MILESTONE_URL = "http://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
+TEST_MILESTONE_URL = "https://radiatest.openeuler.org/api/v1/openeuler/update-release/validate"
 
 MILESTONE_SUCCESS_CODE = "2000"
 DAYLIBUILD_URL = "http://121.36.84.172/dailybuild/"
