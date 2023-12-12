@@ -330,7 +330,7 @@ class MajunOperate:
                 )
             obs_project = obs_project + ":" + "Epol"
             epol_transfer_res = self.transfer_pkg_rpm(
-                obs_project, pkg_family, epol_packages, params.action, release_date
+                obs_project, pkg_family, params.action, release_date, pkgs=epol_packages
             )
             if not self.judge_result(epol_transfer_res):
                 return send_content_majun(False, params.id)
