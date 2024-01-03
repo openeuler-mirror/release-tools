@@ -66,12 +66,12 @@ class UpdateIssue(Issue):
         prj_issue_url = self.externel_gitee_api_url("create_issue_url", owner=data["owner"])
         post_res = self.gitee_api_request("post", prj_issue_url, data=data)
         if not post_res:
-            logger.error("failed to create the issue: {}".format(issue_title))
+            logger.error("Failed to create the issue: {}".format(issue_title))
             return "error_issue_id"
 
         resp_content = json.loads(post_res.text)
         created_issue_id = resp_content["number"]
-        logger.info("an issue with %s id has been created" % created_issue_id)
+        logger.info("An issue with %s id has been created" % created_issue_id)
         return created_issue_id
 
     def create_update_release(self):

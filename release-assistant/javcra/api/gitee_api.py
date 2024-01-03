@@ -80,12 +80,12 @@ class Issue:
 
             retry_count = 0
             while resp.status_code == 408 and retry_count < retry:
-                logger.error("api request timed out, retrying %s." % retry_count)
+                logger.error("Api request timed out, retrying %s." % retry_count)
                 resp = requests.request(method.lower(), url, params=params, data=data, headers=self.headers)
                 retry_count += 1
 
             if resp.status_code not in success_code:
-                logger.error("api request failed, url: %s, response: %s." % (url, resp.text))
+                logger.error("Api request failed, url: %s, response: %s." % (url, resp.text))
                 return None
         except RequestException as e:
             logger.error("RequestException occurred. %s" % e)
@@ -157,7 +157,7 @@ class Issue:
             issues = json.loads(resp.text)
             return issues
         else:
-            logger.error("failed to get the issue info of pkg %s." % pkg)
+            logger.error("Failed to get the issue info of pkg %s." % pkg)
         return []
 
     def get_issue_info(self, issue_number, owner="open_euler"):
@@ -176,7 +176,7 @@ class Issue:
         if resp:
             return json.loads(resp.text)
 
-        logger.error("failed to get the issue info of %s. " % issue_number)
+        logger.error("Failed to get the issue info of %s. " % issue_number)
         return None
 
     def _issue_state(self, data, issue_title, created_issue_id):
@@ -212,12 +212,12 @@ class Issue:
         )
         issue_comments = self.gitee_api_request("get", url=issue_comments_url)
         if not issue_comments:
-            logger.error("failed to get the comment of the issue, the route is %s" % issue_comments_url)
+            logger.error("Failed to get the comment of the issue, the route is %s" % issue_comments_url)
             return created_issue_id
         try:
             issue_comments_resp = json.loads(issue_comments.text)
         except json.JSONDecodeError as error:
-            logger.error("failed to parse json data, the reason for the error is %s" % error)
+            logger.error("Failed to parse json data, the reason for the error is %s" % error)
             return created_issue_id
         # determine whether the false positive is in the comment information
         if judge_false_positive(issue_comments_resp):
@@ -234,7 +234,7 @@ class Issue:
                                                 data={"access_token": self.token, "repo": data.get("repo"),
                                                       "state": "open"})
             if not update_res:
-                logger.error("failed to update the issue: %s" % issue_title)
+                logger.error("Failed to update the issue: %s" % issue_title)
         return created_issue_id
 
     def create_issue(self, data):
@@ -269,12 +269,12 @@ class Issue:
             prj_issue_url = self.__get_gitee_api_url("create_issue_url", owner=data["owner"])
             post_res = self.gitee_api_request("post", prj_issue_url, data=data)
             if not post_res:
-                logger.error("failed to create the issue: {}".format(issue_title))
+                logger.error("Failed to create the issue: {}".format(issue_title))
                 return None
 
             resp_content = json.loads(post_res.text)
             created_issue_id = resp_content["number"]
-            logger.info("an issue with %s id has been created" % created_issue_id)
+            logger.info("An issue with %s id has been created" % created_issue_id)
             return created_issue_id
 
     def update_issue(self, owner="openEuler", **kwargs):
@@ -322,14 +322,14 @@ class Issue:
                 # verify weather the title is correct, title demo: openxxxx-20.03-LTS-SP1 Update 2021/4/23 release
                 title_content = title.strip().split()
                 if len(title_content) != 4:
-                    logger.error("incorrect title, please check. Title: %s" % title)
+                    logger.error("Incorrect title, please check. Title: %s" % title)
                     return None
                 branch = title.strip().split()[0]
                 if branch not in BRANCH_LIST:
-                    logger.error("branch %s not in qualified branch_list: %s" % (branch, BRANCH_LIST))
+                    logger.error("Branch %s not in qualified branch_list: %s" % (branch, BRANCH_LIST))
                     return None
         except IndexError:
-            logger.error("failed to get update issue branch.")
+            logger.error("Failed to get update issue branch.")
         return branch
 
     def get_issue_body(self, issue_id):
@@ -341,7 +341,7 @@ class Issue:
         """
         issue_content = self.get_issue_info(issue_id)
         if not issue_content:
-            logger.error("can not get issue content for %s ,please check!" % issue_id)
+            logger.error("Can not get issue content for %s ,please check!" % issue_id)
             return None
         body = issue_content.get("body", "")
         if not body:
@@ -378,7 +378,7 @@ class Issue:
                 repo_idx = pkgname_index_dict.get(block_name)
                 repo_info = line.split("|")[repo_idx]
             except IndexError:
-                logger.error("can not get pkg info in {} block".format(block_name))
+                logger.error("Can not get pkg info in {} block".format(block_name))
             else:
                 repos.add(repo_info)
         return repos
@@ -399,7 +399,7 @@ class Issue:
         if block_res:
             pkg_set.update(self.__process_body_for_pkglist(block_res[block_name], block_name=block_name))
         else:
-            logger.warning("not found %s content when getting pkglist from specific part." % block_name)
+            logger.warning("Not found %s content when getting pkglist from specific part." % block_name)
         return pkg_set
 
     def get_update_list(self):
@@ -429,7 +429,7 @@ class Issue:
 
             return list(cve_bugfix_req_pkgs)
         else:
-            logger.error("empty content of issue body, can not get update list.")
+            logger.error("Empty content of issue body, can not get update list.")
             return []
 
     @staticmethod
@@ -461,7 +461,7 @@ class Issue:
             return False
 
         if branch not in BRANCH_LIST:
-            raise ValueError("not supporting branch: %s, which not in %s." % (branch, BRANCH_LIST))
+            raise ValueError("Not supporting branch: %s, which not in %s." % (branch, BRANCH_LIST))
 
         if branch == LTS_BRANCH:
             repo_epol = EPOL_SRC_NAME
@@ -518,7 +518,7 @@ class Issue:
         issue_body = self.get_issue_body(self.issue_num)
 
         if not issue_body:
-            logger.error("empty content of issue body, can not get update list.")
+            logger.error("Empty content of issue body, can not get update list.")
             return []
 
         pkgs = set()
@@ -549,7 +549,7 @@ class Issue:
         )
         issue_comments = self.gitee_api_request("get", url=issue_comments_url)
         if not issue_comments:
-            logger.error("failed to get the comment of the issue, the route is %s" % issue_comments_url)
+            logger.error("Failed to get the comment of the issue, the route is %s" % issue_comments_url)
             return []
         try:
             comment_list = []
@@ -560,7 +560,7 @@ class Issue:
             return comment_list
 
         except json.JSONDecodeError as error:
-            logger.error("failed to parse json data %s" % error)
+            logger.error("Failed to parse json data %s" % error)
             return []
 
     def judge_specific_comment_exists(self, comment_list, issue_params):
