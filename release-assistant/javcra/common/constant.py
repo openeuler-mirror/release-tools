@@ -74,8 +74,8 @@ AARCH_FRAME = "aarch64"
 X86_FRAME = "x86_64"
 
 # branch list for standard epol list
-BRANCH_LIST = ["openEuler-22.03-LTS-SP2", "openEuler-22.03-LTS-SP1", "openEuler-20.03-LTS-SP1",
-               "openEuler-20.03-LTS-SP4", "openEuler-20.03-LTS-SP3", "openEuler-22.03-LTS"]
+BRANCH_LIST = ["openEuler-22.03-LTS-SP3", "openEuler-22.03-LTS-SP2", "openEuler-22.03-LTS-SP1",
+               "openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP4", "openEuler-20.03-LTS-SP3", "openEuler-22.03-LTS"]
 
 # lts branch
 LTS_BRANCH = "openEuler-20.03-LTS"
@@ -109,7 +109,8 @@ ACTUATOR_DICT = {
     "openEuler-20.03-LTS": "openeuler-20.03-lts",
     "openEuler-22.03-LTS": "openeuler-22.03-lts",
     "openEuler-22.03-LTS-SP1": "openeuler-22.03-lts-sp1",
-    "openEuler-22.03-LTS-SP2": "openeuler-22.03-lts-sp2"
+    "openEuler-22.03-LTS-SP2": "openeuler-22.03-lts-sp2",
+    "openEuler-22.03-LTS-SP3": "openeuler-22.03-lts-sp3"
 }
 
 # git warehouse address for release issue
@@ -160,7 +161,8 @@ EPOL_DICT = {
     "openEuler-20.03-LTS-SP4": "EPOL-main",
     "openEuler-22.03-LTS": "EPOL-main",
     "openEuler-22.03-LTS-SP1": "EPOL-main",
-    "openEuler-22.03-LTS-SP2": "EPOL-main"
+    "openEuler-22.03-LTS-SP2": "EPOL-main",
+    "openEuler-22.03-LTS-SP3": "EPOL-main"
 }
 
 # comment dict
@@ -169,7 +171,8 @@ COMMENT_DICT = {"cve": "/cve-ok", "bugfix": "/bugfix-ok", "test": "/test-ok"}
 # label dict
 LABEL_DICT = {"start": "check-pkg", "requires": "check-requires", "release": "release-check"}
 
-MULTI_VERSION_BRANCHS = ["sp2", "sp3", "sp4", "SP2", "SP3", "SP4", "22.03-LTS", "22.03-LTS-SP1", "22.03-LTS-SP2"]
+MULTI_VERSION_BRANCHS = ["sp2", "sp3", "sp4", "SP2", "SP3", "SP4", "22.03-LTS", "22.03-LTS-SP1", "22.03-LTS-SP2",
+                         "22.03-LTS-SP3"]
 
 CHECK_PART_LIST = ["status", "requires", "test", "cve_bugfix", "versions"]
 
@@ -209,6 +212,10 @@ BRANCH_MAP = {
     "openEuler-22.03-LTS-SP2": [
         "openEuler:22.03:LTS:SP2",
         "openEuler:22.03:LTS:SP2:Epol",
+    ],
+    "openEuler-22.03-LTS-SP3": [
+        "openEuler:22.03:LTS:SP3",
+        "openEuler:22.03:LTS:SP3:Epol",
     ]
 }
 
@@ -267,6 +274,11 @@ OBS_VALUES_NAMES = {
         "openEuler:22.03:LTS:SP2",
         "openEuler:22.03:LTS:SP2:Epol",
         "openEuler:22.03:LTS:SP2:Extras",
+    ],
+    "openEuler-22.03-LTS-SP3": [
+        "openEuler:22.03:LTS:SP3",
+        "openEuler:22.03:LTS:SP3:Epol",
+        "openEuler:22.03:LTS:SP3:Extras",
     ]
 }
 
@@ -276,7 +288,8 @@ VM_IP_MAP = {
     "openEuler-20.03-LTS-SP4": "172.16.1.32",
     "openEuler-22.03-LTS": "172.16.1.32",
     "openEuler-22.03-LTS-SP1": "172.16.1.95",
-    "openEuler-22.03-LTS-SP2": "172.16.1.155"
+    "openEuler-22.03-LTS-SP2": "172.16.1.155",
+    "openEuler-22.03-LTS-SP3": "172.16.1.32"
 }
 
 ISO_BUILD_JOB_MAP = {
@@ -285,7 +298,8 @@ ISO_BUILD_JOB_MAP = {
     "openEuler-20.03-LTS-SP4": "EBS-OS-build/Main-openEuler-20.03-LTS-SP4-EBS",
     "openEuler-22.03-LTS": "openEuler-OS-build/Main-openEuler-22.03-LTS-build",
     "openEuler-22.03-LTS-SP1": "EBS-OS-build/Main-openEuler-22.03-LTS-SP1-EBS",
-    "openEuler-22.03-LTS-SP2": "EBS-OS-build/Main-openEuler-22.03-LTS-SP2-EBS"
+    "openEuler-22.03-LTS-SP2": "EBS-OS-build/Main-openEuler-22.03-LTS-SP2-EBS",
+    "openEuler-22.03-LTS-SP3": "EBS-OS-build/Main-openEuler-22.03-LTS-SP3-EBS"
 }
 
 MIN_JENKINS_BUILD_WAIT_TIME = 5
@@ -299,9 +313,10 @@ TESTER = "@gitee-cmd @zhangtao2020 @disnight"
 
 # check cvrf and package's configuration
 VERSION_LIST = ["openEuler-22.03-LTS", "openEuler-22.03-LTS-SP1", "openEuler-20.03-LTS-SP1", "openEuler-20.03-LTS-SP3",
-                "openEuler-20.03-LTS-SP4", "openEuler-22.03-LTS-SP2", "openEuler-22.03-LTS/EPOL",
-                "openEuler-22.03-LTS-SP1/EPOL", "openEuler-20.03-LTS-SP1/EPOL", "openEuler-20.03-LTS-SP3/EPOL",
-                "openEuler-20.03-LTS-SP4/EPOL", "openEuler-22.03-LTS-SP2/EPOL"]
+                "openEuler-20.03-LTS-SP4", "openEuler-22.03-LTS-SP2", "openEuler-22.03-LTS-SP3",
+                "openEuler-22.03-LTS/EPOL", "openEuler-22.03-LTS-SP1/EPOL", "openEuler-20.03-LTS-SP1/EPOL",
+                "openEuler-20.03-LTS-SP3/EPOL", "openEuler-20.03-LTS-SP4/EPOL", "openEuler-22.03-LTS-SP2/EPOL",
+                "openEuler-22.03-LTS-SP3/EPOL"]
 ARCH_LIST = ["aarch64", "source", "x86_64", "noarch"]
 
 # openEuler test repo url
