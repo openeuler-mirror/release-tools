@@ -53,7 +53,9 @@ class TestStart(TestMixin):
         read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
         mock_label = self.make_need_content('mock_update_label.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, resp, mock_init_r, mock_label])
+        mock_issue_comment = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
+        mock_issue_info = self.make_need_content('mock_issue_info.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, mock_issue_comment, resp, resp, mock_issue_info, mock_init_r, mock_label])
         mock_get_r = self.make_object_data(200, "The number of requests is too frequent, "
                                                 "please try again later, there is currently a task being processed")
         self.mock_requests_get(side_effect=[mock_get_r])
@@ -79,7 +81,8 @@ class TestStart(TestMixin):
         self.mock_obs_cloud_get_objects(return_value=mock_r)
         read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
-        self.mock_request(side_effect=[resp, resp, resp, RequestException])
+        mock_issue_comment = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, mock_issue_comment, resp, resp, RequestException])
         mock_get_r = self.make_object_data(200)
         self.mock_requests_get(side_effect=[mock_get_r])
         self.assert_result()
@@ -156,7 +159,8 @@ Parameter validation failed
         issue_body_is_none_data = self.read_file_content('mock_issue_is_none.txt', folder=MOCK_DATA_FILE,
                                                          is_json=False)
         mock_issue_body_is_none_r = self.make_object_data(200, issue_body_is_none_data)
-        self.mock_request(side_effect=[resp, mock_issue_body_is_none_r])
+        mock_issue_comment = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, mock_issue_comment, mock_issue_body_is_none_r])
         self.assert_result()
 
     def test_already_operated(self):
@@ -172,7 +176,8 @@ Parameter validation failed
         already_operated_data = self.read_file_content('already_operated.txt', folder=MOCK_DATA_FILE,
                                                        is_json=False)
         mock_already_operated_r = self.make_object_data(200, already_operated_data)
-        self.mock_request(side_effect=[resp, mock_already_operated_r])
+        mock_issue_comment = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, mock_issue_comment, mock_already_operated_r])
         self.assert_result()
 
     def test_download_file_failed(self):
@@ -196,7 +201,8 @@ Parameter validation failed
         self.mock_obs_cloud_get_objects(return_value=mock_getobjects_r)
         read_excel = pd.read_excel(Path(MOCK_DATA_FILE, "mock_cve_data.xlsx"), sheet_name="cve_list")
         self.mock_pandas_read_excel(return_value=read_excel)
-        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, resp])
+        mock_issue_comment = self.make_need_content('mock_issue_comment.txt', MOCK_DATA_FILE)
+        self.mock_request(side_effect=[resp, mock_issue_comment, resp, resp, resp, resp, resp, resp])
         mock_get_r = self.make_object_data(200)
         self.mock_requests_get(side_effect=[mock_get_r])
         self.assert_result()

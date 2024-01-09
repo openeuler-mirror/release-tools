@@ -1,0 +1,36 @@
+[
+	{
+		"id": 24010076,
+		"body": "issue: #I8S02F",
+		"user": {
+			"id": 5674142,
+			"login": "rearcher",
+			"name": "luxuexian",
+			"avatar_url": "https://gitee.com/assets/no_portrait.png",
+			"url": "https://gitee.com/api/v5/users/rearcher",
+			"html_url": "https://gitee.com/rearcher",
+			"remark": "",
+			"followers_url": "https://gitee.com/api/v5/users/rearcher/followers",
+			"following_url": "https://gitee.com/api/v5/users/rearcher/following_url{/other_user}",
+			"gists_url": "https://gitee.com/api/v5/users/rearcher/gists{/gist_id}",
+			"starred_url": "https://gitee.com/api/v5/users/rearcher/starred{/owner}{/repo}",
+			"subscriptions_url": "https://gitee.com/api/v5/users/rearcher/subscriptions",
+			"organizations_url": "https://gitee.com/api/v5/users/rearcher/orgs",
+			"repos_url": "https://gitee.com/api/v5/users/rearcher/repos",
+			"events_url": "https://gitee.com/api/v5/users/rearcher/events{/privacy}",
+			"received_events_url": "https://gitee.com/api/v5/users/rearcher/received_events",
+			"type": "User"
+		},
+		"source": null,
+		"target": {
+			"issue": {
+				"id": 14664086,
+				"title": "openEuler-20.03-LTS-SP1 Update 2021/11/19 release",
+				"number": "I8QAVQ"
+			},
+			"pull_request": null
+		},
+		"created_at": "2023-12-28T11:14:12+08:00",
+		"updated_at": "2023-12-28T11:14:34+08:00"
+	}
+]

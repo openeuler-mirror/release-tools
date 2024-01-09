@@ -586,6 +586,26 @@ class Issue:
 
         return True
 
+    def get_comment_issues(self, issue_params):
+        """
+        get issues in comment
+
+        Args:
+            issue_params: params for issue
+
+        Returns:
+            issues(list)
+        """
+        issue_comments = self.get_issue_comments(issue_params)
+        issues = []
+        if not issue_comments:
+            return issues
+
+        issues = re.findall("(?<=[#/])[A-Z0-9]{6}", str(issue_comments))
+        result = list(set(issues))
+        result.sort(key=issues.index)
+        return result
+
     def create_issue_label(self, label_list, params):
         """
         create label for release issue

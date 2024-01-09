@@ -51,7 +51,8 @@ class TestCheck(TestMixin):
         self.mock_requests_post(return_value=mock_post_data)
         self.mock_request(
             side_effect=[resp, resp, resp, resp, resp, mock_install_r, resp, resp, resp, mock_bugfix_r, mock_check_r,
-                         resp, resp, mock_install_r, mock_bugfix_r, resp, resp, resp, resp, mock_repo_list_data, resp])
+                         mock_check_r, resp, resp, mock_install_r, mock_bugfix_r, resp, resp, resp, resp,
+                         mock_repo_list_data, resp])
         self.assert_result()
 
     def test_check_status_failed(self):

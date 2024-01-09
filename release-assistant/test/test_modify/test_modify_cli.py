@@ -53,7 +53,7 @@ class TestModify(TestMixin):
         resp = self.make_expect_data(200, 'modifypart.txt')
         mock_r = self.make_need_content('add_issue_info.txt', MOCK_DATA_FILE)
         mock_final_r = self.make_need_content('add_bugfix_success.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp,resp, mock_r, mock_final_r, mock_final_r])
+        self.mock_request(side_effect=[resp, resp, resp, resp, mock_r, mock_final_r, mock_final_r])
         self.command_params = ["I40769", "--giteeid=Mary", "--add=bugfix", "--token=example", "--id=I3AQ2G"]
         self.assert_result()
 
@@ -158,7 +158,7 @@ failed to update remain issues, please check whether the issue exist in cve and 
         """
         resp = self.make_expect_data(200, 'modifypart.txt')
         mock_r = self.make_need_content('delete_bugfix_success.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, resp,resp, mock_r])
+        self.mock_request(side_effect=[resp, resp, resp, resp, resp, mock_r])
         self.command_params = ["I40769", "--giteeid=Mary", "--delete=bugfix", "--token=example", "--id=I3J655"]
         self.assert_result()
 
@@ -201,7 +201,7 @@ update remain issues successfully.
 [ERROR] failed to delete I3J655 in bugfix.
         """
         resp = self.make_expect_data(200, 'modifypart.txt')
-        self.mock_request(side_effect=[resp, resp, resp,resp, RequestException])
+        self.mock_request(side_effect=[resp, resp, resp, resp, resp, RequestException])
         self.command_params = ["I40769", "--giteeid=Mary", "--delete=bugfix", "--token=example", "--id=I3J655"]
         self.assert_result()
 
@@ -295,7 +295,7 @@ failed to update remain issues, please check whether the issue exist in cve and 
         """
         resp = self.make_expect_data(200, 'modifypart.txt')
         mock_r = self.make_need_content('delete_multiple_bugfix_success.txt', MOCK_DATA_FILE)
-        self.mock_request(side_effect=[resp, resp, resp,resp, mock_r])
+        self.mock_request(side_effect=[resp, resp, resp, resp, resp, resp, mock_r])
         self.command_params = ["I40769", "--giteeid=Mary", "--delete=bugfix", "--token=example", "--id", "I3J655",
                                "I3AHLY"]
         self.assert_result()
