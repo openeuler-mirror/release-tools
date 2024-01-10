@@ -511,14 +511,14 @@ class Operation(Issue):
                 "not allowed 'operate' value,expected in ['init','add','delete','update'],but given {}".format(operate)
             )
 
-    def init(self, *args):
+    def init(self, *args, issues=None):
         """
         init specific block
 
         Returns:
             init str
         """
-        return self.get_new_issue_body(operate="init", *args)
+        return self.get_new_issue_body(operate="init", *args, issues=issues)
 
     def get_new_issue_body(self, *args, operate="init", body_str=None, issues=None):
         raise NotImplementedError
@@ -642,7 +642,13 @@ class BugFixIssue(Operation):
 
         table_head = ["issue", "仓库", "status"]
         block_name = "## 2、bugfix"
+
         bugfix_list = []
+        for issue_id in issues:
+            # latest issue status
+            single_issue_info = self.get_single_issue_info(issue_id, block_name)
+            bugfix_list.append(single_issue_info[0])
+
         bugfix_prefix = "修复bugfix {}个".format(len(bugfix_list))
 
         return self.operate_for_specific_block(
@@ -1091,7 +1097,7 @@ class IssueOperation(Operation):
             return False
         return True
 
-    def init_issue_description(self, *args):
+    def init_issue_description(self, *args, issues):
         """
         initialize the release issue body when commenting "start-update" command
 
@@ -1104,7 +1110,7 @@ class IssueOperation(Operation):
 
         release_range = "# 1、发布范围\n"
         cve_block_str = self.cve_object.init(*args)
-        bugfix_block_str = self.bugfix_object.init()
+        bugfix_block_str = self.bugfix_object.init(issues=issues)
         requires_block_str = self.requires_object.init()
         repo_block_str = self.init_repo_table()
         install_build_block_str = self.install_build_object.init()
@@ -1257,7 +1263,7 @@ class IssueOperation(Operation):
         """
         try:
             if operation == "init":
-                return self.init_issue_description(*args)
+                return self.init_issue_description(*args, issues=issues)
             else:
                 return self.update_issue_description(
                     operate=operation, update_block=operate_block, issues=issues

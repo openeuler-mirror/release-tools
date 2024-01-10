@@ -73,8 +73,10 @@ class StartCommand(BaseCommand):
         if not validate_result:
             return
         issue = IssueOperation(GITEE_REPO, params.token, params.releaseIssueID)
+        comment_params = {"owner": "openeuler", "repo": GITEE_REPO, "issue_id": params.releaseIssueID}
+        issues = issue.get_comment_issues(comment_params)
         args = (params.useremail, params.ak, params.sk)
-        start_res = issue.operate_release_issue(operation="init", *args)
+        start_res = issue.operate_release_issue(operation="init", *args, issues=issues)
         if start_res:
             print("[INFO] start update successfully.")
         else:
