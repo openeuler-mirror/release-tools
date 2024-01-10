@@ -647,7 +647,8 @@ class BugFixIssue(Operation):
         for issue_id in issues:
             # latest issue status
             single_issue_info = self.get_single_issue_info(issue_id, block_name)
-            bugfix_list.append(single_issue_info[0])
+            if single_issue_info:
+                bugfix_list.append(single_issue_info[0])
 
         bugfix_prefix = "修复bugfix {}个".format(len(bugfix_list))
 
