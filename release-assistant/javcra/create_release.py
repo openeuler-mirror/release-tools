@@ -22,8 +22,8 @@ from javcra.libs.log import logger
 
 
 class UpdateIssue(Issue):
-    def __init__(self, repo, token, issue_num):
-        super().__init__(repo, token, issue_num=None)
+    def __init__(self, repo, token, issue_num=None):
+        super().__init__(repo, token, issue_num=issue_num)
 
     def create_update_issue(self, branch):
         """
